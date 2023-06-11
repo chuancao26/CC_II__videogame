@@ -22,12 +22,13 @@ class Jugador
     private:
         float posx, posy, gravedad, speed;
         int size, vidas;
-        KeyBoard left, right, up, down. disparar, desaparecer, ; 
+        KeyBoard left, right, up, down. disparar, desaparecer; 
     public:
         virtual void move();
         virtual void textura();
         virtual void revivir();
         virtual void posicion();
+        virtual void caida();
 };
 class Cup : public Jugador
 {

@@ -5,11 +5,12 @@ using namespace sf;
 class Cup
 {
     private:
-        float posx, posy, speed = 0.01;
+        float posx, posy, speed = 0.1, salto = 1, gravedad = 0.1;
         int size;
         Color color;
         RectangleShape cup; 
         int xedge, yedge;
+        int currentJumps, jumps = 2;
     public: 
         Cup(const int &px, const int& py, const int& size_, const Color& a, const int& limitx, const int& limity)
         {
@@ -22,29 +23,24 @@ class Cup
         }
         void draw(RenderWindow& a)
         {
+            caida();
             a.draw(cup);
         }
        void move(const int& px, const int& py)
         {
-            posx = (px + xedge) % xedge;
-            posy = (py + yedge) % yedge;
             cup.setPosition(posx, posy);
         }       
-        void moveController(const bool& xclickRight, const bool& xclickLeft, const bool& yclickUp, const bool& yclickDown )
+        void moveController(const bool& xclickRight, const bool& xclickLeft, const bool& yclickDown )
         {
-            if (xclickLeft)
-            {
-                posx += speed;
-            }
-            if (xclickRight)
+            if (xclickLeft && posx >= 0)
             {
                 posx -= speed;
             }
-            if (yclickDown)
+            if (xclickRight && posx <= xedge - size)
             {
-                posy -= speed;
+                posx = posx + speed;
             }
-            if (yclickUp)
+            if (yclickDown && posy <= yedge - size)
             {
                 posy += speed;
             }
@@ -52,12 +48,26 @@ class Cup
         }
         float getPosx() {return posx;}
         float getPosy() {return posy;}
+        void jump(const bool& yclickUp)
+        {
+            if (yclickUp)
+            {
+                posy -= salto;
+            }
+            move(posx, posy);
+        }
+        void caida()
+        {
+            if (posy < 600)
+                posy += gravedad;
+            move(posx, posy);
+        }
 };
 
 int main()
 {
     int xedge = 800, yedge = 800, size = 40;
-    float posx = 400, posy = 400;
+    float posx = 20, posy = 600;
     bool up, down, left, right;
     Color color = Color::Red;
     RenderWindow window(VideoMode(xedge, yedge), "SFML works!");
@@ -75,8 +85,9 @@ int main()
         left = Keyboard::isKeyPressed(Keyboard::Left);
         right = Keyboard::isKeyPressed(Keyboard::Right);
         window.clear();
-        cout << a.getPosx() << " ; " << a.getPosy() << endl;
-        a.moveController(right,left,up,down);
+        // cout << a.getPosx() << " ; " << a.getPosy() << endl;
+        a.jump(up);
+        a.moveController(right,left,down);
         a.draw(window);
         window.display();
     }
