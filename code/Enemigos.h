@@ -74,7 +74,7 @@ class Bee : public Boss
         void mover(); //animación
         void colision(); //interacción con las balas del jugador
         void textura();
-        void estado1(); //ALanzar un triángulo, como objeto que si se tca, pierdes na vida
+        void estado1(); //Lanzar un triángulo, como objeto que si se tca, pierdes na vida
         void estado2(); //Cabeza cadena y lanza bombas con direccion
         void estado3(); //avion, también dispara
 
