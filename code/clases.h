@@ -23,13 +23,22 @@ public:
     void Mostrar()
 };
 
-
-class Cup
+class Jugador
+{
+    private:
+        float gravedad, speed;
+        int posx, posy, size;
+    public:
+	void move();
+	void textura();
+	void colision();
+}:
+class Cup : public Jugador
 {
     private:
         float gravedad, speed, damage, tarjeta;
         int posx, posy, size, vidas;
-        KeyBoard left, right, up, down, saltar, disparar, dash, cambiar_arma;
+        KeyBoard left, right, up, down, saltar, apuntar, disparar, dash, cambiar_arma;
 	friend class CupMuerto;
 	friend class Tipos_disparo;
 	friend class Plataforma;
@@ -44,7 +53,7 @@ class Cup
 	void invulnerable(); // si es_invulnerable=True
 	void utilizarPlataforma();
 };
-class CupMuerto
+class CupMuerto : public Jugador
 {
     private:
         float gravedad, speed;
@@ -136,13 +145,6 @@ class Mounstro : Boss
         void desaparecer();
 	void utilizarPlataforma();
 };
-
-
-
-
-
-
-
 
 
 
