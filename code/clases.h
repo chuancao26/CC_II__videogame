@@ -52,6 +52,7 @@ class Cup : public Jugador
         friend class CupMuerto;
         friend class Tipos_disparo;
         friend class Plataforma;
+        friend class Enemigo;
     public:
         void move();
         void disparar();
@@ -134,10 +135,10 @@ class Enemigos
         void desaparecer();
         void utilizarPlataforma();
 };
-class Boss : public Enemigo
+class Boss : public Enemigos
 {
 };
-class Mounstro : public Enemigo
+class Mounstro : public Enemigos
 {
 };
 class Serpiente : public Mounstro
