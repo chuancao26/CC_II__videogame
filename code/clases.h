@@ -52,6 +52,7 @@ class Cup : public Jugador
         friend class CupMuerto;
         friend class Tipos_disparo;
         friend class Plataforma;
+        friend class Enemigo;
     public:
         void move();
         void disparar();
@@ -73,7 +74,7 @@ class CupMuerto : public Jugador
         void move();
         void textura();
         void posicion(); // Ubicar el mapa
-        // void volar(); creo que solo se está moviendo
+        // void volar(); creo que solo se estï¿½ moviendo
         void revivir();  //se revive y el fantasma regresa al pool Cup cup1 cup.es_invulnerable=True;
         void colision(); //tocado por la tecla saltar de amigo, o si llega al borde superior de la ventana
 };
@@ -134,10 +135,10 @@ class Enemigos
         void desaparecer();
         void utilizarPlataforma();
 };
-class Boss : public Enemigo
+class Boss : public Enemigos
 {
 };
-class Mounstro : public Enemigo
+class Mounstro : public Enemigos
 {
 };
 class Serpiente : public Mounstro
