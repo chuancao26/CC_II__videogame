@@ -50,11 +50,13 @@ class Cup
         float getPosy() {return posy;}
         void jump(const bool& yclickUp)
         {
-            if (yclickUp)
+            if (yclickUp && posy= 0 && counter < 2)
             {
                 posy -= salto;
             }
+            
             move(posx, posy);
+
         }
         void caida()
         {
@@ -85,7 +87,6 @@ int main()
         left = Keyboard::isKeyPressed(Keyboard::Left);
         right = Keyboard::isKeyPressed(Keyboard::Right);
         window.clear();
-        // cout << a.getPosx() << " ; " << a.getPosy() << endl;
         a.jump(up);
         a.moveController(right,left,down);
         a.draw(window);
