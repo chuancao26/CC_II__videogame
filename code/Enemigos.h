@@ -60,7 +60,7 @@ class Bomba : public Enemigos
 class Bee : public Boss
 {
     private:
-        float speed, damage, vida;
+        float speed, vida;
         int posx, posy, size, estado;
         friend class Tipos_disparo;
         friend class Plataforma;
