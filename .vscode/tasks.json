@@ -22,7 +22,6 @@
         "-lsfml-audio",
         ";",
         "./${fileBasenameNoExtension}"
-
       ],
       "group": {
         "kind": "build",

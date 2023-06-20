@@ -5,7 +5,7 @@ using namespace sf;
 class Cup
 {
     private:
-        float posx, posy, speed = 0.1, salto = 1, gravedad = 0.1;
+        float posx, posy, speed = 0.1, salto = 100, gravedad = 5;
         int size;
         Color color;
         RectangleShape cup; 
@@ -48,16 +48,32 @@ class Cup
         }
         float getPosx() {return posx;}
         float getPosy() {return posy;}
-        void jump(const bool& yclickUp)
-        {
-            if (yclickUp && posy= 0 && counter < 2)
-            {
-                posy -= salto;
-            }
-            
-            move(posx, posy);
+        #include <SFML/System.hpp>
 
+        void jump(bool& yclickUp)
+        {
+            static int jumpCount = 0; // Contador de saltos
+            static Clock jumpTimer; // Temporizador para controlar el tiempo de espera
+            
+            if (yclickUp && jumpCount < 2 && jumpTimer.getElapsedTime().asSeconds() >= 0.8f)
+            {                
+                if (jumpCount == 0)
+                {
+                    posy -= salto;
+                    jumpCount++; // Incrementar el contador de saltos
+
+                }
+                else if (jumpCount == 1)
+                {
+                    posy -= salto;
+                    jumpCount = 0;
+                    // Aquí puedes realizar cualquier acción adicional después del segundo salto
+                }
+                jumpTimer.restart(); // Reiniciar el temporizador
+            }
+            move(posx, posy);
         }
+
         void caida()
         {
             if (posy < 600)
@@ -68,7 +84,7 @@ class Cup
 
 int main()
 {
-    int xedge = 800, yedge = 800, size = 40;
+    int xedge = 1900, yedge = 1080, size = 40;
     float posx = 20, posy = 600;
     bool up, down, left, right;
     Color color = Color::Red;

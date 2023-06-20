@@ -11,7 +11,6 @@ class GameManager
         Mapa* mapa;
         int limitx, limity; /// Limites de la pantalla en x e y 
         string windowName;
-
     public: 
         GameManager(const int& limitx_, const int& limity_, const string& windowName_); // Constructor
         void draw(); // Metodo en donde se mostraran los objetos que apareceran en el mapa
@@ -74,6 +73,15 @@ class Plataforma
         void movimiento(const float&, const float&) // movimiento de acuerdo a la posicion de los cup.
         static Plataforma getInstance() // Controlar la cantidad de instancias activas.  
 };
+// class monedas
+// {
+//     float posx, posy;
+//     float ancho, alto;
+//     Color color;
+//     RectangleShape plataforma; 
+//     int xedge, yedge;
+//     map<string,*Plataforma>instancias;
+// };
 
 
 
