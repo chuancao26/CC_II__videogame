@@ -7,9 +7,13 @@ using namespace sf;
 
 int main()
 {
-    std::string mapString = "AAPA";
+    std::vector<std::string> mapStrings = {
+    "APAP",
+    "PAAP",
+    "AAPA"
+    };
+    Map map = map.parseMap(mapStrings);
     float gravedad = 0.1;
-    Map map = map.parseMap(mapString);
     int xedge = 800, yedge = 800, size = 40;
     float posx = 20, posy = 600;
     bool up, down, left, right;
@@ -46,10 +50,7 @@ int main()
 
         for (const auto& platform : map.platforms)
         {
-            sf::RectangleShape platformShape(sf::Vector2f(platform.width, platform.height));
-            platformShape.setPosition(platform.x, platform.y);
-            platformShape.setFillColor(sf::Color::Green);
-            window.draw(platformShape);
+            window.draw(platform.shape);
         }
         for (const auto& platform : map.platforms)
         {

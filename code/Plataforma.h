@@ -5,22 +5,23 @@
 using namespace std;
 using namespace sf;
 
-struct Platform
+class Platform
 {
+    public:
     float x;
     float y;
     float width;
     float height;
     sf::RectangleShape shape;
-
+    public:
     sf::FloatRect getGlobalBounds() const;
 };
 
-struct Map
+class Map
 {
     public:
-    Map parseMap(const std::string& mapString);
-    
+    Map parseMap(const std::vector<std::string>& mapStrings);
+    public:
     std::vector<Platform> platforms;
 };
 #endif

@@ -10,7 +10,7 @@ sf::FloatRect Platform::getGlobalBounds() const
 }
 
 
-Map Map::parseMap(const std::string& mapString)
+Map Map::parseMap(const std::vector<std::string>& mapStrings)
 {
     Map map;
     const float platformWidth = 100.f;  // Ancho predeterminado de la plataforma
@@ -20,40 +20,46 @@ Map Map::parseMap(const std::string& mapString)
     float currentX = 50.f;
     float currentY = 300.f;
 
-    for (char c : mapString)
+    for (const auto& mapString : mapStrings)
     {
-        if (c == 'P') // Carácter que representa una plataforma
+        currentX = 50.f; // Reiniciar la posición X para cada línea de mapa
+
+        for (char c : mapString)
         {
-            Platform platform;
-            platform.x = currentX;
-            platform.y = currentY;
-            platform.width = platformWidth;
-            platform.height = platformHeight;
-            platform.shape.setPosition(platform.x, platform.y);
-            platform.shape.setSize(sf::Vector2f(platform.width, platform.height));
-            platform.shape.setFillColor(sf::Color::Red);
+            if (c == 'P') // Carácter que representa una plataforma
+            {
+                Platform platform;
+                platform.x = currentX;
+                platform.y = currentY;
+                platform.width = platformWidth;
+                platform.height = platformHeight;
+                platform.shape.setPosition(platform.x, platform.y);
+                platform.shape.setSize(sf::Vector2f(platform.width, platform.height));
+                platform.shape.setFillColor(sf::Color::Red);
 
-            map.platforms.push_back(platform);
+                map.platforms.push_back(platform);
+            }
+            if (c == 'A') // Carácter que representa otra plataforma
+            {
+                Platform platform;
+                platform.x = currentX;
+                platform.y = currentY;
+                platform.width = platformWidth;
+                platform.height = platformHeight;
+                platform.shape.setPosition(platform.x, platform.y);
+                platform.shape.setSize(sf::Vector2f(platform.width, platform.height));
+                platform.shape.setFillColor(sf::Color::Blue);
+
+                map.platforms.push_back(platform);
+            }
+
+            // Mueve las coordenadas X hacia la derecha
+            currentX += platformWidth + platformSpacing;
         }
-        if (c == 'A') // Carácter que representa otra plataforma
-        {
-            Platform platform;
-            platform.x = currentX;
-            platform.y = currentY;
-            platform.width = platformWidth;
-            platform.height = platformHeight;
-            Color color=sf::Color::Blue;
-            platform.shape.setPosition(platform.x, platform.y);
-            platform.shape.setSize(sf::Vector2f(platform.width, platform.height));
-            platform.shape.setFillColor(color);
 
-            map.platforms.push_back(platform);
-        }
-
-        // Mueve las coordenadas X hacia la derecha
-        currentX += platformWidth + platformSpacing;
+        // Mueve las coordenadas Y hacia abajo para la siguiente línea de mapa
+        currentY += platformHeight + platformSpacing;
     }
 
     return map;
 }
-
