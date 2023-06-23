@@ -19,9 +19,7 @@
         "-lsfml-window",
         "-lsfml-system",
         "-lopengl32",
-        "-lsfml-audio",
-        ";",
-        "./${fileBasenameNoExtension}"
+        "-lsfml-audio"
       ],
       "group": {
         "kind": "build",

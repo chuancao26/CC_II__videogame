@@ -1,51 +1,50 @@
 #ifndef BOMBAPOLICE_H
 #define BOMBAPOLICE_H
 #include <SFML/Graphics.hpp>
-using namespace sf;
+#include <iostream>
 class BombaPolice
 {
-    private:
-        float posx, posy;
-        sf::CircleShape bomb;
-        int size = 50;
-        bool exploded = false;
-        sf::Clock clock;
-        sf::Time elapsedTime;
-        float lifetime = 10.0f;
-    public:
-        BombaPolice(const int& posx_,const int& posy_)
-        {
-            posx = posx_;
-            posy = posy_;
-            bomb.setPosition(posx,posy);
-            bomb.setRadius(size);
-            bomb.setFillColor(Color::Red);
+private:
+    float posx, posy, lifetime;
+    int size;
+    sf::CircleShape bomb;
+    sf::Clock clock;
+    sf::Time elapsedTime;
+    sf::Time inicio;
+    sf::Color color;
+    // sf::RenderWindow window;
+public:
+    // constructor
+    BombaPolice(const float& px, const float& py, sf::Time elapsedTime_): // , const sf::RenderWindow& window_
+    posx(px), posy(py), size(50), lifetime(4.0f), color(sf::Color::White), elapsedTime(elapsedTime_),
+    inicio(elapsedTime_)
+    {
+        std::cout << elapsedTime.asSeconds() << " : " << inicio.asSeconds() << std::endl;
+        bomb.setPosition(posx, posy);
+        bomb.setRadius(size);
+        bomb.setFillColor(color);
+    }
+    void update(sf::Time& deltaTime)
+    {
+        elapsedTime = deltaTime;
+    }
+    void draw(sf::RenderWindow& window)
+    {
+        if (elapsedTime.asSeconds() - inicio.asSeconds() <= lifetime)
+        {  
+            // std::cout << elapsedTime.asSeconds() << " : " << inicio.asSeconds() << std::endl; 
+            window.draw(bomb);
         }
-        BombaPolice()
+    }
+    bool isExpired()
+    {
+        if (elapsedTime.asSeconds() - inicio.asSeconds() <= lifetime)
         {
-            posx = 0; posy = 0;
+            return false;
         }
-        void setPosicion(const int& posx_,const int& posy_)
-        {
-            posx = posx_;
-            posy = posy_;
-        }
-        void update(sf::Time deltaTime)
-        {
-            if (deltaTime.asSeconds() >= lifetime)
-            {
-                exploded = true; 
-            }
-        }
-        bool isExpired()
-        {
-            return exploded;
-        }
-        void draw(RenderWindow& window)
-        {
-            if (exploded == false)
-                window.draw(bomb);
-        }
-
+        return true;
+    };
 };
 #endif
+
+

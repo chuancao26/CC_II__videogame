@@ -8,6 +8,8 @@ int main()
     int yedge = 900, xedge = 1690;  
     RenderWindow window(VideoMode(xedge, yedge), "Police Window");
     Police a(Color::Red, xedge, yedge);
+    sf::Clock clock;
+    sf::Time elapsedTime;
     while (window.isOpen()) 
     {
         Event event;
@@ -17,7 +19,9 @@ int main()
                 window.close();
         }
         window.clear(); 
+        elapsedTime = clock.getElapsedTime();
         a.draw(window);
+        a.update(elapsedTime);
         window.display();
     }
 }

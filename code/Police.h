@@ -6,31 +6,23 @@
 class Police
 {
 private:
-    float posx = 1500, posy = 500, life = 100, speed = 1;
-    int HeightSize = 200, WidthSize = 200;
+    float posx, posy, life, speed;
+    int HeightSize, WidthSize, xedge, yedge;
+    bool movingLeft, activeBomb;
     sf::Color color;
     sf::RectangleShape police;
-    int xedge, yedge;
-    bool movingLeft = false;
-    BombaPolice bomba;
     sf::Clock clock;
-
-public:
+    sf::Time elapsedTime;
+    BombaPolice* bomb;
+    public:
     Police(const sf::Color& c, const int& limitx, const int& limity)
-        : color(c), xedge(limitx), yedge(limity), bomba(posx, posy)
+    :posx(1500), posy(500), life(100), speed(0.2),
+     WidthSize(200), HeightSize(200),color(c), xedge(limitx),
+      yedge(limity), movingLeft(false), activeBomb(false)
     {
         police.setPosition(posx, posy);
         police.setFillColor(color);
         police.setSize(sf::Vector2f(WidthSize, HeightSize));
-    }
-    void draw(sf::RenderWindow& window)
-    {
-        move();
-        colocarBomba();
-        sf::Time elapsedTime = clock.getElapsedTime();
-        bomba.update(elapsedTime);
-        bomba.draw(window);
-        window.draw(police);
     }
     void move()
     {
@@ -47,13 +39,41 @@ public:
         }
         police.setPosition(posx, posy);
     }
-    void colocarBomba()
+    void colocarBomba(sf::RenderWindow& window)
     {
-        bomba.setPosicion(posx, posy);
+        if (!activeBomb)
+        {
+            std::cout << "instancia" << std::endl;
+            bomb = new BombaPolice(posx, posy, elapsedTime);
+            activeBomb = true;
+        }
     }
-    void print()
+    void update(sf::Time& timeDelta)
     {
-        std::cout << bomba.isExpired() << std::endl;
+        elapsedTime = timeDelta;
+        if(bomb)
+        {
+            bomb -> update(timeDelta);
+            if (bomb->isExpired())
+            {
+                activeBomb = false;
+                delete bomb;
+            }
+        }
+    }
+    void draw(sf::RenderWindow& window)
+    {
+        move();
+        colocarBomba(window);
+        if (bomb)
+        {
+            bomb->draw(window);
+        }
+        window.draw(police);
+    }
+    ~Police()
+    {
+        delete bomb;
     }
 };
 #endif
