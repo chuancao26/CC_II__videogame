@@ -4,7 +4,6 @@
 #include <vector>
 #include <ctime>
 #include <chrono>
-#include <cstdlib>
 #include <cmath>
 
 class Cuadrado {
@@ -24,7 +23,7 @@ private:
 
 public:
     Cuadrado(float ventanaAncho, float ventanaAlto) :
-        x(0.0f), y(ventanaAlto / 20), size(60.0f),
+        x(0.0f), y(ventanaAlto / 20), size(50.0f),
         maxY(ventanaAlto * 7 / 9), velocidad(4.0f),
         llegoMaximo(false), esperando(false), eliminado(false)
     {
@@ -48,9 +47,9 @@ public:
     }
 
     ~Cuadrado() {
-        //delete sprite;
-        //delete texturaCae;
-        //delete texturaPiso;
+        delete sprite;
+        delete texturaCae;
+        delete texturaPiso;
     }
 
     void setX(float posX) {
@@ -326,21 +325,32 @@ int main()
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Cuadrados");
     window.setFramerateLimit(60);
 
-    Cuadrado* cuadrados[4];
-    for (int i = 0; i < 4; i++) {
-        cuadrados[i] = new Cuadrado(window.getSize().x, window.getSize().y);
+    float ventanaAncho = static_cast<float>(window.getSize().x);
+    float ventanaAlto = static_cast<float>(window.getSize().y);
+
+    Cuadrado* cuadrados[5];
+    for (int i = 0; i < 5; i++) {
+        cuadrados[i] = new Cuadrado(ventanaAncho, ventanaAlto);
     }
 
     Boomerang boomerang(window.getSize().x * 45 / 64, window.getSize().y / 3, window.getSize().x / 7, window.getSize().y / 10);
 
-    sf::Clock clock; //Cuadrados
+    sf::Clock relojGeneracion;
+    float tiempoGeneracion = 3.0f;
+
+    int cuadradosGenerados = 0;
+    sf::Time tiempoAcumulado = sf::Time::Zero;
+    sf::Clock relojMovimiento;
+
+    sf::Clock clock;
+
     float elapsedSeconds = 0.0f;
     float interval = 0.8f;
 
     Cabeza cabeza(window);
+    sf::Clock clock2;
 
-    sf::Clock clock2; //Boomerang
-    Background background(window); //Fondo
+    Background background(window);
 
     while (window.isOpen())
     {
@@ -350,6 +360,10 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
+
+        sf::Time deltaTime = relojMovimiento.restart();
+        tiempoAcumulado += deltaTime;
+
         boomerang.update(window);
 
         float deltaTime2 = clock2.restart().asSeconds();
@@ -359,20 +373,22 @@ int main()
         background.draw();
 
         elapsedSeconds = clock.getElapsedTime().asSeconds();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             if (elapsedSeconds >= interval*i)
             {
                     cuadrados[i]->caer();
                     cuadrados[i]->draw(window);
             }
         }
+
         boomerang.draw(window);
         cabeza.draw();
 
         window.display();
     }
 
-    for (int i = 0; i < 4; i++) {
+    // Liberar memoria
+    for (int i = 0; i < 5; i++) {
         delete cuadrados[i];
     }
 
