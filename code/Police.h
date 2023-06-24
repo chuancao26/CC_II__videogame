@@ -7,7 +7,7 @@ class Police
 {
 private:
     float posx, posy, life, speed;
-    int HeightSize, WidthSize, xedge, yedge;
+    int HeightSize, WidthSize, xBorder, yBorder;
     bool movingLeft, activeBomb;
     sf::Color color;
     sf::RectangleShape police;
@@ -15,10 +15,10 @@ private:
     sf::Time elapsedTime;
     BombaPolice* bomb;
     public:
-    Police(const sf::Color& c, const int& limitx, const int& limity)
+    Police(const int& limitx, const int& limity)
     :posx(1500), posy(500), life(100), speed(0.2),
-     WidthSize(200), HeightSize(200),color(c), xedge(limitx),
-      yedge(limity), movingLeft(false), activeBomb(false)
+    WidthSize(200), HeightSize(200),color(sf::Color::Cyan), xBorder(limitx),
+    yBorder(limity), movingLeft(false), activeBomb(false)
     {
         police.setPosition(posx, posy);
         police.setFillColor(color);
@@ -28,12 +28,12 @@ private:
     {
         if (movingLeft) {
             posx -= speed;
-            if (posx <= 100) {
+            if (posx <= 0) {
                 movingLeft = false;
             }
         } else {
             posx += speed;
-            if (posx >= 1500) {
+            if (posx >= xBorder) {
                 movingLeft = true;
             }
         }
