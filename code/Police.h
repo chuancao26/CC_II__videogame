@@ -43,7 +43,6 @@ private:
     {
         if (!activeBomb)
         {
-            std::cout << "instancia" << std::endl;
             bomb = new BombaPolice(posx, posy, elapsedTime);
             activeBomb = true;
         }

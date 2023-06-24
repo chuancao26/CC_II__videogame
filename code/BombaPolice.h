@@ -45,6 +45,57 @@ public:
         return true;
     };
 };
+class Espina
+{
+private:
+    float posx, posy, speed;
+    int size, points;
+    sf::ConvexShape triangle;
+    sf::Color color;
+public:
+    // constructor
+    Espina(const float& posx_, const float& posy_): size(50), posx(posx_),
+    posy(posy_), points(3), color(sf::Color::Magenta), speed(0.2)
+    {
+        triangle.setPointCount(points);
+        triangle.setPoint(0,sf::Vector2f(posx,posy));
+        triangle.setPoint(1,sf::Vector2f(posx + size, posy));
+        triangle.setPoint(2,sf::Vector2f(posx + size / 2, posy + 100));
+        triangle.setFillColor(color);
+    }
+    void move(const char& type)
+    {
+        // r is right
+        // l is left
+        // u is upward
+        // d is downward
+        if(type == 'r')
+        {
+            std::cout << "toward the right" << std::endl;
+            posx += speed;
+        }
+        if(type == 'l')
+        {
+            std::cout << "toward the left" << std::endl;
+            posx -= speed;
+        }
+        if(type == 'u')
+        {
+            posy -= speed;
+        }
+        if(type == 'd')
+        {
+            posy += speed;
+        }
+        triangle.setPoint(0,sf::Vector2f(posx,posy));
+        triangle.setPoint(1,sf::Vector2f(posx + size, posy));
+        triangle.setPoint(2,sf::Vector2f(posx + size / 2, posy + 100));
+    }
+    void draw(sf::RenderWindow& window)
+    {
+        window.draw(triangle);
+    }
+};
 #endif
 
 
