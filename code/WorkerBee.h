@@ -12,7 +12,7 @@ public:
     // constructor
     WorkerBee(const float& posx_, const float& posy_):
     posx(posx_), posy(posy_), size(100), color(sf::Color::Blue), 
-    xSpeed(0.3), ySpeed(0.1), life(100) // to define
+    xSpeed(1), ySpeed(0.1), life(100) // to define
     {
         bee.setPosition(posx, posy);
         bee.setSize(sf::Vector2f(size, size));
@@ -28,6 +28,10 @@ public:
     {
         move();
         window.draw(bee);
+    }
+    bool isExpired()
+    {
+        return (posx <= -size || posy <= -size) ? true : false;
     }
 };
 

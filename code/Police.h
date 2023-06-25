@@ -8,17 +8,18 @@ class Police
 private:
     float posx, posy, life, speed;
     int HeightSize, WidthSize, xBorder, yBorder;
-    bool movingLeft, activeBomb;
+    bool movingLeft, activeBomb, activeEspinas;
     sf::Color color;
     sf::RectangleShape police;
     sf::Clock clock;
     sf::Time elapsedTime;
     BombaPolice* bomb;
+    Espina* espinas;
     public:
     Police(const int& limitx, const int& limity)
     :posx(1500), posy(500), life(100), speed(0.2),
     WidthSize(200), HeightSize(200),color(sf::Color::Cyan), xBorder(limitx),
-    yBorder(limity), movingLeft(false), activeBomb(false)
+    yBorder(limity), movingLeft(false), activeBomb(false), activeEspinas(false)
     {
         police.setPosition(posx, posy);
         police.setFillColor(color);
@@ -33,7 +34,7 @@ private:
             }
         } else {
             posx += speed;
-            if (posx >= xBorder) {
+            if (posx >= xBorder - WidthSize) {
                 movingLeft = true;
             }
         }
@@ -69,6 +70,10 @@ private:
             bomb->draw(window);
         }
         window.draw(police);
+    }
+    void iniciarEspinas()
+    {
+
     }
     ~Police()
     {
