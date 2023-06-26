@@ -18,10 +18,9 @@ private:
 public:
     // constructor
     BombaPolice(const float& px, const float& py, sf::Time elapsedTime_): // , const sf::RenderWindow& window_
-    posx(px), posy(py), size(50), lifetime(4.0f), color(sf::Color::White), elapsedTime(elapsedTime_),
+    posx(px), posy(py), size(50), lifetime(7.0f), color(sf::Color::White), elapsedTime(elapsedTime_),
     inicio(elapsedTime_)
     {
-        std::cout << elapsedTime.asSeconds() << " : " << inicio.asSeconds() << std::endl;
         bomb.setPosition(posx, posy);
         bomb.setRadius(size);
         bomb.setFillColor(color);
@@ -45,6 +44,8 @@ public:
         }
         return true;
     };
+    float getPosx(){return posx; }
+    float getPosy(){return posy; }
 };
 #endif
 

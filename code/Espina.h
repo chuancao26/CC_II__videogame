@@ -5,14 +5,15 @@ class Espina
 {
 private:
     float posx, posy, speed;
-    int size, points;
+    int size, points, xBorder, yBorder;
     char type;
     sf::ConvexShape triangle;
     sf::Color color;
 public:
     // constructor
-    Espina(const float& posx_, const float& posy_, const char& type_): size(50), posx(posx_),
-    posy(posy_), points(3), color(sf::Color::Magenta), speed(0.5), type(type_)
+    Espina(const float& posx_, const float& posy_, const char& type_, const int& xBorder_, const int& yBorder_):
+    size(50), posx(posx_), posy(posy_), points(3), color(sf::Color::Magenta), speed(2.0f), 
+    type(type_), xBorder(xBorder_), yBorder(yBorder_)
     {
         if(type == 'r')
         {
@@ -50,6 +51,9 @@ public:
         }
 
     }
+    Espina()
+    {
+    };
     void move()
     {
         // r is right
@@ -88,6 +92,14 @@ public:
     void draw(sf::RenderWindow& window)
     {
         window.draw(triangle);
+    }
+    bool isExpired()
+    {
+        if (posx <= -size || posy <= -size || posx >= xBorder + size || posy >= yBorder + size )
+        {
+            return true;
+        }
+        return false;
     }
 };
 #endif

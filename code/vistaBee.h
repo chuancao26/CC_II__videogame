@@ -1,10 +1,11 @@
 #ifndef VISTABEE_H
 #define VISTABEE_H
+#include <SFML/Graphics.hpp>
 #include <iostream>
 #include <random> 
-#include <SFML/Graphics.hpp>
 #include "Police.h"
 #include "WorkerBee.h"
+#include "Espina.h"
 class VistaBee
 {
 private:
@@ -50,7 +51,6 @@ public:
             }
         }
         elapsedtime = clock.getElapsedTime();
-        police -> move();
         police -> update(elapsedtime);
         if (workerBee)
         {
@@ -71,10 +71,10 @@ public:
         if(!activeWorker)
         {
             workerBee = new WorkerBee(xBorder, distributionY(generator));
-            std::cout << distributionY(generator) << std::endl;
             activeWorker = true;
         }
     }
+
     ~VistaBee()
     {
         delete workerBee;
