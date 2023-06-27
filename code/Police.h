@@ -29,12 +29,12 @@ private:
     {
         if (movingLeft) {
             posx -= speed;
-            if (posx <= 0) {
+            if (posx <= xBorder * 0.1) {
                 movingLeft = false;
             }
         } else {
             posx += speed;
-            if (posx >= xBorder - WidthSize) {
+            if (posx >= xBorder * 0.9 - WidthSize) {
                 movingLeft = true;
             }
         }

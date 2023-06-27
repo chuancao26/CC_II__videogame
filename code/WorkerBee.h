@@ -1,17 +1,17 @@
 #ifndef WORKERBEE_H
 #define WORKERBEE_H
 #include <SFML/Graphics.hpp>
-class WorkerBee
+#include "Enemigos.h"
+class WorkerBee : public Enemigo
 {
 private:
-    float posx, posy, life, xSpeed, ySpeed;
-    int size;
+    float life, xSpeed, ySpeed;
     sf::RectangleShape bee;
     sf::Color color;
 public:
     // constructor
     WorkerBee(const float& posx_, const float& posy_):
-    posx(posx_), posy(posy_), size(100), color(sf::Color::Blue), 
+    Enemigo(posx_, posy_, 100), color(sf::Color::Blue), 
     xSpeed(1), ySpeed(0.1), life(100) // to define
     {
         bee.setPosition(posx, posy);
