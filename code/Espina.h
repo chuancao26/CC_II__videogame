@@ -12,7 +12,7 @@ private:
 public:
     // constructor
     Espina(const float& posx_, const float& posy_, const char& type_, const int& xBorder_, const int& yBorder_):
-    size(50), posx(posx_), posy(posy_), points(3), color(sf::Color::Magenta), speed(2.0f), 
+    size(50), posx(posx_), posy(posy_), points(3), color(sf::Color::Magenta), speed(3.0f), 
     type(type_), xBorder(xBorder_), yBorder(yBorder_)
     {
         if(type == 'r')
@@ -39,7 +39,6 @@ public:
             triangle.setPoint(1,sf::Vector2f(posx - size, posy));
             triangle.setPoint(2,sf::Vector2f(posx - size / 2, posy + 100));
             triangle.setFillColor(color);
-            std::cout << "entro r" << std::endl;
         }
         else if(type == 'u')
         {
@@ -47,6 +46,38 @@ public:
             triangle.setPoint(0,sf::Vector2f(posx, posy));
             triangle.setPoint(1,sf::Vector2f(posx - size, posy));
             triangle.setPoint(2,sf::Vector2f(posx - size / 2, posy - 100));
+            triangle.setFillColor(color);
+        }
+        else if(type == 'a') // is upward left 
+        {
+            triangle.setPointCount(points);
+            triangle.setPoint(0,sf::Vector2f(posx, posy));
+            triangle.setPoint(1,sf::Vector2f(posx + size, posy - size / 2));
+            triangle.setPoint(2,sf::Vector2f(posx - 100, posy - 100 / 2));
+            triangle.setFillColor(color);
+        }
+        else if(type == 'b') // is upward Right
+        {
+            triangle.setPointCount(points);
+            triangle.setPoint(0,sf::Vector2f(posx, posy));
+            triangle.setPoint(1,sf::Vector2f(posx + size, posy - size / 2));
+            triangle.setPoint(2,sf::Vector2f(posx + 100, posy - 100 / 2));
+            triangle.setFillColor(color);
+        }
+        else if(type == 'c') // is downward left
+        {
+            triangle.setPointCount(points);
+            triangle.setPoint(0,sf::Vector2f(posx, posy));
+            triangle.setPoint(1,sf::Vector2f(posx + size / 2, posy + size));
+            triangle.setPoint(2,sf::Vector2f(posx - 100, posy + 100 / 2));
+            triangle.setFillColor(color);
+        }
+        else if(type == 'e') // is downward right
+        {
+            triangle.setPointCount(points);
+            triangle.setPoint(0,sf::Vector2f(posx, posy));
+            triangle.setPoint(1,sf::Vector2f(posx + size / 2, posy + size));
+            triangle.setPoint(2,sf::Vector2f(posx + 100, posy + 100 / 2));
             triangle.setFillColor(color);
         }
 
@@ -60,7 +91,45 @@ public:
         // l is left
         // u is upward
         // d is downward
-        if(type == 'r')
+        // a is upward left
+        // b is upward right 
+        // c is downward left
+        // d is downward right
+        
+
+        if(type == 'a') // is upward left 
+        {
+            posx -= speed;
+            posy -= speed; 
+            triangle.setPoint(0,sf::Vector2f(posx, posy));
+            triangle.setPoint(1,sf::Vector2f(posx + size, posy - size / 2));
+            triangle.setPoint(2,sf::Vector2f(posx - 100, posy - 100 / 2));
+        }
+        if(type == 'b') // is upward Right
+        {
+            posx += speed;
+            posy -= speed;
+            triangle.setPoint(0,sf::Vector2f(posx, posy));
+            triangle.setPoint(1,sf::Vector2f(posx + size, posy - size / 2));
+            triangle.setPoint(2,sf::Vector2f(posx + 100, posy - 100 / 2));
+        }
+        if(type == 'c') // is downward left
+        {
+            posx -= speed;
+            posy += speed;
+            triangle.setPoint(0,sf::Vector2f(posx, posy));
+            triangle.setPoint(1,sf::Vector2f(posx + size / 2, posy + size));
+            triangle.setPoint(2,sf::Vector2f(posx - 100, posy + 100 / 2));
+        }
+        if(type == 'e') // is downward right
+        {
+            posx += speed;
+            posy += speed;
+            triangle.setPoint(0,sf::Vector2f(posx, posy));
+            triangle.setPoint(1,sf::Vector2f(posx + size / 2, posy + size));
+            triangle.setPoint(2,sf::Vector2f(posx + 100, posy + 100 / 2));
+        }
+        if(type == 'r') 
         {
             posx += speed;
             triangle.setPoint(0,sf::Vector2f(posx, posy));
@@ -101,5 +170,9 @@ public:
         }
         return false;
     }
+    // ~Espinas()
+    // {
+    //     std::cout << "Se murió" << std:: endl;
+    // }
 };
 #endif
