@@ -18,9 +18,10 @@ private:
     Espina** espinas;
     public:
     Police(const int& limitx, const int& limity):
-    Enemigo(limitx * 0.8, limity * 0.75, 200), life(100), speed(0.2),
+    Enemigo(limitx * 0.8, limity * 0.5, 200), life(100), speed(0.2),
     WidthSize(200), HeightSize(200),color(sf::Color::Cyan), xBorder(limitx),
-    yBorder(limity), movingLeft(false), activeBomb(false), activeEspinas(false)
+    yBorder(limity), movingLeft(false), activeBomb(false), activeEspinas(false),
+    espinas(nullptr)
     {
         police.setPosition(posx, posy);
         police.setFillColor(color);
@@ -41,7 +42,7 @@ private:
         }
         police.setPosition(posx, posy);
     }
-    void colocarBomba(sf::RenderWindow& window)
+    void colocarBomba()
     {
         if (!activeBomb)
         {
@@ -65,42 +66,88 @@ private:
 
             }
         }
-        if (espinas)
+        if (activeEspinas)
         {
-            espinas[0]->move();
-            espinas[1]->move();
-            espinas[2]->move();
-            espinas[3]->move();
-            espinas[4]->move();
-            espinas[5]->move();
-            espinas[6]->move();
-            espinas[7]->move();
+            if(espinas[0])
+            {
+                espinas[0] ->move();
+            }
+            if(espinas[1])
+            {
+                espinas[1] ->move();
+            }
+            if(espinas[2])
+            {
+                espinas[2] ->move();
+            }
+            if(espinas[3])
+            {
+                espinas[3] ->move();
+            }
+            if(espinas[4])
+            {
+                espinas[4] ->move();
+            }
+            if(espinas[5])
+            {
+                espinas[5] ->move();
+            }
+            if(espinas[6])
+            {
+                espinas[6] ->move();
+            }
+            if(espinas[7])
+            {
+                espinas[7] ->move();
+            }
             if (espinas[0]->isExpired() && espinas[1]->isExpired() && espinas[2]->isExpired() && espinas[3]->isExpired() && espinas[4]->isExpired() && espinas[5]->isExpired() && espinas[6]->isExpired() && espinas[7]->isExpired())
             {
-                delete[] espinas;
-                std::cout << "Se Elimino" << std::endl;
+                delete espinas;
                 activeEspinas = false;
             }
         }
     }
     void draw(sf::RenderWindow& window)
     {
-        colocarBomba(window);
+        colocarBomba();
         if (bomb)
         {
             bomb->draw(window);
         }
-        if (espinas)
+        if (activeEspinas)
         {
-            espinas[0]->draw(window);
-            espinas[1]->draw(window);
-            espinas[2]->draw(window);
-            espinas[3]->draw(window);
-            espinas[4]->draw(window);
-            espinas[5]->draw(window);
-            espinas[6]->draw(window);
-            espinas[7]->draw(window);
-
+            if(espinas[0])
+            {
+                espinas[0] ->draw(window);
+            }
+            if(espinas[1])
+            {
+                espinas[1] ->draw(window);
+            }
+            if(espinas[2])
+            {
+                espinas[2] ->draw(window);
+            }
+            if(espinas[3])
+            {
+                espinas[3] ->draw(window);
+            }
+            if(espinas[4])
+            {
+                espinas[4] ->draw(window);
+            }
+            if(espinas[5])
+            {
+                espinas[5] ->draw(window);
+            }
+            if(espinas[6])
+            {
+                espinas[6] ->draw(window);
+            }
+            if(espinas[7])
+            {
+                espinas[7] ->draw(window);
+            }
         }
         window.draw(police);
     }
@@ -110,14 +157,13 @@ private:
         {
             if (!activeEspinas)
             {
-                std::cout << "Se creo" << std::endl;
                 espinas = new Espina*[8];
                 espinas[0] = new Espina(bomb->getPosx(), bomb->getPosy(),'r', xBorder, yBorder);
                 espinas[1] = new Espina(bomb->getPosx(), bomb->getPosy(),'l', xBorder, yBorder);
                 espinas[2] = new Espina(bomb->getPosx(), bomb->getPosy(),'u', xBorder, yBorder);
                 espinas[3] = new Espina(bomb->getPosx(), bomb->getPosy(),'d', xBorder, yBorder);
-                espinas[4] = new Espina(bomb->getPosx(), bomb->getPosy(),'a', xBorder, yBorder);
-                espinas[5] = new Espina(bomb->getPosx(), bomb->getPosy(),'b', xBorder, yBorder);
+                espinas[4] = new Espina(bomb->getPosx(), bomb->getPosy(),'b', xBorder, yBorder);
+                espinas[5] = new Espina(bomb->getPosx(), bomb->getPosy(),'a', xBorder, yBorder);
                 espinas[6] = new Espina(bomb->getPosx(), bomb->getPosy(),'c', xBorder, yBorder);
                 espinas[7] = new Espina(bomb->getPosx(), bomb->getPosy(),'e', xBorder, yBorder);
                 activeEspinas = true;
@@ -128,6 +174,14 @@ private:
     ~Police()
     {
         delete bomb;
+        delete espinas[0];
+        delete espinas[1];
+        delete espinas[2];
+        delete espinas[3];
+        delete espinas[4];
+        delete espinas[5];
+        delete espinas[6];
+        delete espinas[7];
         delete[] espinas;
     }
 };

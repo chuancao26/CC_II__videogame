@@ -18,7 +18,7 @@ private:
 public:
     // constructor
     BombaPolice(const float& px, const float& py, sf::Time elapsedTime_):
-    Enemigo(px, py, 50), lifetime(5.0f), color(sf::Color::White), elapsedTime(elapsedTime_),
+    Enemigo(px, py, 50), lifetime(3.0f), color(sf::Color::White), elapsedTime(elapsedTime_),
     inicio(elapsedTime_)
     {
         bomb.setPosition(posx, posy);
