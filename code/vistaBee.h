@@ -22,7 +22,7 @@ private:
 public:
     // constructor
     VistaBee():
-    xBorder(1680), yBorder(900), windowName("Prueba"), activeWorker(false)
+    xBorder(1280), yBorder(720), windowName("Prueba"), activeWorker(false)
     {
         std::random_device rd;
         generator.seed(rd());
