@@ -4,8 +4,74 @@
 #include <ctime>
 #include <chrono>
 #include <cmath>
+#include <string>
 
 // Modelo
+class CuadradoModel {
+private:
+    float x;
+    float y;
+    float size;
+    float maxY;
+    float velocidad;
+
+    bool esperando;
+    sf::Clock relojEspera;
+    bool eliminado;
+
+public:
+    bool llegoMaximo;
+    CuadradoModel(float ventanaAncho = 0.0f, float ventanaAlto = 0.0f)
+        : x(0.0f), y(ventanaAlto / 20), size(50.0f),
+          maxY(ventanaAlto * 7 / 9), velocidad(4.0f),
+          llegoMaximo(false), esperando(false), eliminado(false) {}
+
+    void setX(float posX) {
+        x = posX;
+    }
+
+    void caer() {
+        if (!llegoMaximo) {
+            if (y < maxY) {
+                y += velocidad;
+            } else {
+                llegoMaximo = true;
+                relojEspera.restart();
+                esperando = true;
+            }
+        } else {
+            if (esperando) {
+                if (relojEspera.getElapsedTime().asSeconds() >= 5.0f) {
+                    esperando = false;
+                    llegoMaximo = false;
+                    setX(static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX) / (x * 3 / 5)));
+                    eliminado = true;
+                }
+            } else {
+                if (y < maxY) {
+                    y += velocidad;
+                }
+            }
+        }
+    }
+
+    float getX() const {
+        return x;
+    }
+
+    float getY() const {
+        return y;
+    }
+
+    float getSize() const {
+        return size;
+    }
+
+    bool isEliminado() const {
+        return eliminado;
+    }
+};
+
 class BoomerangModel {
 private:
     float x;
@@ -77,112 +143,7 @@ public:
 };
 
 
-class CuadradoModel {
-private:
-    float x;
-    float y;
-    float size;
-    float maxY;
-    float velocidad;
-
-    bool esperando;
-    sf::Clock relojEspera;
-    bool eliminado;
-
-public:
-    bool llegoMaximo;
-    CuadradoModel(float ventanaAncho = 0.0f, float ventanaAlto = 0.0f)
-        : x(0.0f), y(ventanaAlto / 20), size(50.0f),
-          maxY(ventanaAlto * 7 / 9), velocidad(4.0f),
-          llegoMaximo(false), esperando(false), eliminado(false) {}
-
-    void setX(float posX) {
-        x = posX;
-    }
-
-    void caer() {
-        if (!llegoMaximo) {
-            if (y < maxY) {
-                y += velocidad;
-            } else {
-                llegoMaximo = true;
-                relojEspera.restart();
-                esperando = true;
-            }
-        } else {
-            if (esperando) {
-                if (relojEspera.getElapsedTime().asSeconds() >= 5.0f) {
-                    esperando = false;
-                    llegoMaximo = false;
-                    setX(static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX) / (x * 3 / 5)));
-                    eliminado = true;
-                }
-            } else {
-                if (y < maxY) {
-                    y += velocidad;
-                }
-            }
-        }
-    }
-
-    float getX() const {
-        return x;
-    }
-
-    float getY() const {
-        return y;
-    }
-
-    float getSize() const {
-        return size;
-    }
-
-    bool isEliminado() const {
-        return eliminado;
-    }
-};
-
 // Vista
-class BoomerangView {
-private:
-    sf::Sprite sprite;
-    sf::Texture texture1;
-    sf::Texture texture2;
-
-
-public:
-    BoomerangView(float width, float height) {
-        // Cargar las texturas desde los archivos
-        if (!texture1.loadFromFile("boomerang1.png")) {
-            // Manejar el error si la carga de la textura 1 falla
-            std::cout << "Error al cargar la imagen boomerang1.png" << std::endl;
-        }
-
-        if (!texture2.loadFromFile("boomerang2.png")) {
-            // Manejar el error si la carga de la textura 2 falla
-            std::cout << "Error al cargar la imagen boomerang2.png" << std::endl;
-        }
-
-        // Establecer la textura inicial en el sprite y ajustar su escala
-        sprite.setTexture(texture1);
-        sprite.setScale(width / texture1.getSize().x, height / texture1.getSize().y * 1.3);
-    }
-
-    void updateTexture(float x) {
-        if ((x > 100 && x < 200) || (x > 300 && x < 400) || (x > 500 && x < 600) || (x > 700)) {
-            sprite.setTexture(texture1);
-        }
-        else {
-            sprite.setTexture(texture2);
-        }
-    }
-
-    void draw(sf::RenderWindow& window, float x, float y) {
-        sprite.setPosition(x, y);
-        window.draw(sprite);
-    }
-};
-
 class CuadradoView {
 private:
     sf::Sprite sprite;
@@ -225,7 +186,93 @@ public:
 
 };
 
+class BoomerangView {
+private:
+    sf::Sprite sprite;
+    sf::Texture texture1;
+    sf::Texture texture2;
+
+
+public:
+    BoomerangView(float width, float height) {
+        // Cargar las texturas desde los archivos
+        if (!texture1.loadFromFile("boomerang1.png")) {
+            // Manejar el error si la carga de la textura 1 falla
+            std::cout << "Error al cargar la imagen boomerang1.png" << std::endl;
+        }
+
+        if (!texture2.loadFromFile("boomerang2.png")) {
+            // Manejar el error si la carga de la textura 2 falla
+            std::cout << "Error al cargar la imagen boomerang2.png" << std::endl;
+        }
+
+        // Establecer la textura inicial en el sprite y ajustar su escala
+        sprite.setTexture(texture1);
+        sprite.setScale(width / texture1.getSize().x, height / texture1.getSize().y * 1.3);
+    }
+
+    void updateTexture(float x) {
+        if ((x > 100 && x < 200) || (x > 300 && x < 400) || (x > 500 && x < 600) || (x > 700)) {
+            sprite.setTexture(texture1);
+        }
+        else {
+            sprite.setTexture(texture2);
+        }
+    }
+
+    void draw(sf::RenderWindow& window, float x, float y) {
+        sprite.setPosition(x, y);
+        window.draw(sprite);
+    }
+};
+
 // Controlador
+
+class CuadradoController {
+private:
+    std::vector<CuadradoModel> cuadrados;
+    CuadradoView cuadradoView;
+
+public:
+    CuadradoController(float ventanaAncho, float ventanaAlto) : cuadrados(1), cuadradoView(){
+        //float elapsedSeconds = 0.0f;
+        //elapsedSeconds = clock.getElapsedTime().asSeconds();
+        for (int i = 0; i < 1; i++) {
+            //if (elapsedSeconds >= interval*i)
+            //{
+                float posicionX = static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX) / (ventanaAncho * 3 / 5));
+                cuadrados[i] = CuadradoModel(ventanaAncho, ventanaAlto);
+                cuadrados[i].setX(posicionX);
+                cuadrados[i].caer();
+            //}
+        }
+    }
+
+    void update() {
+        for (auto& cuadrado : cuadrados) {
+            cuadrado.caer();
+        }
+    }
+
+
+    void draw(sf::RenderWindow& window) {
+        for (const auto& cuadrado : cuadrados) {
+            if (!cuadrado.isEliminado()) {
+                cuadradoView.setSize(cuadrado.getSize());
+                cuadradoView.setPosition(cuadrado.getX(), cuadrado.getY());
+
+                if (cuadrado.llegoMaximo) {
+                    cuadradoView.setTexturePiso();
+                } else {
+                    cuadradoView.setTextureCae();
+                }
+
+                cuadradoView.draw(window);
+            }
+        }
+    }
+
+};
 class BoomerangController {
 private:
     BoomerangModel boomerangModel;
@@ -254,43 +301,6 @@ public:
     }
 };
 
-class CuadradoController {
-private:
-    std::vector<CuadradoModel> cuadrados;
-    CuadradoView cuadradoView;
-
-public:
-    CuadradoController(float ventanaAncho, float ventanaAlto) : cuadrados(5), cuadradoView() {
-        for (int i = 0; i < 5; i++) {
-            cuadrados[i] = CuadradoModel(ventanaAncho, ventanaAlto);
-        }
-    }
-
-    void update() {
-        for (auto& cuadrado : cuadrados) {
-            cuadrado.caer();
-        }
-    }
-
-    void draw(sf::RenderWindow& window) {
-        for (const auto& cuadrado : cuadrados) {
-            if (!cuadrado.isEliminado()) {
-                cuadradoView.setSize(cuadrado.getSize());
-                cuadradoView.setPosition(cuadrado.getX(), cuadrado.getY());
-
-                if (cuadrado.llegoMaximo) {
-                    cuadradoView.setTexturePiso();
-                } else {
-                    cuadradoView.setTextureCae();
-                }
-
-                cuadradoView.draw(window);
-            }
-        }
-    }
-
-};
-
 int main() {
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
@@ -298,7 +308,11 @@ int main() {
     window.setFramerateLimit(60);
 
     BoomerangController boomerang(window.getSize().x * 45 / 64, window.getSize().y / 3, window.getSize().x / 7, window.getSize().y / 10);
-    CuadradoController cuadradoController(window.getSize().x, window.getSize().y);
+
+    const int maxCuadrados = 5;
+    CuadradoController* cuadrados[maxCuadrados] = {}; // Arreglo de punteros a CuadradoController
+    float elapsedSeconds = 0.0f;
+    float interval = 1.0f; // Intervalo de tiempo entre la aparición de los cuadrados (1 segundo)
 
     //Boomerang
     sf::Time tiempoAcumulado = sf::Time::Zero;
@@ -306,8 +320,7 @@ int main() {
 
     //Cuadrado
     sf::Clock clock;
-    float elapsedSeconds = 0.0f;
-    float interval = 0.025f;
+    sf::Clock timer; // Reloj para controlar el intervalo de tiempo
 
     while (window.isOpen()) {
         sf::Event event;
@@ -315,23 +328,54 @@ int main() {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-        sf::Time deltaTime = relojMovimiento.restart();
-        tiempoAcumulado += deltaTime;
 
+        // Calcular el tiempo transcurrido desde la última aparición de un cuadrado
+        float deltaTime = timer.getElapsedTime().asSeconds();
+        if (deltaTime >= interval) {
+            // Generar una nueva posición aleatoria para el cuadrado
+            float posicionX = static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX) / (window.getSize().x * 3 / 5));
+
+            // Buscar un espacio disponible en el arreglo de punteros
+            int indice = -1;
+            for (int i = 0; i < maxCuadrados; i++) {
+                if (cuadrados[i] == nullptr) {
+                    indice = i;
+                    break;
+                }
+            }
+
+            // Si se encontró un espacio disponible, crear un nuevo CuadradoController en esa posición
+            if (indice != -1) {
+                cuadrados[indice] = new CuadradoController(window.getSize().x, window.getSize().y);
+                cuadrados[indice]->update();
+                cuadrados[indice]->draw(window);
+            }
+
+            // Reiniciar el reloj para el siguiente intervalo
+            timer.restart();
+        }
+        
         boomerang.update(window.getSize().x);
         window.clear(sf::Color::White);
-
-        boomerang.draw(window);
-
-        elapsedSeconds = clock.getElapsedTime().asSeconds();
-        if (elapsedSeconds >= interval) {
-            cuadradoController.update();
-            clock.restart();
+        if (!boomerang.shouldDelete()) {
+            boomerang.draw(window);
         }
-        cuadradoController.draw(window);
+        // Actualizar y dibujar los cuadrados existentes en el arreglo
+        for (int i = 0; i < maxCuadrados; i++) {
+            if (cuadrados[i] != nullptr) {
+                cuadrados[i]->update();
+                cuadrados[i]->draw(window);
+            }
+        }
 
         window.display();
     }
 
+    // Liberar la memoria de los CuadradoController creados
+    for (int i = 0; i < maxCuadrados; i++) {
+        delete cuadrados[i];
+    }
+
     return 0;
 }
+
