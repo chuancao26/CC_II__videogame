@@ -93,7 +93,7 @@ public:
     {
         if (!activeTriangle)
         {
-            triangle = new Triangulo(xBorder * 0.5, yBorder * 0.5, xBorder, yBorder, 'b');
+            triangle = new Triangulo(0, 0, xBorder, yBorder, 'e');
             activeTriangle = true;
         }
     }
