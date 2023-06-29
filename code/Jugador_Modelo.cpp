@@ -1,6 +1,5 @@
 #include "Jugador_Modelo.h"
 using namespace std;
-//using namespace sf;
 
 float Jugador::getPosx() const {return posx;}
 float Jugador::getPosy() const {return posy;}
@@ -10,19 +9,12 @@ Cup::Cup(const int &px, const int& py, const int& size_)
     posx = px; posy = py; size = size_;
     saltando=false;
     enplataforma=false;
-    vidas=3;
+    vidas=3;saltos=1;
     gravedad=3;
     speed=10, salto = 150;
+    clock_salto=0.f;
 }
-/*void Cup::dibujar(RenderWindow& a)
-{
-    caida();
-    a.draw(cup);
-}
-sf::FloatRect Cup::getGlobalBounds() const
-{
-    return cup.getGlobalBounds();
-}*/
+
 void Cup::mover(const float& px, const float& py)
 {
     posx = px;

@@ -1,19 +1,18 @@
 #include "Jugador_Modelo.h"
 #include "Plataforma_Modelo.h"
-#include "Jugador_Vista.cpp"
+#include "Vista.cpp"
 
-class JugadorControlador {
+class Controlador {
 private:
-    Cup& jugador;
-    JugadorVista& vista;
+    Cup jugador;
+    Vista vista;
     Mapa map;
     Plataforma pla;
-    bool collision = false;
-    bool onPlatform = false;
+    sf::Clock clock;
 
 public:
-    JugadorControlador(Cup& jugador, JugadorVista& vista,std::vector<std::string> mapStrings)
-        : jugador(jugador), vista(vista) 
+    Controlador(Cup& jugador,std::vector<std::string> mapStrings)
+        : jugador(jugador),vista(1280,720)
     {
         map = Mapa::parseMap(mapStrings);
     }
@@ -63,7 +62,8 @@ public:
 
     void renderizar() {
         vista.window.clear();
-        vista.dibujar(jugador);
+        vista.plataformas.clear();
+        vista.dibujarCup(jugador);
         dibujarPlataformas();
         vista.window.display();
     }
@@ -76,7 +76,7 @@ public:
     void colisiones(){
         for (const auto& platform : vista.plataformas)
         {
-            if (vista.colision(vista.cupShape,platform))
+            if (vista.colision(vista.jugador_v.cupShape,platform))
             {
                 jugador.enPlataforma(true);
                 jugador.estaColisionando(platform.pla.getPosy());
@@ -84,10 +84,21 @@ public:
             jugador.enPlataforma(false);
         }
     }
+    void mover_plataformas() {
+        if (clock.getElapsedTime().asSeconds() >= 1.0f) 
+        {
+            for (auto& platform : map.platforms) {
+                platform.caida();
+                dibujarPlataformas();
+            }
 
+        clock.restart();
+        }
+    }
+    
     void ejecutar() {
         while (vista.window.isOpen()) {
-            vista.actualizar(jugador);
+            mover_plataformas();
             colisiones();
             manejarEventos();
             renderizar();

@@ -1,16 +1,22 @@
+#ifndef PLATAFORMA_VISTA_H
+#define PLATAFORMA_VISTA_H
 #include <SFML/Graphics.hpp>
-#include "Plataforma_Modelo.h"
+#include "Plataforma_Modelo.cpp"
 
 class PlataformaVista
 {
     public:
         sf::RectangleShape platformShape;
         Plataforma pla;
+        float gravedad;
+        float posx,posy;
     public:
         PlataformaVista(const Plataforma& plat):pla(plat)
         {
             platformShape.setSize(sf::Vector2f(100.f, 20.f));
             platformShape.setFillColor(sf::Color::Green);
+            posx=pla.getPosx();
+            posy=pla.getPosy();
         }
         sf::RectangleShape& get(){
             return platformShape;
@@ -23,5 +29,14 @@ class PlataformaVista
         {
             return platformShape.getGlobalBounds();
         }
+        void dibujarPlat(const Plataforma& plataforma,sf::RenderWindow& window) 
+        {
+            //jugadorSprite.setPosition(jugador.getPosx(), jugador.getPosy());
+            PlataformaVista plat(plataforma);
+            plat.setPosition(plataforma.getPosx(), plataforma.getPosy());
+            window.draw(plat.get());
+        }
+        
 
 };
+#endif

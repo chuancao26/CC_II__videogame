@@ -1,20 +1,17 @@
 #ifndef PLATAFORMA_MODELO_H
 #define PLATAFORMA_MODELO_H
-
 #include <vector>
 #include <string>
 
 class Plataforma
 {
     public:
-    float x;
-    float y;
-    float width;
-    float height;
+    float x,y, gravedad,width,height,velocidadY;;
     public:
     float getPosx() const;
     float getPosy() const;
     void setPosition(float px, float py); 
+    void caida();
 };
 
 class Mapa

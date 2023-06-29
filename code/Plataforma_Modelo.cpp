@@ -66,4 +66,13 @@ Mapa Mapa::parseMap(const std::vector<std::string>& mapStrings)
 
     return map;
 }
-
+void Plataforma::caida()
+{
+    if(y<800)
+    {
+        gravedad = 10.f; // Ajusta el valor de gravedad según tus necesidades
+        y += gravedad;
+    }
+    
+    setPosition(x,y);
+}

@@ -1,21 +1,19 @@
 #ifndef JUGADOR_MODELO_H
 #define JUGADOR_MODELO_H
-//#include "Poderes.h"
-//#include "Plataforma.h"
 #include <iostream>
 using namespace std;
-//using namespace sf;
 
 class Jugador
 {
     public:
-        float posx, posy, gravedad, speed;
-        int size;
+        float posx, posy, gravedad, speed, clock_salto;
+        int size,saltos;
         bool vulnerable;
     public:
         float getPosx() const;
         float getPosy() const;
         int getSize() const;
+        virtual void mover(const float& px, const float& py)=0;
 };
 class Cup: public Jugador {
 public:
@@ -24,7 +22,7 @@ public:
     int currentJumps, jumps, vidas;
 public:
     Cup(const int &px, const int& py, const int& size_);
-    void mover(const float& px, const float& py);
+    virtual void mover(const float& px, const float& py) override;
     void moverIzquierda();
     void moverDerecha();
     void moverArriba();
