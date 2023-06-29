@@ -10,7 +10,8 @@
 class VistaBee
 {
 private:
-    Police* police;
+    PoliceM* policeM;
+    PoliceV* policeV;
     Triangulo* triangle;
     WorkerBee* workerBee;
     bool activeWorker, activeTriangle;
@@ -30,18 +31,13 @@ public:
         generator.seed(rd());
         distributionY = std::uniform_int_distribution<int>(150,yBorder);
         window.create(sf::VideoMode(xBorder, yBorder), windowName);
-        police = new Police(xBorder,yBorder);
+        policeM = new PoliceM(xBorder,yBorder);
+        policeV = new PoliceV(policeM);
     }
     void render()
     {
         window.clear();
-        police -> draw(window);
-        if (activeWorker)
-            workerBee -> draw(window);
-        if (activeTriangle)
-        {
-            triangle -> draw(window);
-        }
+        drawEntitys();
         window.display();
     }
     void handleInput() 
@@ -54,10 +50,27 @@ public:
                 window.close();
             }
         }
-        drawWorker();
-        drawTriangle();
+        update();
+    }
+    void update()
+    {
         elapsedtime = clock.getElapsedTime();
-        police -> update(elapsedtime);
+        policeM ->move();
+        policeV -> update(elapsedtime);
+        updateTriangle();
+        updateWorker();
+    }
+    bool isOpen()
+    {
+        return window.isOpen();
+    }
+    void updateWorker()
+    {           
+        if(!activeWorker)
+        {
+            workerBee = new WorkerBee(xBorder, distributionY(generator));
+            activeWorker = true;
+        }
         if (activeWorker)
         {
             workerBee -> move();
@@ -66,6 +79,14 @@ public:
                 delete workerBee;
                 activeWorker = false;
             }
+        }
+    }
+    void updateTriangle()
+    {
+        if (!activeTriangle)
+        {
+            triangle = new Triangulo(0, 0, xBorder, yBorder, 'e');
+            activeTriangle = true;
         }
         if(activeTriangle)
         {
@@ -77,33 +98,22 @@ public:
             }
         }
     }
-    bool isOpen()
+    void drawEntitys()
     {
-        return window.isOpen();
-    }
-    void drawWorker()
-    {           
-        if(!activeWorker)
+        policeV -> draw(window);
+        if (activeWorker)
+            workerBee -> draw(window);
+        if (activeTriangle)
         {
-            workerBee = new WorkerBee(xBorder, distributionY(generator));
-            activeWorker = true;
-        }
-    }
-    void drawTriangle()
-    {
-        if (!activeTriangle)
-        {
-            triangle = new Triangulo(0, 0, xBorder, yBorder, 'e');
-            activeTriangle = true;
+            triangle -> draw(window);
         }
     }
     ~VistaBee()
     {
         delete workerBee;
-        delete police;
+        delete policeM;
+        delete policeV;
         delete triangle;
     }
 };
-
-
 #endif

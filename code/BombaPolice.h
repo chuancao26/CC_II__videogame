@@ -8,7 +8,6 @@ class BombaPolice : public Enemigo
 {
 private:
     float lifetime;
-    Espina* espinas;
     sf::CircleShape bomb;
     sf::Clock clock;
     sf::Time elapsedTime;

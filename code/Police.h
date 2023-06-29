@@ -3,29 +3,24 @@
 #include <SFML/Graphics.hpp>
 #include "BombaPolice.h"
 #include "Enemigos.h"
+#include "Espina.h"
 #include <iostream>
-class Police : public Enemigo
+class PoliceM : public Enemigo
 {
 private:
     float life, speed;
     int HeightSize, WidthSize, xBorder, yBorder;
-    bool movingLeft, activeBomb, activeEspinas;
-    sf::Color color;
-    sf::RectangleShape police;
-    sf::Clock clock;
-    sf::Time elapsedTime;
-    BombaPolice* bomb;
-    Espina** espinas;
+    bool movingLeft;
     public:
-    Police(const int& limitx, const int& limity):
+    PoliceM(const int& limitx, const int& limity):
     Enemigo(limitx * 0.8, limity * 0.5, 200), life(100), speed(0.2),
-    WidthSize(100), HeightSize(100),color(sf::Color::Cyan), xBorder(limitx),
-    yBorder(limity), movingLeft(false), activeBomb(false), activeEspinas(false),
-    espinas(nullptr)
+    WidthSize(100), HeightSize(100), xBorder(limitx),
+    yBorder(limity), movingLeft(false)
     {
-        police.setPosition(posx, posy);
-        police.setFillColor(color);
-        police.setSize(sf::Vector2f(WidthSize, HeightSize));
+    }
+    void draw(sf::RenderWindow& window)
+    {
+        std::cout << "There's no implementation" << std::endl;
     }
     void move()
     {
@@ -40,149 +35,220 @@ private:
                 movingLeft = true;
             }
         }
-        police.setPosition(posx, posy);
     }
-    void colocarBomba()
+    float getPosx(){return posx;}
+    float getPosy(){return posy;}
+    int getSize(){return size;}
+    int getWidth(){return WidthSize;}
+    int getHeight(){return HeightSize;}
+    int getXborder(){return xBorder;}
+    int getYborder(){return yBorder;}
+};
+class PoliceV
+{
+private:
+    bool activeBomb, activeEspinas;
+    sf::Color color;
+    sf::RectangleShape police;
+    sf::Clock clock;
+    sf::Time elapsedTime;
+    PoliceM* p; 
+    BombaPolice* bomb;
+    EspinaM** espinasM;
+    EspinaV** espinasV;
+public:
+    PoliceV(PoliceM*& police_): p(police_),
+    color(sf::Color::Cyan), activeBomb(false), activeEspinas(false)
     {
-        if (!activeBomb)
-        {
-            bomb = new BombaPolice(posx, posy, elapsedTime);
-            activeBomb = true;
-        }
+        police.setPosition(p->getPosx(), p->getPosy());
+        police.setFillColor(color);
+        police.setSize(sf::Vector2f(p->getWidth(), p->getHeight()));
     }
-    void update(sf::Time& timeDelta)
+    void move()
     {
-        elapsedTime = timeDelta;
-        move();
+        police.setPosition(p->getPosx(), p->getPosy());
+    }
+    void updateBomb()
+    {
         if(bomb)
         {
-            bomb -> update(timeDelta);
+            bomb -> update(elapsedTime);
             if (bomb->isExpired())
             {
                 activeBomb = false;
-                drawEspinas();
-
+                crearEspinas();
+                activeEspinas = true;
                 delete bomb;
-
             }
         }
+    }
+    void updateEspinas()
+    {
         if (activeEspinas)
         {
-            if(espinas[0])
+            if(espinasM[0])
             {
-                espinas[0] ->move();
+                espinasM[0] ->move();
+                espinasV[0] ->update();
+
             }
-            if(espinas[1])
+            if(espinasM[1])
             {
-                espinas[1] ->move();
+                espinasM[1] ->move();
+                espinasV[1] ->update();
             }
-            if(espinas[2])
+            if(espinasM[2])
             {
-                espinas[2] ->move();
+                espinasM[2] ->move();
+                espinasV[2] ->update();
             }
-            if(espinas[3])
+            if(espinasM[3])
             {
-                espinas[3] ->move();
+                espinasM[3] ->move();
+                espinasV[3] ->update();
             }
-            if(espinas[4])
+            if(espinasM[4])
             {
-                espinas[4] ->move();
+                espinasM[4] ->move();
+                espinasV[4] ->update();
             }
-            if(espinas[5])
+            if(espinasM[5])
             {
-                espinas[5] ->move();
+                espinasM[5] ->move();
+                espinasV[5] ->update();
             }
-            if(espinas[6])
+            if(espinasM[6])
             {
-                espinas[6] ->move();
+                espinasM[6] ->move();
+                espinasV[6] ->update();
             }
-            if(espinas[7])
+            if(espinasM[7])
             {
-                espinas[7] ->move();
+                espinasM[7] ->move();
+                espinasV[7] ->update();
             }
-            if (espinas[0]->isExpired() && espinas[1]->isExpired() && espinas[2]->isExpired() && espinas[3]->isExpired() && espinas[4]->isExpired() && espinas[5]->isExpired() && espinas[6]->isExpired() && espinas[7]->isExpired())
+            if (espinasM[0]->isExpired() && espinasM[1]->isExpired() && espinasM[2]->isExpired() && espinasM[3]->isExpired() && espinasM[4]->isExpired() && espinasM[5]->isExpired() && espinasM[6]->isExpired() && espinasM[7]->isExpired())
             {
-                delete espinas;
+                delete espinasM;
+                delete espinasV;
                 activeEspinas = false;
             }
+        }  
+    }
+    void update(sf::Time& timeDelta)
+    {
+        updateBomb();
+        updateEspinas();
+        elapsedTime = timeDelta;
+        move();
+        
+    }
+    void drawBomb(sf::RenderWindow& window)
+    {
+        if (!activeBomb)
+        {
+            bomb = new BombaPolice(p->getPosx(), p->getPosy(), elapsedTime);
+            activeBomb = true;
+        }
+        if (activeBomb)
+        {
+            bomb->draw(window);
         }
     }
     void draw(sf::RenderWindow& window)
     {
-        colocarBomba();
-        if (bomb)
-        {
-            bomb->draw(window);
-        }
-        if (activeEspinas)
-        {
-            if(espinas[0])
-            {
-                espinas[0] ->draw(window);
-            }
-            if(espinas[1])
-            {
-                espinas[1] ->draw(window);
-            }
-            if(espinas[2])
-            {
-                espinas[2] ->draw(window);
-            }
-            if(espinas[3])
-            {
-                espinas[3] ->draw(window);
-            }
-            if(espinas[4])
-            {
-                espinas[4] ->draw(window);
-            }
-            if(espinas[5])
-            {
-                espinas[5] ->draw(window);
-            }
-            if(espinas[6])
-            {
-                espinas[6] ->draw(window);
-            }
-            if(espinas[7])
-            {
-                espinas[7] ->draw(window);
-            }
-        }
+        drawBomb(window);
+        drawEspinas(window);
         window.draw(police);
     }
-    void drawEspinas()
+    void crearEspinas()
     {
         if(bomb)
         {
             if (!activeEspinas)
             {
-                espinas = new Espina*[8];
-                espinas[0] = new Espina(bomb->getPosx(), bomb->getPosy(),'r', xBorder, yBorder);
-                espinas[1] = new Espina(bomb->getPosx(), bomb->getPosy(),'l', xBorder, yBorder);
-                espinas[2] = new Espina(bomb->getPosx(), bomb->getPosy(),'u', xBorder, yBorder);
-                espinas[3] = new Espina(bomb->getPosx(), bomb->getPosy(),'d', xBorder, yBorder);
-                espinas[4] = new Espina(bomb->getPosx(), bomb->getPosy(),'b', xBorder, yBorder);
-                espinas[5] = new Espina(bomb->getPosx(), bomb->getPosy(),'a', xBorder, yBorder);
-                espinas[6] = new Espina(bomb->getPosx(), bomb->getPosy(),'c', xBorder, yBorder);
-                espinas[7] = new Espina(bomb->getPosx(), bomb->getPosy(),'e', xBorder, yBorder);
+                espinasM = new EspinaM*[8];
+                espinasM[0] = new EspinaM(bomb->getPosx(), bomb->getPosy(),'r', p->getXborder(), p->getYborder());
+                espinasM[1] = new EspinaM(bomb->getPosx(), bomb->getPosy(),'l', p->getXborder(), p->getYborder());
+                espinasM[2] = new EspinaM(bomb->getPosx(), bomb->getPosy(),'u', p->getXborder(), p->getYborder());
+                espinasM[3] = new EspinaM(bomb->getPosx(), bomb->getPosy(),'d', p->getXborder(), p->getYborder());
+                espinasM[4] = new EspinaM(bomb->getPosx(), bomb->getPosy(),'b', p->getXborder(), p->getYborder());
+                espinasM[5] = new EspinaM(bomb->getPosx(), bomb->getPosy(),'a', p->getXborder(), p->getYborder());
+                espinasM[6] = new EspinaM(bomb->getPosx(), bomb->getPosy(),'c', p->getXborder(), p->getYborder());
+                espinasM[7] = new EspinaM(bomb->getPosx(), bomb->getPosy(),'e', p->getXborder(), p->getYborder());
+
+                espinasV = new EspinaV*[8];
+                espinasV[0] = new EspinaV(espinasM[0]);
+                espinasV[1] = new EspinaV(espinasM[1]);
+                espinasV[2] = new EspinaV(espinasM[2]);
+                espinasV[3] = new EspinaV(espinasM[3]);
+                espinasV[4] = new EspinaV(espinasM[4]);
+                espinasV[5] = new EspinaV(espinasM[5]);
+                espinasV[6] = new EspinaV(espinasM[6]);
+                espinasV[7] = new EspinaV(espinasM[7]);
                 activeEspinas = true;
             }
         }
-
     }
-    ~Police()
+    void drawEspinas(sf::RenderWindow& window)
+    {
+        if (activeEspinas)
+        {
+            if(espinasV[0])
+            {
+                espinasV[0] ->draw(window);
+            }
+            if(espinasV[1])
+            {
+                espinasV[1] ->draw(window);
+            }
+            if(espinasV[2])
+            {
+                espinasV[2] ->draw(window);
+            }
+            if(espinasV[3])
+            {
+                espinasV[3] ->draw(window);
+            }
+            if(espinasV[4])
+            {
+                espinasV[4] ->draw(window);
+            }
+            if(espinasV[5])
+            {
+                espinasV[5] ->draw(window);
+            }
+            if(espinasV[6])
+            {
+                espinasV[6] ->draw(window);
+            }
+            if(espinasV[7])
+            {
+                espinasV[7] ->draw(window);
+            }
+        }
+    }
+        ~PoliceV()
     {
         delete bomb;
-        delete espinas[0];
-        delete espinas[1];
-        delete espinas[2];
-        delete espinas[3];
-        delete espinas[4];
-        delete espinas[5];
-        delete espinas[6];
-        delete espinas[7];
-        delete[] espinas;
+        delete espinasM[0];
+        delete espinasM[1];
+        delete espinasM[2];
+        delete espinasM[3];
+        delete espinasM[4];
+        delete espinasM[5];
+        delete espinasM[6];
+        delete espinasM[7];
+        delete espinasV[0];
+        delete espinasV[1];
+        delete espinasV[2];
+        delete espinasV[3];
+        delete espinasV[4];
+        delete espinasV[5];
+        delete espinasV[6];
+        delete espinasV[7];
+        delete[] espinasM;
+        delete[] espinasV;
     }
 };
 #endif
