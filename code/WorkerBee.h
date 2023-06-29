@@ -11,8 +11,8 @@ private:
 public:
     // constructor
     WorkerBee(const float& posx_, const float& posy_):
-    Enemigo(posx_, posy_, 100), color(sf::Color::Blue), 
-    xSpeed(1), ySpeed(0.1), life(100) // to define
+    Enemigo(posx_, posy_, 50), color(sf::Color::Blue), 
+    xSpeed(0.2), ySpeed(0.1), life(100) // to define
     {
         bee.setPosition(posx, posy);
         bee.setSize(sf::Vector2f(size, size));

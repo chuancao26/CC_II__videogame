@@ -12,7 +12,7 @@ private:
 public:
     // constructor
     Espina(const float& posx_, const float& posy_, const char& type_, const int& xBorder_, const int& yBorder_):
-    size(50), posx(posx_), posy(posy_), points(3), color(sf::Color::Magenta), speed(3.0f), 
+    size(30), posx(posx_), posy(posy_), points(3), color(sf::Color::Magenta), speed(0.5f), 
     type(type_), xBorder(xBorder_), yBorder(yBorder_)
     {
         if(type == 'r')

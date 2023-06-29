@@ -6,12 +6,14 @@
 #include "Police.h"
 #include "WorkerBee.h"
 #include "Espina.h"
+#include "triangulo.h"
 class VistaBee
 {
 private:
     Police* police;
+    Triangulo* triangle;
     WorkerBee* workerBee;
-    bool activeWorker;
+    bool activeWorker, activeTriangle;
     sf::RenderWindow window;
     sf::Clock clock;
     sf::Time elapsedtime;
@@ -22,7 +24,7 @@ private:
 public:
     // constructor
     VistaBee():
-    xBorder(1280), yBorder(720), windowName("Prueba"), activeWorker(false)
+    xBorder(1280), yBorder(720), windowName("Prueba"), activeWorker(false), activeTriangle(false)
     {
         std::random_device rd;
         generator.seed(rd());
@@ -34,10 +36,12 @@ public:
     {
         window.clear();
         police -> draw(window);
-        drawWorker();
-        if (workerBee)
+        if (activeWorker)
             workerBee -> draw(window);
-        
+        if (activeTriangle)
+        {
+            triangle -> draw(window);
+        }
         window.display();
     }
     void handleInput() 
@@ -50,15 +54,26 @@ public:
                 window.close();
             }
         }
+        drawWorker();
+        drawTriangle();
         elapsedtime = clock.getElapsedTime();
         police -> update(elapsedtime);
-        if (workerBee)
+        if (activeWorker)
         {
             workerBee -> move();
             if(workerBee -> isExpired())
             {
                 delete workerBee;
                 activeWorker = false;
+            }
+        }
+        if(activeTriangle)
+        {
+            triangle->move();
+            if (triangle ->isExpired())
+            {
+                delete triangle;
+                activeTriangle = false;
             }
         }
     }
@@ -74,11 +89,19 @@ public:
             activeWorker = true;
         }
     }
-
+    void drawTriangle()
+    {
+        if (!activeTriangle)
+        {
+            triangle = new Triangulo(xBorder * 0.5, yBorder * 0.5, xBorder, yBorder, 'b');
+            activeTriangle = true;
+        }
+    }
     ~VistaBee()
     {
         delete workerBee;
         delete police;
+        delete triangle;
     }
 };
 

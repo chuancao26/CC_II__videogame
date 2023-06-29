@@ -1,28 +1,24 @@
 #ifndef PINKBALL_H
 #define PINKBALL_H
 #include <SFML/Graphics.hpp>
+#include "Enemigos.h"
 #include <iostream>
-class PinkBall
+
+class PinkBall : public Enemigo
 {
 private:
-    float posx, posy;
-    int size;
     sf::CircleShape ball;
     sf::Color color;
 public:
-    PinkBall(const float& posx_, const float& posy_): posx(posx_), posy(posy_),
+    PinkBall(const float& posx_, const float& posy_): Enemigo(posx_, posy_, 20),
     color(sf::Color::Yellow)
     {
         ball.setFillColor(color);
         ball.setRadius(size);
     }
-    void update()
-    {
-
-    }
     void draw()
     {
-
+        
     }
     void move()
     {

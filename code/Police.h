@@ -19,7 +19,7 @@ private:
     public:
     Police(const int& limitx, const int& limity):
     Enemigo(limitx * 0.8, limity * 0.5, 200), life(100), speed(0.2),
-    WidthSize(200), HeightSize(200),color(sf::Color::Cyan), xBorder(limitx),
+    WidthSize(100), HeightSize(100),color(sf::Color::Cyan), xBorder(limitx),
     yBorder(limity), movingLeft(false), activeBomb(false), activeEspinas(false),
     espinas(nullptr)
     {

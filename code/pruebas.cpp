@@ -1,151 +1,27 @@
 #include <SFML/Graphics.hpp>
 
-class Espina
-{
-private:
-    float posx, posy, speed;
-    int size, points, xBorder, yBorder;
-    char type;
-    sf::ConvexShape triangle;
-    sf::Color color;
-
-public:
-    Espina(const float& posx_, const float& posy_, const char& type_, const int& xBorder_, const int& yBorder_):
-        size(50), posx(posx_), posy(posy_), points(3), color(sf::Color::Magenta), speed(3.0f), 
-        type(type_), xBorder(xBorder_), yBorder(yBorder_)
-    {
-        // Crear el triángulo de la espina
-        triangle.setPointCount(points);
-        triangle.setFillColor(color);
-        
-        // Establecer los puntos del triángulo según el tipo de espina
-        if (type == 'r')
-        {
-            triangle.setPoint(0, sf::Vector2f(posx, posy));
-            triangle.setPoint(1, sf::Vector2f(posx, posy - size));
-            triangle.setPoint(2, sf::Vector2f(posx + 100, posy - size / 2));
-        }
-        else if (type == 'l')
-        {
-            triangle.setPoint(0, sf::Vector2f(posx, posy));
-            triangle.setPoint(1, sf::Vector2f(posx, posy - size));
-            triangle.setPoint(2, sf::Vector2f(posx - 100, posy - size / 2));
-        }
-        else if (type == 'd')
-        {
-            triangle.setPoint(0, sf::Vector2f(posx, posy));
-            triangle.setPoint(1, sf::Vector2f(posx - size, posy));
-            triangle.setPoint(2, sf::Vector2f(posx - size / 2, posy + 100));
-        }
-        else if (type == 'u')
-        {
-            triangle.setPoint(0, sf::Vector2f(posx, posy));
-            triangle.setPoint(1, sf::Vector2f(posx - size, posy));
-            triangle.setPoint(2, sf::Vector2f(posx - size / 2, posy - 100));
-        }
-        else if (type == 'a') // is upward left 
-        {
-            triangle.setPoint(0, sf::Vector2f(posx, posy));
-            triangle.setPoint(1, sf::Vector2f(posx + size, posy - size / 2));
-            triangle.setPoint(2, sf::Vector2f(posx - 100, posy - 100 / 2));
-        }
-        else if (type == 'b') // is upward right
-        {
-            triangle.setPoint(0, sf::Vector2f(posx, posy));
-            triangle.setPoint(1, sf::Vector2f(posx + size, posy - size / 2));
-            triangle.setPoint(2, sf::Vector2f(posx + 100, posy - 100 / 2));
-        }
-        else if (type == 'c') // is downward left
-        {
-            triangle.setPoint(0, sf::Vector2f(posx, posy));
-            triangle.setPoint(1, sf::Vector2f(posx + size / 2, posy + size));
-            triangle.setPoint(2, sf::Vector2f(posx - 100, posy + 100 / 2));
-        }
-        else if (type == 'e') // is downward right
-        {
-            triangle.setPoint(0, sf::Vector2f(posx, posy));
-            triangle.setPoint(1, sf::Vector2f(posx + size / 2, posy + size));
-            triangle.setPoint(2, sf::Vector2f(posx + 100, posy + 100 / 2));
-        }
-    }
-
-    void move()
-    {
-        if (type == 'a') // is upward left 
-        {
-            posx -= speed;
-            posy -= speed; 
-        }
-        else if (type == 'b') // is upward right
-        {
-            posx += speed;
-            posy -= speed;
-        }
-        else if (type == 'c') // is downward left
-        {
-            posx -= speed;
-            posy += speed;
-        }
-        else if (type == 'e') // is downward right
-        {
-            posx += speed;
-            posy += speed;
-        }
-        else if (type == 'r') 
-        {
-            posx += speed;
-        }
-        else if (type == 'l')
-        {
-            posx -= speed;
-        }
-        else if (type == 'u')
-        {
-            posy -= speed;
-        }
-        else if (type == 'd')
-        {
-            posy += speed;
-        }
-        
-        // Actualizar la posición del triángulo
-        triangle.setPosition(posx, posy);
-    }
-
-    void draw(sf::RenderWindow& window)
-    {
-        window.draw(triangle);
-    }
-
-    bool isExpired()
-    {
-        if (posx <= -size || posy <= -size || posx >= xBorder + size || posy >= yBorder + size)
-        {
-            return true;
-        }
-        return false;
-    }
-};
-
 int main()
 {
-    const int screenWidth = 800;
-    const int screenHeight = 600;
+    // Crear la ventana
+    sf::RenderWindow window(sf::VideoMode(800, 800), "Cuadrado móvil");
 
-    sf::RenderWindow window(sf::VideoMode(screenWidth, screenHeight), "Espinas");
+    // Crear el cuadrado
+    sf::RectangleShape square(sf::Vector2f(100.0f, 100.0f));
+    square.setFillColor(sf::Color::Green);
+    square.setOrigin(50.0f, 50.0f);
 
-    // Crear las espinas de los ocho tipos
-    Espina espinaR(100, 100, 'r', screenWidth, screenHeight);
-    Espina espinaL(200, 200, 'l', screenWidth, screenHeight);
-    Espina espinaD(300, 300, 'd', screenWidth, screenHeight);
-    Espina espinaU(400, 400, 'u', screenWidth, screenHeight);
-    Espina espinaA(500, 500, 'a', screenWidth, screenHeight);
-    Espina espinaB(600, 100, 'b', screenWidth, screenHeight);
-    Espina espinaC(700, 200, 'c', screenWidth, screenHeight);
-    Espina espinaE(800, 300, 'e', screenWidth, screenHeight);
+    // Establecer la posición inicial del cuadrado
+    sf::Vector2f position(400.0f, 400.0f);
+    square.setPosition(position);
 
+    // Velocidad y rotación del cuadrado
+    float speed = 1.0f;
+    float rotationSpeed = 1.0f;
+
+    // Bucle principal
     while (window.isOpen())
     {
+        // Manejar eventos de la ventana
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -153,39 +29,24 @@ int main()
                 window.close();
         }
 
+        // Actualizar la posición y rotación del cuadrado
+        position.x += speed * 0.016f; // Multiplicar por un factor de tiempo fijo para un movimiento constante
+        square.setRotation(square.getRotation() + rotationSpeed * 0.016f);
+
+        // Comprobar los límites de la ventana y hacer que el cuadrado rebote
+        if (position.x + 50.0f > 800.0f || position.x - 50.0f < 0.0f)
+            speed = -speed;
+
+        // Establecer la nueva posición del cuadrado
+        square.setPosition(position);
+
+        // Limpiar la ventana
         window.clear();
 
-        // Mover y dibujar las espinas
+        // Dibujar el cuadrado en la ventana
+        window.draw(square);
 
-        espinaB.move();
-        espinaB.draw(window);
-
-
-        // Comprobar si alguna espina ha expirado (está fuera de la pantalla)
-        if (espinaR.isExpired())
-            espinaR = Espina(100, 100, 'r', screenWidth, screenHeight);
-
-        if (espinaL.isExpired())
-            espinaL = Espina(200, 200, 'l', screenWidth, screenHeight);
-
-        if (espinaD.isExpired())
-            espinaD = Espina(300, 300, 'd', screenWidth, screenHeight);
-
-        if (espinaU.isExpired())
-            espinaU = Espina(400, 400, 'u', screenWidth, screenHeight);
-
-        if (espinaA.isExpired())
-            espinaA = Espina(500, 500, 'a', screenWidth, screenHeight);
-
-        if (espinaB.isExpired())
-            espinaB = Espina(600, 100, 'b', screenWidth, screenHeight);
-
-        if (espinaC.isExpired())
-            espinaC = Espina(700, 200, 'c', screenWidth, screenHeight);
-
-        if (espinaE.isExpired())
-            espinaE = Espina(800, 300, 'e', screenWidth, screenHeight);
-
+        // Mostrar la ventana
         window.display();
     }
 
