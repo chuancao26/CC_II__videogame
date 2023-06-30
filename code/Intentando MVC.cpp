@@ -14,9 +14,8 @@ private:
     float size;
     float maxY;
     float velocidad;
-
     bool esperando;
-    sf::Clock relojEspera;
+    std::chrono::steady_clock::time_point relojEspera;
     bool eliminado;
 
 public:
@@ -36,12 +35,14 @@ public:
                 y += velocidad;
             } else {
                 llegoMaximo = true;
-                relojEspera.restart();
+                relojEspera = std::chrono::steady_clock::now();
                 esperando = true;
             }
         } else {
             if (esperando) {
-                if (relojEspera.getElapsedTime().asSeconds() >= 5.0f) {
+                std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
+                std::chrono::duration<float> elapsed = now - relojEspera;
+                if (elapsed.count() >= 5.0f) {
                     esperando = false;
                     llegoMaximo = false;
                     setX(static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX) / (x * 3 / 5)));
@@ -165,7 +166,7 @@ public:
     }
 
     void setSize(float size) {
-        sprite.setScale(size / texturaPiso.getSize().x, size / texturaPiso.getSize().y);
+        sprite.setScale(size / texturaPiso.getSize().x*1.2, size / texturaPiso.getSize().y*1.2);
     }
 
     void setPosition(float x, float y) {
@@ -208,7 +209,7 @@ public:
 
         // Establecer la textura inicial en el sprite y ajustar su escala
         sprite.setTexture(texture1);
-        sprite.setScale(width / texture1.getSize().x, height / texture1.getSize().y * 1.3);
+        sprite.setScale(width / texture1.getSize().x, height / texture1.getSize().y * 1.5);
     }
 
     void updateTexture(float x) {
