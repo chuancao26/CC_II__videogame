@@ -12,8 +12,10 @@ class VistaBee
 private:
     PoliceM* policeM;
     PoliceV* policeV;
-    Triangulo* triangle;
-    WorkerBee* workerBee;
+    TrianguloM* triangleM;
+    TrianguloV* triangleV;
+    WorkerBeeM* workerBeeM;
+    WorkerBeeV* workerBeeV;
     bool activeWorker, activeTriangle;
     sf::RenderWindow window;
     sf::Clock clock;
@@ -68,15 +70,18 @@ public:
     {           
         if(!activeWorker)
         {
-            workerBee = new WorkerBee(xBorder, distributionY(generator));
+            workerBeeM = new WorkerBeeM(xBorder, distributionY(generator));
+            workerBeeV = new WorkerBeeV(workerBeeM);
             activeWorker = true;
         }
         if (activeWorker)
         {
-            workerBee -> move();
-            if(workerBee -> isExpired())
+            workerBeeM -> move();
+            workerBeeV -> move();
+            if(workerBeeM -> isExpired())
             {
-                delete workerBee;
+                delete workerBeeM;
+                delete workerBeeV;
                 activeWorker = false;
             }
         }
@@ -85,15 +90,18 @@ public:
     {
         if (!activeTriangle)
         {
-            triangle = new Triangulo(0, 0, xBorder, yBorder, 'e');
+            triangleM = new TrianguloM(0,0, xBorder, yBorder, 'e');
+            triangleV = new TrianguloV(triangleM);
             activeTriangle = true;
         }
         if(activeTriangle)
         {
-            triangle->move();
-            if (triangle ->isExpired())
+            triangleM->move();
+            triangleV->move();
+            if (triangleM->isExpired())
             {
-                delete triangle;
+                delete triangleM;
+                delete triangleV;
                 activeTriangle = false;
             }
         }
@@ -102,18 +110,22 @@ public:
     {
         policeV -> draw(window);
         if (activeWorker)
-            workerBee -> draw(window);
+        {
+            workerBeeV -> draw(window);
+        }
         if (activeTriangle)
         {
-            triangle -> draw(window);
+            triangleV -> draw(window);
         }
     }
     ~VistaBee()
     {
-        delete workerBee;
+        delete workerBeeM;
+        delete workerBeeV;
         delete policeM;
         delete policeV;
-        delete triangle;
+        delete triangleM;
+        delete triangleV;
     }
 };
 #endif

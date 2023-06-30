@@ -18,10 +18,6 @@ private:
     yBorder(limity), movingLeft(false)
     {
     }
-    void draw(sf::RenderWindow& window)
-    {
-        std::cout << "There's no implementation" << std::endl;
-    }
     void move()
     {
         if (movingLeft) {
@@ -51,9 +47,10 @@ private:
     sf::Color color;
     sf::RectangleShape police;
     sf::Clock clock;
-    sf::Time elapsedTime;
+    float elapsedTime;
     PoliceM* p; 
-    BombaPolice* bomb;
+    BombaPoliceM* bombM;
+    BombaPoliceV* bombV;
     EspinaM** espinasM;
     EspinaV** espinasV;
 public:
@@ -70,15 +67,16 @@ public:
     }
     void updateBomb()
     {
-        if(bomb)
+        if(activeBomb)
         {
-            bomb -> update(elapsedTime);
-            if (bomb->isExpired())
+            bombM -> update(elapsedTime);
+            if (bombM -> isExpired())
             {
                 activeBomb = false;
                 crearEspinas();
                 activeEspinas = true;
-                delete bomb;
+                delete bombM;
+                delete bombV;
             }
         }
     }
@@ -139,7 +137,7 @@ public:
     {
         updateBomb();
         updateEspinas();
-        elapsedTime = timeDelta;
+        elapsedTime = timeDelta.asSeconds();
         move();
         
     }
@@ -147,12 +145,14 @@ public:
     {
         if (!activeBomb)
         {
-            bomb = new BombaPolice(p->getPosx(), p->getPosy(), elapsedTime);
+            bombM = new BombaPoliceM(p->getPosx(), p->getPosy(), elapsedTime);
+            bombV = new BombaPoliceV(bombM);
+            
             activeBomb = true;
         }
         if (activeBomb)
         {
-            bomb->draw(window);
+            bombV->draw(window);
         }
     }
     void draw(sf::RenderWindow& window)
@@ -163,19 +163,19 @@ public:
     }
     void crearEspinas()
     {
-        if(bomb)
+        if(bombM)
         {
             if (!activeEspinas)
             {
                 espinasM = new EspinaM*[8];
-                espinasM[0] = new EspinaM(bomb->getPosx(), bomb->getPosy(),'r', p->getXborder(), p->getYborder());
-                espinasM[1] = new EspinaM(bomb->getPosx(), bomb->getPosy(),'l', p->getXborder(), p->getYborder());
-                espinasM[2] = new EspinaM(bomb->getPosx(), bomb->getPosy(),'u', p->getXborder(), p->getYborder());
-                espinasM[3] = new EspinaM(bomb->getPosx(), bomb->getPosy(),'d', p->getXborder(), p->getYborder());
-                espinasM[4] = new EspinaM(bomb->getPosx(), bomb->getPosy(),'b', p->getXborder(), p->getYborder());
-                espinasM[5] = new EspinaM(bomb->getPosx(), bomb->getPosy(),'a', p->getXborder(), p->getYborder());
-                espinasM[6] = new EspinaM(bomb->getPosx(), bomb->getPosy(),'c', p->getXborder(), p->getYborder());
-                espinasM[7] = new EspinaM(bomb->getPosx(), bomb->getPosy(),'e', p->getXborder(), p->getYborder());
+                espinasM[0] = new EspinaM(bombM->getPosx(), bombM->getPosy(),'r', p->getXborder(), p->getYborder());
+                espinasM[1] = new EspinaM(bombM->getPosx(), bombM->getPosy(),'l', p->getXborder(), p->getYborder());
+                espinasM[2] = new EspinaM(bombM->getPosx(), bombM->getPosy(),'u', p->getXborder(), p->getYborder());
+                espinasM[3] = new EspinaM(bombM->getPosx(), bombM->getPosy(),'d', p->getXborder(), p->getYborder());
+                espinasM[4] = new EspinaM(bombM->getPosx(), bombM->getPosy(),'b', p->getXborder(), p->getYborder());
+                espinasM[5] = new EspinaM(bombM->getPosx(), bombM->getPosy(),'a', p->getXborder(), p->getYborder());
+                espinasM[6] = new EspinaM(bombM->getPosx(), bombM->getPosy(),'c', p->getXborder(), p->getYborder());
+                espinasM[7] = new EspinaM(bombM->getPosx(), bombM->getPosy(),'e', p->getXborder(), p->getYborder());
 
                 espinasV = new EspinaV*[8];
                 espinasV[0] = new EspinaV(espinasM[0]);
@@ -230,7 +230,8 @@ public:
     }
         ~PoliceV()
     {
-        delete bomb;
+        delete bombV;
+        delete bombM;
         delete espinasM[0];
         delete espinasM[1];
         delete espinasM[2];

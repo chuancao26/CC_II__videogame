@@ -8,7 +8,6 @@ public:
     int size;
     Enemigo(const float& posx_, const float& posy_, const int& size_):
     posx(posx_), posy(posy_), size(size_){}
-    virtual void draw(sf::RenderWindow& window) = 0;
     virtual void move() = 0;
 };
 #endif
