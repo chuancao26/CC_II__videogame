@@ -140,14 +140,14 @@ public:
     void moveRight(sf::RenderWindow& window) {
         x += 7.0f;
         if (x >= window.getSize().x - width) {  // Extremo derecho
-            direction--;  // Cambiar dirección a izquierda
+            direction--;  // Cambiar direcciï¿½n a izquierda
         }
     }
 
     void moveLeft(sf::RenderWindow& window) {
         x -= 7.0f;
         if (x <= -2 * width) {  // Punto de inicio
-            direction = 0;  // Cambiar dirección a derecha
+            direction = 0;  // Cambiar direcciï¿½n a derecha
         }
     }
 
@@ -192,9 +192,9 @@ public:
 };
 
 
-class Cabeza {
+class FlorBossView {
 public:
-    Cabeza(sf::RenderWindow& window) : window_(window) {
+    FlorBossView(sf::RenderWindow& window) : window_(window) {
         if (!textureGreen_.loadFromFile("normal1.png")) {
             // Error al cargar la imagen normal1.png
             return;
@@ -303,7 +303,7 @@ public:
 
         sprite_.setTexture(texture_);
 
-        // Escala la imagen para que encaje con el tamaño de la ventana
+        // Escala la imagen para que encaje con el tamaï¿½o de la ventana
         float scaleX = static_cast<float>(window.getSize().x) / sprite_.getLocalBounds().width;
         float scaleY = static_cast<float>(window.getSize().y) / sprite_.getLocalBounds().height;
         sprite_.setScale(scaleX, scaleY);
@@ -347,7 +347,7 @@ int main()
     float elapsedSeconds = 0.0f;
     float interval = 0.8f;
 
-    Cabeza cabeza(window);
+    FlorBossView florBoss(window);
     sf::Clock clock2;
 
     Background background(window);
@@ -367,7 +367,7 @@ int main()
         boomerang.update(window);
 
         float deltaTime2 = clock2.restart().asSeconds();
-        cabeza.update(deltaTime2);
+        florBoss.update(deltaTime2);
 
         window.clear(sf::Color::White);
         background.draw();
@@ -382,7 +382,7 @@ int main()
         }
 
         boomerang.draw(window);
-        cabeza.draw();
+        florBoss.draw();
 
         window.display();
     }
@@ -392,7 +392,7 @@ int main()
         delete cuadrados[i];
     }
 
-    cabeza.removeRectangles();
+    florBoss.removeRectangles();
 
     return 0;
 }

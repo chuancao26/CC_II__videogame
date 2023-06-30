@@ -7,7 +7,7 @@
 #include <string>
 
 // Modelo
-class CuadradoModel {
+class BombModel {
 private:
     float x;
     float y;
@@ -20,7 +20,7 @@ private:
 
 public:
     bool llegoMaximo;
-    CuadradoModel(float ventanaAncho = 0.0f, float ventanaAlto = 0.0f)
+    BombModel(float ventanaAncho = 0.0f, float ventanaAlto = 0.0f)
         : x(0.0f), y(ventanaAlto / 20), size(50.0f),
           maxY(ventanaAlto * 7 / 9), velocidad(4.0f),
           llegoMaximo(false), esperando(false), eliminado(false) {}
@@ -145,7 +145,7 @@ public:
 
 
 // Vista
-class CuadradoView {
+class BombView {
 private:
     sf::Sprite sprite;
     sf::Texture texturaCae;
@@ -153,7 +153,7 @@ private:
     sf::RenderWindow window;
 
 public:
-    CuadradoView() {
+    BombView() {
         if (!texturaCae.loadFromFile("bombaCae.png")) {
             std::cout << "Error al cargar la imagen bombaCae.png" << std::endl;
         }
@@ -229,35 +229,35 @@ public:
 
 // Controlador
 
-class CuadradoController {
+class BombController {
 private:
-    std::vector<CuadradoModel> cuadrados;
-    CuadradoView cuadradoView;
+    std::vector<BombModel> bombs;
+    BombView cuadradoView;
 
 public:
-    CuadradoController(float ventanaAncho, float ventanaAlto) : cuadrados(1), cuadradoView(){
+    BombController(float ventanaAncho, float ventanaAlto) : bombs(1), cuadradoView(){
         //float elapsedSeconds = 0.0f;
         //elapsedSeconds = clock.getElapsedTime().asSeconds();
         for (int i = 0; i < 1; i++) {
             //if (elapsedSeconds >= interval*i)
             //{
                 float posicionX = static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX) / (ventanaAncho * 3 / 5));
-                cuadrados[i] = CuadradoModel(ventanaAncho, ventanaAlto);
-                cuadrados[i].setX(posicionX);
-                cuadrados[i].caer();
+                bombs[i] = BombModel(ventanaAncho, ventanaAlto);
+                bombs[i].setX(posicionX);
+                bombs[i].caer();
             //}
         }
     }
 
     void update() {
-        for (auto& cuadrado : cuadrados) {
-            cuadrado.caer();
+        for (auto& bomb : bombs) {
+            bomb.caer();
         }
     }
 
 
     void draw(sf::RenderWindow& window) {
-        for (const auto& cuadrado : cuadrados) {
+        for (const auto& cuadrado : bombs) {
             if (!cuadrado.isEliminado()) {
                 cuadradoView.setSize(cuadrado.getSize());
                 cuadradoView.setPosition(cuadrado.getX(), cuadrado.getY());
@@ -302,6 +302,136 @@ public:
     }
 };
 
+//BossView
+
+class FlorBossView {
+public:
+    FlorBossView(sf::RenderWindow& window) : window_(window) {
+        if (!textureGreen_.loadFromFile("normal1.png")) {
+            // Error al cargar la imagen normal1.png
+            return;
+        }
+
+        if (!texturePurple_.loadFromFile("normal2.png")) {
+            // Error al cargar la imagen normal2.png
+            return;
+        }
+
+        spriteGreen_.setTexture(textureGreen_);
+        spritePurple_.setTexture(texturePurple_);
+
+        spriteGreen_.setScale(window.getSize().x / 3 / spriteGreen_.getLocalBounds().width,
+                              ((window.getSize().y * 4) / 5) / spriteGreen_.getLocalBounds().height);
+        spritePurple_.setScale(window.getSize().x / 3 / spritePurple_.getLocalBounds().width,
+                               ((window.getSize().y * 4) / 5) / spritePurple_.getLocalBounds().height);
+
+        spriteGreen_.setPosition(window_.getSize().x - (spriteGreen_.getLocalBounds().width)/1.1,
+                                 window.getSize().y / 12);
+        spritePurple_.setPosition(window_.getSize().x - (spritePurple_.getLocalBounds().width)/1.1,
+                                  window.getSize().y / 12);
+        textureGreen_.setSmooth(true);
+        texturePurple_.setSmooth(true);
+        rectThird_.setSize(sf::Vector2f(200.0f, 250.0f));
+        rectThird_.setFillColor(sf::Color::Blue);
+        rectThird_.setPosition(window_.getSize().x, (window_.getSize().y - rectThird_.getSize().y) / 2.0f);
+
+        isGreenActive_ = true;
+        timer_ = 0.0f;
+        duration_ = 0.5f;
+        isGrowing_ = false;
+        growthTimer_ = 0.0f;
+        growthDuration_ = 2.0f;
+    }
+
+    void update(float deltaTime) {
+        timer_ += deltaTime;
+        growthTimer_ += deltaTime;
+
+        if (timer_ >= duration_) {
+            isGreenActive_ = !isGreenActive_;
+            timer_ = 0.0f;
+        }
+
+        if (isGrowing_) {
+            float growthAmount = (window_.getSize().x - rectThird_.getSize().x) / growthDuration_ * deltaTime;
+            rectThird_.setSize(rectThird_.getSize() + sf::Vector2f(growthAmount, 0.0f));
+            rectThird_.setPosition(rectThird_.getPosition().x - growthAmount, rectThird_.getPosition().y);
+
+            if (growthTimer_ >= growthDuration_) {
+                rectThird_.setSize(sf::Vector2f(200.0f, 250.0f));
+                rectThird_.setPosition(window_.getSize().x, (window_.getSize().y - rectThird_.getSize().y) / 2.0f);
+
+                growthTimer_ = 0.0f;
+                isGrowing_ = false;
+            }
+        }
+    }
+
+    void draw() {
+        if (isGreenActive_) {
+            window_.draw(spriteGreen_);
+        } else {
+            window_.draw(spritePurple_);
+        }
+
+        window_.draw(rectThird_);
+    }
+    void removeRectangles() {
+        spriteGreen_.setScale(0.0f, 0.0f);
+        spritePurple_.setScale(0.0f, 0.0f);
+        rectThird_.setSize(sf::Vector2f(0.0f, 0.0f));
+    }
+
+    void startGrowing() {
+        if (!isGrowing_) {
+            isGrowing_ = true;
+            growthTimer_ = 0.0f;
+        }
+    }
+
+
+private:
+    sf::RenderWindow& window_;
+    sf::Texture textureGreen_;
+    sf::Texture texturePurple_;
+    sf::Sprite spriteGreen_;
+    sf::Sprite spritePurple_;
+    sf::RectangleShape rectThird_;
+    bool isGreenActive_;
+    float timer_;
+    float duration_;
+    bool isGrowing_;
+    float growthTimer_;
+    float growthDuration_;
+};
+
+//FondoView
+class Background {
+public:
+    Background(sf::RenderWindow& window) : window_(window) {
+        if (!texture_.loadFromFile("fondoFlor.png")) {
+            // Error al cargar la imagen fondoFlor.png
+            return;
+        }
+
+        sprite_.setTexture(texture_);
+
+        // Escala la imagen para que encaje con el tama�o de la ventana
+        float scaleX = static_cast<float>(window.getSize().x) / sprite_.getLocalBounds().width;
+        float scaleY = static_cast<float>(window.getSize().y) / sprite_.getLocalBounds().height;
+        sprite_.setScale(scaleX, scaleY);
+    }
+
+    void draw() {
+        window_.draw(sprite_);
+    }
+
+private:
+    sf::RenderWindow& window_;
+    sf::Texture texture_;
+    sf::Sprite sprite_;
+};
+
 int main() {
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
@@ -310,8 +440,8 @@ int main() {
 
     BoomerangController boomerang(window.getSize().x * 45 / 64, window.getSize().y / 3, window.getSize().x / 7, window.getSize().y / 10);
 
-    const int maxCuadrados = 5;
-    CuadradoController* cuadrados[maxCuadrados] = {}; // Arreglo de punteros a CuadradoController
+    const int maxBombs = 5;
+    BombController* bombs[maxBombs] = {}; // Arreglo de punteros a CuadradoController
     float elapsedSeconds = 0.0f;
     float interval = 1.0f; // Intervalo de tiempo entre la aparición de los cuadrados (1 segundo)
 
@@ -322,6 +452,11 @@ int main() {
     //Cuadrado
     sf::Clock clock;
     sf::Clock timer; // Reloj para controlar el intervalo de tiempo
+
+    FlorBossView florBoss(window); //Crear view del Boss
+    sf::Clock clock2;
+
+    Background background(window); //Fondo del juego "Cagney Carnation"
 
     while (window.isOpen()) {
         sf::Event event;
@@ -338,8 +473,8 @@ int main() {
 
             // Buscar un espacio disponible en el arreglo de punteros
             int indice = -1;
-            for (int i = 0; i < maxCuadrados; i++) {
-                if (cuadrados[i] == nullptr) {
+            for (int i = 0; i < maxBombs; i++) {
+                if (bombs[i] == nullptr) {
                     indice = i;
                     break;
                 }
@@ -347,9 +482,9 @@ int main() {
 
             // Si se encontró un espacio disponible, crear un nuevo CuadradoController en esa posición
             if (indice != -1) {
-                cuadrados[indice] = new CuadradoController(window.getSize().x, window.getSize().y);
-                cuadrados[indice]->update();
-                cuadrados[indice]->draw(window);
+                bombs[indice] = new BombController(window.getSize().x, window.getSize().y);
+                bombs[indice]->update();
+                bombs[indice]->draw(window);
             }
 
             // Reiniciar el reloj para el siguiente intervalo
@@ -357,24 +492,31 @@ int main() {
         }
         
         boomerang.update(window.getSize().x);
+
+        float deltaTime2 = clock2.restart().asSeconds();
+        florBoss.update(deltaTime2);
+
         window.clear(sf::Color::White);
+        background.draw();
         if (!boomerang.shouldDelete()) {
             boomerang.draw(window);
         }
         // Actualizar y dibujar los cuadrados existentes en el arreglo
-        for (int i = 0; i < maxCuadrados; i++) {
-            if (cuadrados[i] != nullptr) {
-                cuadrados[i]->update();
-                cuadrados[i]->draw(window);
+        for (int i = 0; i < maxBombs; i++) {
+            if (bombs[i] != nullptr) {
+                bombs[i]->update();
+                bombs[i]->draw(window);
             }
         }
 
+        florBoss.draw();
+        
         window.display();
     }
 
     // Liberar la memoria de los CuadradoController creados
-    for (int i = 0; i < maxCuadrados; i++) {
-        delete cuadrados[i];
+    for (int i = 0; i < maxBombs; i++) {
+        delete bombs[i];
     }
 
     return 0;
