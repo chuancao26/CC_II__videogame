@@ -7,12 +7,21 @@ public:
     vector<PlataformaVista> plataformas;
     JugadorVista jugador_v;
     float width,height;
+    float elapsedSeconds;
+    float interval;
+    sf::Time tiempoAcumulado;
+    sf::Clock relojMovimiento;
+    sf::Clock clock;
+    sf::Clock timer;
     
 public:
     Vista(int xedge, int yedge) : width(xedge), height(yedge), window(sf::VideoMode(xedge, yedge), "CUPHEAD!") 
     {
         width = window.getSize().x;
         height = window.getSize().y;
+        elapsedSeconds = 0.0f;
+        interval = 1.0f;
+        tiempoAcumulado = sf::Time::Zero;
     }
     
     void dibujarCup(const Cup& jugador) {
@@ -33,11 +42,11 @@ public:
     bool colision(sf::Sprite& jugador,const PlataformaVista& platform)
     {
         sf::FloatRect jugadorBounds = jugador.getGlobalBounds();
-        sf::FloatRect plataformaBounds = platform.getGlobalBounds();
+        sf::FloatRect plataformaBounds = platform.platformShape.getGlobalBounds();
         return jugadorBounds.intersects(plataformaBounds);
     }
 
-    void actualizarPlataformasVistas(float deltaTime, vector<Plataforma> plataformas_) {
+    void actualizarPlataformasVistas(vector<Plataforma> plataformas_) {
         for (auto plat : plataformas_) {
             plat.caida();
         }
@@ -53,6 +62,7 @@ public:
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
+            
         }
     }
 };

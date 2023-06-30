@@ -6,8 +6,9 @@
 class Plataforma
 {
     public:
-    float x,y, gravedad,width,height,velocidadY;;
+    float x,y, gravedad,width,height;
     public:
+    Plataforma();
     float getPosx() const;
     float getPosy() const;
     void setPosition(float px, float py); 

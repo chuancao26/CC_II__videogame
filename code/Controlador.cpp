@@ -1,6 +1,10 @@
 #include "Jugador_Modelo.h"
 #include "Plataforma_Modelo.h"
 #include "Vista.cpp"
+#include "Boss_Vista.cpp"
+#include "Background_Vista.cpp"
+#include "Boomerang_Controlador.cpp"
+#include "Bomba_Controlador.cpp"
 
 class Controlador {
 private:
@@ -55,9 +59,6 @@ public:
             }
         }
         jugador.caida();
-    }
-    void actualizar() {
-        
     }
 
     void renderizar() {

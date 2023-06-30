@@ -7,14 +7,14 @@ void Plataforma::setPosition(float px, float py)
     x = px;
     y = py;
 }
-
+Plataforma::Plataforma(){}
 Mapa Mapa::parseMap(const std::vector<std::string>& mapStrings)
 {
     Mapa map;
-    const float platformWidth = 100.f;  // Ancho predeterminado de la plataforma
+    const float platformWidth = 80.f;  // Ancho predeterminado de la plataforma
     const float platformHeight = 20.f;  // Alto predeterminado de la plataforma
-    const float platformSpacingH = 70.f; // Espacio predeterminado entre plataformas
-    const float platformSpacingW = 50.f; // Espacio predeterminado entre plataformas
+    const float platformSpacingH = 80.f; // Espacio predeterminado entre plataformas
+    const float platformSpacingW = 80.f; // Espacio predeterminado entre plataformas
 
     float currentX = 50.f;
     float currentY = 600.f; // Cambiamos la posición inicial en Y

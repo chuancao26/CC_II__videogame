@@ -11,7 +11,7 @@ public:
 
     JugadorVista()
     {
-        if (!texture1.loadFromFile("img\\jugador.png")) {
+        if (!texture1.loadFromFile("img\\cup\\jugador.png")) {
             cout << "Error al cargar la imagen jugador.png" <<endl;
         }
         cupShape.setTexture(texture1);

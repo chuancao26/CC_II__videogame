@@ -19,7 +19,7 @@ class Cup: public Jugador {
 public:
     bool saltando,enplataforma;
     float salto;
-    int currentJumps, jumps, vidas;
+    int jumps, vidas;
 public:
     Cup(const int &px, const int& py, const int& size_);
     virtual void mover(const float& px, const float& py) override;
