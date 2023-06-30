@@ -6,7 +6,7 @@
 class TrianguloM : public Enemigo
 {
 private:
-    int radius, xBorder, yBorder;
+    int xBorder, yBorder;
     float speed, rotationSpeed;
     char type;
 public:

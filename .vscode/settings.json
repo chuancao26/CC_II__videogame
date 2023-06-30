@@ -4,6 +4,7 @@
         "iostream": "cpp",
         "initializer_list": "cpp",
         "xutility": "cpp",
+<<<<<<< HEAD
         "algorithm": "cpp",
         "atomic": "cpp",
         "bit": "cpp",
@@ -67,4 +68,9 @@
         "thread": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
+=======
+        "vector": "cpp",
+        "xiosbase": "cpp"
+    }
+>>>>>>> 4f3eafc50626a7f787185abaf4593cf430991de4
 }
