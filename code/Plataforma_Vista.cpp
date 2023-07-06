@@ -13,7 +13,7 @@ class PlataformaVista
     public:
         PlataformaVista(const Plataforma& plat):pla(plat)
         {
-            platformShape.setSize(sf::Vector2f(80.f, 20.f));
+            platformShape.setSize(sf::Vector2f(pla.width, pla.height));
             platformShape.setFillColor(sf::Color::Green);
             posx=pla.getPosx();
             posy=pla.getPosy();
@@ -32,7 +32,6 @@ class PlataformaVista
             plat.setPosition(plataforma.getPosx(), plataforma.getPosy());
             window.draw(plat.get());
         }
-        
 
 };
 #endif

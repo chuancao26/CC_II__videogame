@@ -13,12 +13,15 @@ private:
     Mapa map;
     Plataforma pla;
     sf::Clock clock;
+    Background background;
+    int nivel;
 
 public:
     Controlador(Cup& jugador,std::vector<std::string> mapStrings)
         : jugador(jugador),vista(1280,720)
     {
         map = Mapa::parseMap(mapStrings);
+        nivel=2;
     }
 
     void manejarEventos() {
@@ -45,8 +48,9 @@ public:
                 else if (event.key.code == sf::Keyboard::Down) {
                     jugador.moverAbajo();
                 }
-                
-                //jugador.caida();
+                else if (event.key.code == sf::Keyboard::Space) {
+                    nivel+=1;
+                }
             }
             else if (event.type == sf::Event::KeyReleased) {
                 // Manejar teclas liberadas
@@ -61,26 +65,62 @@ public:
         jugador.caida();
     }
 
+    void Menu()
+    {
+        switch (nivel)
+        {
+            case 0:
+                background.cargar(vista.window,nivel);
+                background.draw(vista.window);
+                break;
+            case 1:
+                background.cargar(vista.window,nivel);
+                background.draw(vista.window);
+                vista.plataformas.clear();
+                vista.dibujarCup(jugador);
+                dibujarPlataformas();
+                break;
+            case 2:
+                background.cargar(vista.window,nivel);
+                background.draw(vista.window);
+                //vista.plataformas.clear();
+                //actualizarPlataformas();
+                vista.dibujarCup(jugador);
+                dibujarPlataformas();
+                break;
+            case 3:
+                background.cargar(vista.window,nivel);
+                background.draw(vista.window);
+                break;
+            default:
+                break;
+        }
+    }
+
     void renderizar() {
         vista.window.clear();
-        vista.plataformas.clear();
-        vista.dibujarCup(jugador);
-        dibujarPlataformas();
+        Menu();
         vista.window.display();
     }
+    void actualizarPlataformas()
+    {
+        vista.actualizarPlataformas(map.platforms, map.size, map);
+    }
     void dibujarPlataformas(){
-        for (const auto& platform : map.platforms)
+        int size=map.size;
+        for (int i = 0; i < size; i++) 
         {
-            vista.dibujarPlat(platform);
+            Plataforma plat = map.platforms[i];
+            vista.dibujarPlat(plat);
         }
     }
     void colisiones(){
-        for (const auto& platform : vista.plataformas)
+        for (auto platform : vista.plataformas)
         {
             if (vista.colision(vista.jugador_v.cupShape,platform))
             {
                 jugador.enPlataforma(true);
-                jugador.estaColisionando(platform.pla.getPosy());
+                jugador.estaColisionando(platform->pla.getPosy());
             }
             jugador.enPlataforma(false);
         }
@@ -88,8 +128,11 @@ public:
     void mover_plataformas() {
         if (clock.getElapsedTime().asSeconds() >= 1.0f) 
         {
-            for (auto& platform : map.platforms) {
-                platform.caida();
+            int size=map.size;
+            for (int i = 0; i < size; i++) 
+            {
+                Plataforma plat = map.platforms[i];
+                plat.caida();
                 dibujarPlataformas();
             }
 

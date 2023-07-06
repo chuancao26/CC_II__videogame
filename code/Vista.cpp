@@ -4,7 +4,7 @@
 class Vista {
 public:
     sf::RenderWindow window;
-    vector<PlataformaVista> plataformas;
+    vector<PlataformaVista*> plataformas;
     JugadorVista jugador_v;
     float width,height;
     float elapsedSeconds;
@@ -29,28 +29,37 @@ public:
         jugador_v.dibujar(jugador,window);
     }
     void dibujarPlat(const Plataforma& plataforma) {
-        //jugadorSprite.setPosition(jugador.getPosx(), jugador.getPosy());
-        PlataformaVista plat(plataforma);
-        plat.setPosition(plataforma.getPosx(), plataforma.getPosy());
-        window.draw(plat.get());
+       
+        PlataformaVista* plat = new PlataformaVista(plataforma);
+        plat->setPosition(plataforma.getPosx(), plataforma.getPosy());
+        window.draw(plat->get());
         plataformas.push_back(plat);
     }
     void actualizar_Plataformas() {
         
     }
     
-    bool colision(sf::Sprite& jugador,const PlataformaVista& platform)
+    bool colision(sf::Sprite& jugador, PlataformaVista* platform)
     {
         sf::FloatRect jugadorBounds = jugador.getGlobalBounds();
-        sf::FloatRect plataformaBounds = platform.platformShape.getGlobalBounds();
+        sf::FloatRect plataformaBounds = platform->platformShape.getGlobalBounds();
         return jugadorBounds.intersects(plataformaBounds);
     }
-
-    void actualizarPlataformasVistas(vector<Plataforma> plataformas_) {
-        for (auto plat : plataformas_) {
-            plat.caida();
+    
+    void actualizarPlataformas(Plataforma* plataformas, int size, Mapa& map) {
+        int* eli=new int[10];
+        int n=0;
+        for (int i = 0; i < size; i++) {
+            Plataforma* plat = &plataformas[i];
+            if (plat->getPosy() > 800) {
+                eli[n]=i;
+            }
+        }
+        for (int j = 0; j < n; j++) {
+            map.remove(j);
         }
     }
+    
 
     bool ventanaAbierta() {
         return window.isOpen();
