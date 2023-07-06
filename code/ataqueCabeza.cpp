@@ -14,8 +14,7 @@ private:
     sf::Sprite caraSprite_;
     sf::Texture cuelloTexture_;
     sf::Sprite cuelloSprite_;
-    sf::Textu
-    re inicioCabezaTexture_;
+    sf::Texture inicioCabezaTexture_;
     sf::Sprite inicioCabezaSprite_;
     float originalWidth_;
     float originalHeight_;
