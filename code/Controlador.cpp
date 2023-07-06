@@ -83,8 +83,7 @@ public:
             case 2:
                 background.cargar(vista.window,nivel);
                 background.draw(vista.window);
-                //vista.plataformas.clear();
-                //actualizarPlataformas();
+                vista.plataformas.clear();
                 vista.dibujarCup(jugador);
                 dibujarPlataformas();
                 break;
@@ -102,16 +101,16 @@ public:
         Menu();
         vista.window.display();
     }
-    void actualizarPlataformas()
-    {
-        vista.actualizarPlataformas(map.platforms, map.size, map);
-    }
     void dibujarPlataformas(){
-        int size=map.size;
-        for (int i = 0; i < size; i++) 
+        for ( auto& platform : map.platforms)
         {
-            Plataforma plat = map.platforms[i];
-            vista.dibujarPlat(plat);
+            if(platform.getPosy()>500)
+            {
+                float nposy=map.platforms.back().getPosy()-50;
+                platform.setPosition(platform.getPosx(),nposy);
+                
+            }
+            vista.dibujarPlat(platform);
         }
     }
     void colisiones(){
@@ -128,11 +127,8 @@ public:
     void mover_plataformas() {
         if (clock.getElapsedTime().asSeconds() >= 1.0f) 
         {
-            int size=map.size;
-            for (int i = 0; i < size; i++) 
-            {
-                Plataforma plat = map.platforms[i];
-                plat.caida();
+            for (auto& platform : map.platforms) {
+                platform.caida();
                 dibujarPlataformas();
             }
 

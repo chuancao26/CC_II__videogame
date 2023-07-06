@@ -45,21 +45,6 @@ public:
         sf::FloatRect plataformaBounds = platform->platformShape.getGlobalBounds();
         return jugadorBounds.intersects(plataformaBounds);
     }
-    
-    void actualizarPlataformas(Plataforma* plataformas, int size, Mapa& map) {
-        int* eli=new int[10];
-        int n=0;
-        for (int i = 0; i < size; i++) {
-            Plataforma* plat = &plataformas[i];
-            if (plat->getPosy() > 800) {
-                eli[n]=i;
-            }
-        }
-        for (int j = 0; j < n; j++) {
-            map.remove(j);
-        }
-    }
-    
 
     bool ventanaAbierta() {
         return window.isOpen();

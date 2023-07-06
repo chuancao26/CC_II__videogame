@@ -20,15 +20,8 @@ class Mapa
     public:
     static Mapa parseMap(const std::vector<std::string>& mapStrings);
     public:
-    Plataforma *platforms; 
-    int size;
-    void eliminarPlataformas();
-    Mapa();
-    void set(const Plataforma val, int pos);
-    Plataforma get(int pos)const;
-    void pushback(const Plataforma val);
-    void remove(int pos);
-    ~Mapa();
+    vector<Plataforma> platforms; 
+    
 };
 
 #endif

@@ -49,7 +49,7 @@ Mapa Mapa::parseMap(const std::vector<std::string>& mapStrings)
                 platform.width = platformWidth;
                 platform.height = platformHeight;
 
-                map.pushback(platform);
+                map.platforms.push_back(platform);
             }
             else if (c == 'A') // Carácter que representa otra plataforma
             {
@@ -59,7 +59,7 @@ Mapa Mapa::parseMap(const std::vector<std::string>& mapStrings)
                 platform.width = platformWidth;
                 platform.height = platformHeight;
 
-                map.pushback(platform);
+                map.platforms.push_back(platform);
             }
 
             // Mueve las coordenadas X hacia la derecha
@@ -77,47 +77,9 @@ void Plataforma::caida()
 {
     if(y<800)
     {
-        gravedad = 0,1.f; // Ajusta el valor de gravedad según tus necesidades
+        gravedad = 10.f; // Ajusta el valor de gravedad según tus necesidades
         y += gravedad;
     }
     
     setPosition(x,y);
-}
-Mapa::Mapa()
-{
-    this->size=0;
-    platforms= new Plataforma[size];
-}
-
-void Mapa::set(const Plataforma val, int pos)
-{
-    platforms[pos]=val;
-}
-Plataforma Mapa::get(int pos)const
-{
-    return platforms[pos];
-}
-void Mapa::pushback(const Plataforma val)
-{
-    Plataforma *newdata= new Plataforma[size+1];
-    for(int i=0;i<size;i++)
-        newdata[i]=platforms[i];
-    newdata[size]=val;
-    size++;
-    delete[] platforms;
-    this->platforms=newdata;
-}
-void Mapa::remove(int pos)
-{
-    Plataforma *newdata= new Plataforma[size-1];
-    for(int i=pos;i<size-1;i++)
-        newdata[i]=platforms[i+1];
-    for(int i=0;i<pos;i++)
-        newdata[i]=platforms[i];
-    size--;
-    delete[] platforms;
-    this->platforms=newdata;
-}
-Mapa::~Mapa(){
-    delete[] platforms;
 }
