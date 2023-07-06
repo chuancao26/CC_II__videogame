@@ -134,13 +134,6 @@ public:
         return deleteFlag;
     }
 
-    void deleteBoomerang() {
-        deleteFlag = true;
-    }
-
-    bool reachedRightEdge(float windowWidth) const {
-        return (x >= windowWidth - width);
-    }
 };
 
 
