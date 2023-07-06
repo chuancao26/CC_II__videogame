@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-#include "GameController.h"
-int main()
-{   
-    GameController gameController;
-    gameController.Run();
-=======
 #include "Controlador.cpp"
 #include "GameController.h"
 #include <iostream>
@@ -116,5 +109,4 @@ int main() {
 
     ejecutar();
     return 0;
->>>>>>> 4f3eafc50626a7f787185abaf4593cf430991de4
 }
