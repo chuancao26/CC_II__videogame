@@ -12,15 +12,16 @@ private:
     Vista vista;
     Mapa map;
     Plataforma pla;
-    sf::Clock clock;
+    sf::Clock clock,clock2;
     Background background;
     int nivel;
 
 public:
     Controlador(Cup& jugador,std::vector<std::string> mapStrings)
         : jugador(jugador),vista(1280,720)
-    {
-        map = Mapa::parseMap(mapStrings);
+    {   
+        //std::vector<std::string> mapStrings=map.crearMapa(8);
+        map.parseMap(mapStrings);
         nivel=2;
     }
 
@@ -71,31 +72,42 @@ public:
         {
             case 0:
                 background.cargar(vista.window,nivel);
-                background.draw(vista.window);
+                background.draw1(vista.window);
                 break;
             case 1:
                 background.cargar(vista.window,nivel);
-                background.draw(vista.window);
+                background.draw1(vista.window);
                 vista.plataformas.clear();
                 vista.dibujarCup(jugador);
                 dibujarPlataformas();
                 break;
             case 2:
                 background.cargar(vista.window,nivel);
-                background.draw(vista.window);
+                background.draw2(vista.window);
                 vista.plataformas.clear();
+                map.eliminarPlataformas();
+                crearplataformas();
+                mover_plataformas();
                 vista.dibujarCup(jugador);
                 dibujarPlataformas();
                 break;
             case 3:
                 background.cargar(vista.window,nivel);
-                background.draw(vista.window);
+                background.draw1(vista.window);
                 break;
             default:
                 break;
         }
     }
-
+    void crearplataformas()
+    {
+        if (clock2.getElapsedTime().asSeconds() >= 8.0f) 
+        {
+            vector<string> m=map.crearMapa(1);
+            map.parseMap(m);
+            clock2.restart();
+        }
+    }
     void renderizar() {
         vista.window.clear();
         Menu();
@@ -104,12 +116,6 @@ public:
     void dibujarPlataformas(){
         for ( auto& platform : map.platforms)
         {
-            if(platform.getPosy()>500)
-            {
-                float nposy=map.platforms.back().getPosy()-50;
-                platform.setPosition(platform.getPosx(),nposy);
-                
-            }
             vista.dibujarPlat(platform);
         }
     }
@@ -125,12 +131,13 @@ public:
         }
     }
     void mover_plataformas() {
-        if (clock.getElapsedTime().asSeconds() >= 1.0f) 
+        if (clock.getElapsedTime().asSeconds() >= 0.5f) 
         {
             for (auto& platform : map.platforms) {
                 platform.caida();
                 dibujarPlataformas();
             }
+            background.actualizar(vista.window);
 
         clock.restart();
         }
@@ -138,7 +145,6 @@ public:
     
     void ejecutar() {
         while (vista.window.isOpen()) {
-            mover_plataformas();
             colisiones();
             manejarEventos();
             renderizar();

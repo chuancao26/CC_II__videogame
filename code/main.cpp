@@ -69,7 +69,7 @@ void ejecutar(){
 
         window.clear(sf::Color::White);
         background.cargar(window,0);
-        background.draw(window);
+        background.draw1(window);
         if (!boomerang.shouldDelete()) {
             boomerang.draw(window);
         }
@@ -94,24 +94,18 @@ void ejecutar(){
 int main() {
     int xedge = 1280, yedge = 720, size = 60;
     float posx = 20, posy = 600;
+    Cup a(posx, posy, size); 
     std::vector<std::string> mapStrings =
     {
-        "AAAAAAAA",
-        "PPPAAAAA",
-        " P P   A",
-        "PP PPP  ",
-        "AAAAAAAA",
-        "AAAAAAAA",
-        "AAAAAAAA",
-        "AAAAAAAA"
+        "AAA",
+        "AAA",
+        "AAA",
+        "AAA"
     };
-    Cup a(posx, posy, size); 
     Controlador controlador(a,mapStrings);
     controlador.ejecutar();
     
     //GameController gameController;
     //gameController.Run();
-
-    //ejecutar();
     return 0;
 }
