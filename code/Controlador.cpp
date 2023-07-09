@@ -5,6 +5,7 @@
 #include "Background_Vista.cpp"
 #include "Boomerang_Controlador.cpp"
 #include "Bomba_Controlador.cpp"
+#include "Elegir.cpp"
 #include <thread>
 
 class Controlador {
@@ -13,18 +14,20 @@ private:
     Cup jugador2;
     Vista vista;
     Mapa map;
+    ElegirPlayer elegir;
     Plataforma pla;
     sf::Clock clock, clock2, clock3, clock4;
     Background background;
-    int nivel;
+    int nivel,j1,j2;
+    vector<int> jugadores;
 
 public:
-    Controlador(Cup& jugador1, Cup& jugador2,int j1,int j2)
-        : jugador1(jugador1), jugador2(jugador2), vista(1280, 720,j1,j2)
+    Controlador(Cup& jugador1, Cup& jugador2)
+        : jugador1(jugador1), jugador2(jugador2), vista(1280, 720)
     {
         std::vector<std::string> mapStrings = map.crearMapa(10);
         map.parseMap(mapStrings);
-        nivel = 2;
+        nivel = 0;
     }
 
     void manejarEventos() {
@@ -84,6 +87,17 @@ public:
                     jugador2.estaSaltando(false);
                 }
             }
+            else if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    sf::Vector2i mousePosition = sf::Mouse::getPosition(vista.window);
+                    sf::Vector2f mousePos(mousePosition.x, mousePosition.y);
+                    jugadores.push_back(elegir.seleccionar(mousePos,true));
+                }
+                else if (event.mouseButton.button == sf::Mouse::Right) {
+                    // Código para el clic derecho del mouse
+                    std::cout << "Clic derecho del mouse" << std::endl;
+                }
+            }
         }
         float delta = clock3.restart().asSeconds();
         jugador1.caida(delta);
@@ -97,13 +111,17 @@ public:
         case 0:
             background.cargar(vista.window, nivel);
             background.draw1(vista.window);
+            elegir.dibujar(vista.window);
+            //jugadores=elegir.elegir(vista.window);
             break;
         case 1:
+            j1=jugadores.front();
+            j2=jugadores.back();
             background.cargar(vista.window, nivel);
             background.draw1(vista.window);
+            vista.cargarJugadores(j1,j2);
             vista.plataformas.clear();
-            vista.dibujarCup(jugador1,1);
-            vista.dibujarCup(jugador2,2);
+            vista.dibujarCup(jugador1,jugador2);
             dibujarPlataformas();
             break;
         case 2:
@@ -113,8 +131,7 @@ public:
             crearplataformas();
             vista.plataformas.clear();
             mover_plataformas();
-            vista.dibujarCup(jugador1,1);
-            vista.dibujarCup(jugador2,2);
+            vista.dibujarCup(jugador1,jugador2);
             dibujarPlataformas();
             break;
         case 3:
@@ -176,18 +193,21 @@ public:
     }
 
     void ejecutar() {
-        std::thread hiloJugador2([this] {
-            while (vista.window.isOpen()) {
-                manejarEventos();
-            }
-        });
+        if(nivel>0)
+        {
+            std::thread hiloJugador2([this] {
+                while (vista.window.isOpen()) {
+                    manejarEventos();
+                }
+            }); 
+            
+            hiloJugador2.join();
+        }
 
         while (vista.window.isOpen()) {
             colisiones();
             manejarEventos();
             renderizar();
-        }
-
-        hiloJugador2.join();
+        }  
     }
 };

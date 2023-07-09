@@ -9,8 +9,8 @@ public:
     
     
 public:
-
-    JugadorVista(int n)
+    JugadorVista(){}
+    void cargar(int n)
     {
         switch (n)
         {
@@ -23,6 +23,12 @@ public:
             if (!texture1.loadFromFile("img\\cup\\jugador2.png")) {
                 cout << "Error al cargar la imagen jugador2.png" <<endl;
             }
+            break;
+        case 3:
+            if (!texture1.loadFromFile("img\\cup\\jugador3.png")) {
+                cout << "Error al cargar la imagen jugador3.png" <<endl;
+            }
+            break;
         default:
             break;
         }

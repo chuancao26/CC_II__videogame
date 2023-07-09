@@ -96,7 +96,7 @@ int main() {
     float posx = 20, posy = 100;
     Cup a(posx, posy, size);
     Cup b(200, posy, size); 
-    Controlador controlador(a,b,1,2);
+    Controlador controlador(a,b);
     controlador.ejecutar();
     
     //GameController gameController;
