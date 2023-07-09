@@ -17,7 +17,7 @@ public:
             }
             break;
         case 2:
-            if (!texture_.loadFromFile("img\\menu\\fondoBee8.png")) {
+            if (!texture_.loadFromFile("img\\menu\\fondoBee.png")) {
                 std::cout<<"Error al cargar la imagen fondoBee2.png"<<std::endl;
             }
             break;
@@ -37,7 +37,7 @@ public:
         float scaleX = static_cast<float>(window.getSize().x) / sprite_.getLocalBounds().width;
         float scaleY = static_cast<float>(window.getSize().y) / sprite_.getLocalBounds().height;
         sprite_.setScale(scaleX, scaleY);
-        gravedad_ = 10.0f;
+        gravedad_ = 50.0f;
         altura_ = sprite_.getLocalBounds().height;
     }
 
@@ -67,9 +67,9 @@ public:
         window.draw(sprite_);
     }
 
-    void actualizar(sf::RenderWindow& window)
+    void actualizar(sf::RenderWindow& window,float d)
     {
-        float nuevaPosicion = sprite_.getPosition().y + gravedad_;// desplazamiento;
+        float nuevaPosicion = sprite_.getPosition().y + gravedad_*d;// desplazamiento;
 
         if (nuevaPosicion >= altura_) {
             nuevaPosicion -= altura_;

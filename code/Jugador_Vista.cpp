@@ -7,15 +7,28 @@ public:
     sf::Texture texture1;
     sf::Sprite cupShape;
     
+    
 public:
 
-    JugadorVista()
+    JugadorVista(int n)
     {
-        if (!texture1.loadFromFile("img\\cup\\jugador.png")) {
-            cout << "Error al cargar la imagen jugador.png" <<endl;
+        switch (n)
+        {
+        case 1:
+            if (!texture1.loadFromFile("img\\cup\\jugador.png")) {
+                cout << "Error al cargar la imagen jugador.png" <<endl;
+            }
+            break;
+        case 2:
+            if (!texture1.loadFromFile("img\\cup\\jugador2.png")) {
+                cout << "Error al cargar la imagen jugador2.png" <<endl;
+            }
+        default:
+            break;
         }
+        
         cupShape.setTexture(texture1);
-        cupShape.setScale(60.f/cupShape.getLocalBounds().width, 60.f/cupShape.getLocalBounds().height);
+        cupShape.setScale(80.f/cupShape.getLocalBounds().width, 80.f/cupShape.getLocalBounds().height);
     }
     
     void dibujar(const Cup& jugador,sf::RenderWindow& window) {

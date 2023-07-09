@@ -6,6 +6,7 @@ public:
     sf::RenderWindow window;
     vector<PlataformaVista*> plataformas;
     JugadorVista jugador_v;
+    JugadorVista jugador_v2;
     float width,height;
     float elapsedSeconds;
     float interval;
@@ -15,7 +16,8 @@ public:
     sf::Clock timer;
     
 public:
-    Vista(int xedge, int yedge) : width(xedge), height(yedge), window(sf::VideoMode(xedge, yedge), "CUPHEAD!") 
+    Vista(int xedge, int yedge,int j1, int j2) : width(xedge), height(yedge), window(sf::VideoMode(xedge, yedge), "CUPHEAD!"),
+    jugador_v(j1),jugador_v2(j2) 
     {
         width = window.getSize().x;
         height = window.getSize().y;
@@ -24,9 +26,18 @@ public:
         tiempoAcumulado = sf::Time::Zero;
     }
     
-    void dibujarCup(const Cup& jugador) {
+    void dibujarCup(const Cup& jugador,int n) {
         //jugadorSprite.setPosition(jugador.getPosx(), jugador.getPosy());
-        jugador_v.dibujar(jugador,window);
+        switch (n)
+        {
+        case 1:
+            jugador_v.dibujar(jugador,window);
+            break;
+        case 2:
+            jugador_v2.dibujar(jugador,window);
+            break;
+        }
+        
     }
     void dibujarPlat(const Plataforma& plataforma) {
        

@@ -92,17 +92,11 @@ void ejecutar(){
     }
 }
 int main() {
-    int xedge = 1280, yedge = 720, size = 60;
-    float posx = 20, posy = 600;
-    Cup a(posx, posy, size); 
-    std::vector<std::string> mapStrings =
-    {
-        "AAA",
-        "AAA",
-        "AAA",
-        "AAA"
-    };
-    Controlador controlador(a,mapStrings);
+    int xedge = 1280, yedge = 720, size = 80;
+    float posx = 20, posy = 100;
+    Cup a(posx, posy, size);
+    Cup b(200, posy, size); 
+    Controlador controlador(a,b,1,2);
     controlador.ejecutar();
     
     //GameController gameController;

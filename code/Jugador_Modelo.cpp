@@ -10,7 +10,7 @@ Cup::Cup(const int &px, const int& py, const int& size_)
     saltando=false;
     enplataforma=false;
     vidas=3;saltos=1;
-    gravedad=3;
+    gravedad=100;
     speed=10, salto = 150;
     clock_salto=0.f;
 }
@@ -49,10 +49,10 @@ void Cup::saltar()
     }
     mover(posx, posy);
 }
-void Cup::caida()
+void Cup::caida(float d)
 {
-    if (posy < 600.0f && !enplataforma && !saltando) {
-        posy += gravedad;
+    if (posy < 800.0f && !enplataforma && !saltando) {
+        posy += gravedad*d;
     }
     mover(posx,posy);
 }

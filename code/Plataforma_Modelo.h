@@ -12,7 +12,7 @@ class Plataforma
     float getPosx() const;
     float getPosy() const;
     void setPosition(float px, float py); 
-    void caida();
+    void caida(float d);
     
 };
 
@@ -33,6 +33,7 @@ class Mapa
     std::string generarSecuenciaFila();
     void eliminarPlataformas();
     bool se_elimina(const Plataforma& plat);
+    void crearPlataformas();
 };
 
 #endif

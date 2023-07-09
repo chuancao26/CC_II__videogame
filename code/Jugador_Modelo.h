@@ -30,7 +30,7 @@ public:
     void saltar();
     void actualizar();
     void estaSaltando(bool t);
-    void caida();
+    void caida(float d);
     void estaColisionando(const float& y);
     void enPlataforma(bool t);
 };

@@ -17,8 +17,8 @@ Mapa::Mapa()
 {
     platformWidth = 200.f;  // Ancho predeterminado de la plataforma
     platformHeight = 30.f;  // Alto predeterminado de la plataforma
-    platformSpacingH = 200.f; // Espacio predeterminado entre plataformas
-    platformSpacingW = 200.f; // Espacio predeterminado entre plataformas
+    platformSpacingH = 90.f; // Espacio predeterminado entre plataformas
+    platformSpacingW = 300.f; // Espacio predeterminado entre plataformas
     currentY = 720.f;
     recorrer=false;
 }
@@ -55,7 +55,8 @@ void Mapa::parseMap(const std::vector<std::string>& mapStrings)
     float currentX;
     if(currentY!=720)
     {
-        currentY-=platforms.back().getPosy()+platformHeight + platformSpacingH;
+        currentY-=platforms.back().getPosy()+platformHeight+platformSpacingH;
+        
     }
     // Obtener la cantidad de filas y columnas del mapa
     size_t numRows = mapStrings.size();
@@ -70,11 +71,11 @@ void Mapa::parseMap(const std::vector<std::string>& mapStrings)
         const auto& mapString = mapStrings[row];
         if(!recorrer)
         {
-            currentX = 20.f;
+            currentX = 40.f;
             recorrer=true;
         }
         else{
-           currentX = 200.f; // Reiniciar la posición X para cada línea de mapa 
+           currentX = 290.f; // Reiniciar la posición X para cada línea de mapa 
            recorrer=false;
         }
         
@@ -101,11 +102,11 @@ void Mapa::parseMap(const std::vector<std::string>& mapStrings)
     }
 }
 
-void Plataforma::caida()
+void Plataforma::caida(float d)
 {
     if(y<800)
     {
-        gravedad = 10.f; // Ajusta el valor de gravedad según tus necesidades
+        gravedad = 50.f*d; // Ajusta el valor de gravedad según tus necesidades
         y += gravedad;
     }
     
@@ -130,4 +131,12 @@ void Mapa::eliminarPlataformas()
             ++it; 
         }
     }
+    
+}
+
+void Mapa::crearPlataformas()
+{
+    vector<string> m = crearMapa(1);
+    parseMap(m);
+
 }
