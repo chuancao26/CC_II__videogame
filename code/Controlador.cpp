@@ -45,9 +45,11 @@ public:
                     jugador1.saltar();
                 }
                 else if (event.key.code == sf::Keyboard::Left) {
+                    jugador1.vaizquierda(true);
                     jugador1.moverIzquierda();
                 }
                 else if (event.key.code == sf::Keyboard::Right) {
+                    jugador1.vaderecha(true);
                     jugador1.moverDerecha();
                 }
                 else if (event.key.code == sf::Keyboard::Down) {
@@ -62,9 +64,11 @@ public:
                     jugador2.saltar();
                 }
                 else if (event.key.code == sf::Keyboard::A) {
+                    jugador2.vaizquierda(true);
                     jugador2.moverIzquierda();
                 }
                 else if (event.key.code == sf::Keyboard::D) {
+                    jugador2.vaderecha(true);
                     jugador2.moverDerecha();
                 }
                 else if (event.key.code == sf::Keyboard::S) {
@@ -74,14 +78,16 @@ public:
             else if (event.type == sf::Event::KeyReleased) {
                 // Manejar teclas liberadas para el jugador 1
                 if (event.key.code == sf::Keyboard::Left || event.key.code == sf::Keyboard::Right) {
-                    //jugador1.detenerMovimientoHorizontal();
+                    jugador1.vaizquierda(false);
+                    jugador1.vaderecha(false);
                 }
                 if (event.key.code == sf::Keyboard::Up) {
                     jugador1.estaSaltando(false);
                 }
                 // Manejar teclas liberadas para el jugador 2
                 if (event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::D) {
-                    //jugador2.detenerMovimientoHorizontal();
+                    jugador2.vaizquierda(false);
+                    jugador2.vaderecha(false);
                 }
                 if (event.key.code == sf::Keyboard::W) {
                     jugador2.estaSaltando(false);
@@ -122,7 +128,6 @@ public:
             vista.cargarJugadores(j1,j2);
             vista.plataformas.clear();
             vista.dibujarCup(jugador1,jugador2);
-            dibujarPlataformas();
             break;
         case 2:
             background.cargar(vista.window, nivel);

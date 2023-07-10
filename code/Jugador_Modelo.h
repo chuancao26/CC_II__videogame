@@ -17,7 +17,7 @@ class Jugador
 };
 class Cup: public Jugador {
 public:
-    bool saltando,enplataforma;
+    bool saltando,enplataforma,derecha,izquierda,quieto;
     float salto;
     int jumps, vidas;
 public:
@@ -30,6 +30,9 @@ public:
     void saltar();
     void actualizar();
     void estaSaltando(bool t);
+    void vaderecha(bool t);
+    void vaizquierda(bool t);
+    void estaquieto(bool t);
     void caida(float d);
     void estaColisionando(const float& y);
     void enPlataforma(bool t);

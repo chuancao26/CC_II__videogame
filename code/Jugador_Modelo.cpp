@@ -8,6 +8,8 @@ Cup::Cup(const int &px, const int& py, const int& size_)
 {
     posx = px; posy = py; size = size_;
     saltando=false;
+    derecha=false;
+    izquierda=false;
     enplataforma=false;
     vidas=3;saltos=1;
     gravedad=100;
@@ -62,6 +64,18 @@ void Cup::actualizar() {
 void Cup::estaSaltando(bool t)
 {
     saltando=t;
+}
+void Cup::vaderecha(bool t)
+{
+    derecha=t;
+}
+void Cup::vaizquierda(bool t)
+{
+    izquierda=t;
+}
+void Cup::estaquieto(bool t)
+{
+    quieto=t;
 }
 void Cup::estaColisionando(const float& y)
 {

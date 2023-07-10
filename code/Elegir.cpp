@@ -21,21 +21,21 @@ class ElegirPlayer{
     ElegirPlayer()
     {
         size=200;
-        if (!texture1.loadFromFile("img\\cup\\jugador.png")) {
+        if (!texture1.loadFromFile("img\\cup\\cup1\\jugador.png")) {
             cout << "Error al cargar la imagen jugador.png" <<endl;
         }
         sprite1.setTexture(texture1);
         sprite1.setPosition(100, 100);
         sprite1.setScale(size/sprite1.getLocalBounds().width, size/sprite1.getLocalBounds().height);
 
-        if (!texture2.loadFromFile("img\\cup\\jugador2.png")) {
+        if (!texture2.loadFromFile("img\\cup\\cup2\\jugador.png")) {
                 cout << "Error al cargar la imagen jugador2.png" <<endl;
         }
         sprite2.setTexture(texture2);
         sprite2.setPosition(400, 100);
         sprite2.setScale(size/sprite2.getLocalBounds().width, size/sprite2.getLocalBounds().height);
 
-        if (!texture3.loadFromFile("img\\cup\\jugador3.png")) {
+        if (!texture3.loadFromFile("img\\cup\\cup3\\jugador.png")) {
             cout << "Error al cargar la imagen jugador3.png" <<endl;
         }
         sprite3.setTexture(texture3);
