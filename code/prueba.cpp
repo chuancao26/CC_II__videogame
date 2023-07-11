@@ -1,19 +1,49 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include <iostream>
+
+class Fist
+{
+private:
+    sf::RectangleShape cuad;
+    sf::Color color;
+    int xBorder, yBorder, size;
+    float posx, posy, x, y, radiusX, radiusY, angle;
+
+public:
+    Fist(const int& xb, const int& yb)
+        : color(sf::Color::Magenta), xBorder(xb), yBorder(yb),
+          posx(xBorder / 2), posy(yBorder / 2), size(50), radiusX(200), radiusY(100), angle(0.0f)
+    {
+        cuad.setSize(sf::Vector2f(size, size));
+        cuad.setFillColor(color);
+        cuad.setPosition(posx, posy);
+    }
+
+    void move()
+    {
+        x = posx + std::sin(2 * angle) * std::pow(std::abs(std::cos(angle)), 0.5f) * radiusX;
+        y = posy - std::sin(angle) * std::pow(std::abs(std::cos(2 * angle)), 0.5f) * radiusY;
+        cuad.setPosition(x, y);
+    }
+
+    void update(const bool& tecla)
+    {
+        angle += 0.01f;
+        move();
+    }
+
+    void draw(sf::RenderWindow& window)
+    {
+        window.draw(cuad);
+    }
+};
+
 int main()
 {
-// Bucle principal del juego
-    int width = 800;
-    int height = 800;
-    float avance = 0.0f;
-    float speed = 0.1f;
-    bool moveLeft = false, lateral = true, moveUp = false, avanceFlag = false;
-    sf::RenderWindow window(sf::VideoMode(width,height), "Probando el misil");
-    sf::RectangleShape rect;
-    rect.setSize(sf::Vector2f(100,50));
-    float posx = width * 0.1f, posy = height * 0.9f;
-    rect.setPosition(posx, posy);
+    sf::RenderWindow window(sf::VideoMode(800, 800), "Cuadrado Movimiento Alas de Mariposa");
+    Fist a(800, 800);
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -23,59 +53,10 @@ int main()
                 window.close();
         }
 
-        // Limpiar la ventana
-        window.clear(sf::Color::Black);
-        window.draw(rect);
-        if (lateral)
-        {
-            if (moveLeft && !moveUp)
-            {
-                posx -= speed;
-            }
-            if (!moveLeft && !moveUp)
-            {
-                posx += speed;
-            }
-            if (posx >= 0.5 * width)
-            {
-                moveLeft = true;
-                moveUp = true;
-                rect.setSize(sf::Vector2f(50,100));
-                if (!avanceFlag)
-                {
-                    avance = posy;
-                    avanceFlag = true;
-                }
-            }
-            if (posx <= 0.05 * width)
-            {
-                moveLeft = false;
-                moveUp = true;
-                rect.setSize(sf::Vector2f(50,100));
-                if (!avanceFlag)
-                {
-                    avance = posy;
-                    avanceFlag = true;
-                }
-            }
-            if (moveUp)
-            {
-                posy -= speed;
-                if (avance - posy >= height * 0.15)
-                {
-                    avanceFlag = false;
-                    moveUp = false;
-                    rect.setSize(sf::Vector2f(100,50));
-                }
-            }
-        }
-        if (posy <= 0 && !moveUp)
-        {
-            posy = height * 0.1;
-        }
-        rect.setPosition(posx,posy);
-        
-        // Actualizar la ventana
+        a.update();
+
+        // window.clear();
+        a.draw(window);
         window.display();
     }
 

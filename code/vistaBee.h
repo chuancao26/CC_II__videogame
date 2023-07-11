@@ -7,16 +7,19 @@
 #include "WorkerBee.h"
 #include "Espina.h"
 #include "triangulo.h"
+#include "MisilBee.h"
 class VistaBee
 {
 private:
+    MisilM* misilM;
+    MisilV* misilV;
     PoliceM* policeM;
     PoliceV* policeV;
     TrianguloM* triangleM;
     TrianguloV* triangleV;
     WorkerBeeM* workerBeeM;
     WorkerBeeV* workerBeeV;
-    bool activeWorker, activeTriangle;
+    bool activeWorker, activeTriangle, activeMisil;
     sf::RenderWindow window;
     sf::Clock clock;
     sf::Time elapsedtime;
@@ -61,6 +64,7 @@ public:
         policeV -> update(elapsedtime);
         updateTriangle();
         updateWorker();
+        updateMisil();
     }
     bool isOpen()
     {
@@ -106,13 +110,53 @@ public:
             }
         }
     }
+    void updateMisil()
+    {
+        if (!activeMisil)
+        {
+            misilM = new MisilM(xBorder, yBorder);
+            misilV = new MisilV(misilM);
+            activeMisil = true;
+        }
+        if (activeMisil)
+        {
+            misilM->move();
+            misilV->update();
+            if (misilM->isExpired())
+            {
+                delete misilM;
+                delete misilV;
+                activeMisil = false;
+            }
+        }
+    }
     void drawEntitys()
     {
-        policeV -> draw(window);
+        drawPolice();
+        drawWorker();
+        drawTriangle();
+        drawMisil();
+    }
+    void drawMisil()
+    {
+        if (activeMisil)
+        {
+            misilV ->draw(window);
+        }
+    }
+    void drawWorker()
+    {
         if (activeWorker)
         {
             workerBeeV -> draw(window);
         }
+    }
+    void drawPolice()
+    {
+        policeV -> draw(window);
+    }
+    void drawTriangle()
+    {
         if (activeTriangle)
         {
             triangleV -> draw(window);
