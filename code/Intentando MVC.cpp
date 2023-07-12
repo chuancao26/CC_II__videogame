@@ -5,6 +5,7 @@
 #include <chrono>
 #include <cmath>
 #include <string>
+#include <memory>
 
 // Modelo
 class BombModel {
@@ -293,10 +294,10 @@ public:
     bool shouldDelete() const {
         return boomerangModel.shouldDelete();
     }
+
 };
 
 //BossView
-
 class FlorBossView {
 public:
     FlorBossView(sf::RenderWindow& window) : window_(window) {
@@ -398,6 +399,7 @@ private:
     float growthDuration_;
 };
 
+
 //FondoView
 class Background {
 public:
@@ -430,8 +432,8 @@ int main() {
 
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Cuadrados");
     window.setFramerateLimit(60);
+    BoomerangController *boomerang= new BoomerangController(window.getSize().x * 45 / 64, window.getSize().y / 3, window.getSize().x / 7, window.getSize().y / 10);
 
-    BoomerangController boomerang(window.getSize().x * 45 / 64, window.getSize().y / 3, window.getSize().x / 7, window.getSize().y / 10);
 
     const int maxBombs = 5;
     BombController* bombs[maxBombs] = {}; // Arreglo de punteros a CuadradoController
@@ -484,15 +486,15 @@ int main() {
             timer.restart();
         }
         
-        boomerang.update(window.getSize().x);
+        boomerang[0].update(window.getSize().x);
 
         float deltaTime2 = clock2.restart().asSeconds();
         florBoss.update(deltaTime2);
 
         window.clear(sf::Color::White);
         background.draw();
-        if (!boomerang.shouldDelete()) {
-            boomerang.draw(window);
+        if (!boomerang[0].shouldDelete()) {
+            boomerang[0].draw(window);
         }
         // Actualizar y dibujar los cuadrados existentes en el arreglo
         for (int i = 0; i < maxBombs; i++) {
@@ -504,6 +506,8 @@ int main() {
 
         florBoss.draw();
         
+
+
         window.display();
     }
 
@@ -511,6 +515,9 @@ int main() {
     for (int i = 0; i < maxBombs; i++) {
         delete bombs[i];
     }
+    if (boomerang[0].shouldDelete()==true){
+            delete boomerang;
+        }
 
     return 0;
 }
