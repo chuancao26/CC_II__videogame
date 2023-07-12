@@ -3,23 +3,21 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <random> 
+#include <memory>
 #include "Police.h"
 #include "WorkerBee.h"
 #include "Espina.h"
 #include "triangulo.h"
-#include "MisilBee.h"
 class VistaBee
 {
 private:
-    MisilM* misilM;
-    MisilV* misilV;
-    PoliceM* policeM;
-    PoliceV* policeV;
-    TrianguloM* triangleM;
-    TrianguloV* triangleV;
-    WorkerBeeM* workerBeeM;
-    WorkerBeeV* workerBeeV;
-    bool activeWorker, activeTriangle, activeMisil;
+    std::shared_ptr<PoliceM> policeM;
+    std::shared_ptr<PoliceV> policeV;
+    std::shared_ptr<TrianguloM> triangleM;
+    std::shared_ptr<TrianguloV> triangleV;
+    std::shared_ptr<WorkerBeeM> workerBeeM;
+    std::shared_ptr<WorkerBeeV> workerBeeV;
+    bool activeWorker, activeTriangle;
     sf::RenderWindow window;
     sf::Clock clock;
     sf::Time elapsedtime;
@@ -36,8 +34,8 @@ public:
         generator.seed(rd());
         distributionY = std::uniform_int_distribution<int>(150,yBorder);
         window.create(sf::VideoMode(xBorder, yBorder), windowName);
-        policeM = new PoliceM(xBorder,yBorder);
-        policeV = new PoliceV(policeM);
+        policeM = std::make_shared<PoliceM>(xBorder,yBorder);
+        policeV = std::make_shared<PoliceV>(policeM);
     }
     void render()
     {
@@ -64,7 +62,6 @@ public:
         policeV -> update(elapsedtime);
         updateTriangle();
         updateWorker();
-        updateMisil();
     }
     bool isOpen()
     {
@@ -74,8 +71,8 @@ public:
     {           
         if(!activeWorker)
         {
-            workerBeeM = new WorkerBeeM(xBorder, distributionY(generator));
-            workerBeeV = new WorkerBeeV(workerBeeM);
+            workerBeeM = std::make_shared<WorkerBeeM> (xBorder, distributionY(generator));
+            workerBeeV = std::make_shared<WorkerBeeV> (workerBeeM);
             activeWorker = true;
         }
         if (activeWorker)
@@ -84,8 +81,8 @@ public:
             workerBeeV -> move();
             if(workerBeeM -> isExpired())
             {
-                delete workerBeeM;
-                delete workerBeeV;
+                workerBeeM.reset();
+                workerBeeV.reset();
                 activeWorker = false;
             }
         }
@@ -94,8 +91,8 @@ public:
     {
         if (!activeTriangle)
         {
-            triangleM = new TrianguloM(0,0, xBorder, yBorder, 'e');
-            triangleV = new TrianguloV(triangleM);
+            triangleM = std::make_shared<TrianguloM>(0,0, xBorder, yBorder, 'e');
+            triangleV = std::make_shared<TrianguloV>(triangleM);
             activeTriangle = true;
         }
         if(activeTriangle)
@@ -104,59 +101,19 @@ public:
             triangleV->move();
             if (triangleM->isExpired())
             {
-                delete triangleM;
-                delete triangleV;
+                triangleM.reset();
+                triangleV.reset();
                 activeTriangle = false;
-            }
-        }
-    }
-    void updateMisil()
-    {
-        if (!activeMisil)
-        {
-            misilM = new MisilM(xBorder, yBorder);
-            misilV = new MisilV(misilM);
-            activeMisil = true;
-        }
-        if (activeMisil)
-        {
-            misilM->move();
-            misilV->update();
-            if (misilM->isExpired())
-            {
-                delete misilM;
-                delete misilV;
-                activeMisil = false;
             }
         }
     }
     void drawEntitys()
     {
-        drawPolice();
-        drawWorker();
-        drawTriangle();
-        drawMisil();
-    }
-    void drawMisil()
-    {
-        if (activeMisil)
-        {
-            misilV ->draw(window);
-        }
-    }
-    void drawWorker()
-    {
+        policeV -> draw(window);
         if (activeWorker)
         {
             workerBeeV -> draw(window);
         }
-    }
-    void drawPolice()
-    {
-        policeV -> draw(window);
-    }
-    void drawTriangle()
-    {
         if (activeTriangle)
         {
             triangleV -> draw(window);
@@ -164,12 +121,7 @@ public:
     }
     ~VistaBee()
     {
-        delete workerBeeM;
-        delete workerBeeV;
-        delete policeM;
-        delete policeV;
-        delete triangleM;
-        delete triangleV;
+
     }
 };
 #endif

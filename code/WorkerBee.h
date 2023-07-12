@@ -2,6 +2,7 @@
 #define WORKERBEE_H
 #include <SFML/Graphics.hpp>
 #include "Enemigos.h"
+#include <memory>
 class WorkerBeeM : public Enemigo
 {
 private:
@@ -32,14 +33,14 @@ public:
 class WorkerBeeV
 {
 private:
-    WorkerBeeM* wb;
+    std::shared_ptr<WorkerBeeM> wb;
     sf::RectangleShape bee;
     sf::Color color;
 
 public:
-    WorkerBeeV(WorkerBeeM*& wb_): wb(wb_), color(sf::Color::Blue)
+    WorkerBeeV(std::shared_ptr<WorkerBeeM> wb_): wb(wb_), color(sf::Color::Blue)
     {
-        bee.setPosition(wb ->getPosx(), wb ->getPosy());
+        bee.setPosition(wb ->getPosx(), wb->getPosy());
         bee.setSize(sf::Vector2f(wb ->getSize(), wb ->getSize()));
         bee.setFillColor(color);
     }

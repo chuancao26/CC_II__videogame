@@ -4,6 +4,7 @@
 #include "BombaPolice.h"
 #include "Enemigos.h"
 #include "Espina.h"
+#include <memory>
 #include <iostream>
 class PoliceM : public Enemigo
 {
@@ -48,13 +49,13 @@ private:
     sf::RectangleShape police;
     sf::Clock clock;
     float elapsedTime;
-    PoliceM* p; 
-    BombaPoliceM* bombM;
-    BombaPoliceV* bombV;
+    std::shared_ptr<PoliceM> p; 
+    std::shared_ptr<BombaPoliceM> bombM;
+    std::shared_ptr<BombaPoliceV> bombV;
     EspinaM** espinasM;
     EspinaV** espinasV;
 public:
-    PoliceV(PoliceM*& police_): p(police_),
+    PoliceV(std::shared_ptr<PoliceM> police_): p(police_),
     color(sf::Color::Cyan), activeBomb(false), activeEspinas(false)
     {
         police.setPosition(p->getPosx(), p->getPosy());
@@ -75,8 +76,6 @@ public:
                 activeBomb = false;
                 crearEspinas();
                 activeEspinas = true;
-                delete bombM;
-                delete bombV;
             }
         }
     }
@@ -145,8 +144,8 @@ public:
     {
         if (!activeBomb)
         {
-            bombM = new BombaPoliceM(p->getPosx(), p->getPosy(), elapsedTime);
-            bombV = new BombaPoliceV(bombM);
+            bombM = std::make_shared<BombaPoliceM>(p->getPosx(), p->getPosy(), elapsedTime);
+            bombV = std::make_shared<BombaPoliceV>(bombM);
             
             activeBomb = true;
         }
@@ -228,10 +227,8 @@ public:
             }
         }
     }
-        ~PoliceV()
+    ~PoliceV()
     {
-        delete bombV;
-        delete bombM;
         delete espinasM[0];
         delete espinasM[1];
         delete espinasM[2];
@@ -251,5 +248,6 @@ public:
         delete[] espinasM;
         delete[] espinasV;
     }
+
 };
 #endif

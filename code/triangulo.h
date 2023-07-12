@@ -3,10 +3,11 @@
 #include <SFML/Graphics.hpp>
 #include "Enemigos.h"
 #include <iostream>
+#include <memory>
 class TrianguloM : public Enemigo
 {
 private:
-    int xBorder, yBorder;
+    int radius, xBorder, yBorder;
     float speed, rotationSpeed;
     char type;
 public:
@@ -70,13 +71,13 @@ public:
 class TrianguloV
 {
 private:
-    TrianguloM* tm;
+    std::shared_ptr<TrianguloM> tm;
     sf::ConvexShape triangle;
     sf::Color color;
     sf::Time start;
     sf::Time elapsedTime;
 public:
-    TrianguloV(TrianguloM*& tm_):tm(tm_), color(sf::Color::White), triangle(3)
+    TrianguloV(std::shared_ptr<TrianguloM> tm_):tm(tm_), color(sf::Color::White), triangle(3)
     {
         triangle.setPoint(0, sf::Vector2f(0.0f, 0.0f));
         triangle.setPoint(1, sf::Vector2f(0.0f, 100.0f));
