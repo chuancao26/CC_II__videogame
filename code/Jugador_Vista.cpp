@@ -36,7 +36,7 @@ public:
         for(int i=1;i<5;i++)
         {
             sf::Texture textura;
-            if (!textura.loadFromFile("img\\cup\\"+jugador+"\\salto"+std::to_string(i)+".png")) {
+            if (!textura.loadFromFile("img/cup/"+jugador+"/salto"+std::to_string(i)+".png")) {
                 cout << "Error al cargar la imagen salto.png" <<endl;
             }
             salto.push_back(textura);
@@ -73,7 +73,7 @@ public:
             }
             disparar.push_back(textura);
         }*/
-        for(int n=1;n<4;n++)
+        for(int n=1;n<5;n++)
         {
             sf::Texture textura;
             if (!textura.loadFromFile("img\\cup\\"+jugador+"\\quieto"+std::to_string(n)+".png")) {

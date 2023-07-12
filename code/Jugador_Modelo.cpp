@@ -79,7 +79,7 @@ void Cup::estaquieto(bool t)
 }
 void Cup::estaColisionando(const float& y)
 {
-    posy = y;
+    posy = y+15;
     mover(posx, posy);
 
 }

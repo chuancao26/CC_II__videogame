@@ -92,11 +92,7 @@ void ejecutar(){
     }
 }
 int main() {
-    int xedge = 1280, yedge = 720, size = 80;
-    float posx = 20, posy = 100;
-    Cup a(posx, posy, size);
-    Cup b(200, posy, size); 
-    Controlador controlador(a,b);
+    Controlador controlador;
     controlador.ejecutar();
     
     //GameController gameController;

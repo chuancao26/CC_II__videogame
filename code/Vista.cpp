@@ -26,8 +26,12 @@ public:
     }
     void cargarJugadores(int j1,int j2)
     {
-        jugador_v.cargar(j1);
-        jugador_v2.cargar(j2);
+        if(j1!=0 && j2!=0)
+        {
+            jugador_v.cargar(j1);
+            jugador_v2.cargar(j2); 
+        }
+        
     }
     
     void dibujarCup(const Cup& jugador1,const Cup& jugador2) {

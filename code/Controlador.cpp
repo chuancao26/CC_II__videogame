@@ -16,18 +16,20 @@ private:
     Mapa map;
     ElegirPlayer elegir;
     Plataforma pla;
-    sf::Clock clock, clock2, clock3, clock4;
+    sf::Clock clock, clock2, clock3, clock4,clock5;
     Background background;
     int nivel,j1,j2;
     vector<int> jugadores;
+    bool elegidos;
 
 public:
-    Controlador(Cup& jugador1, Cup& jugador2)
-        : jugador1(jugador1), jugador2(jugador2), vista(1280, 720)
+    Controlador()
+        : jugador1(20,100,80), jugador2(200,100,80), vista(1280, 720)
     {
         std::vector<std::string> mapStrings = map.crearMapa(10);
         map.parseMap(mapStrings);
-        nivel = 0;
+        nivel = 0;j1=0;j2=0;
+        elegidos=false;
     }
 
     void manejarEventos() {
@@ -98,6 +100,8 @@ public:
                     sf::Vector2i mousePosition = sf::Mouse::getPosition(vista.window);
                     sf::Vector2f mousePos(mousePosition.x, mousePosition.y);
                     jugadores.push_back(elegir.seleccionar(mousePos,true));
+                    if(jugadores.size()==2)
+                        elegidos=true;
                 }
                 else if (event.mouseButton.button == sf::Mouse::Right) {
                     // Código para el clic derecho del mouse
@@ -118,26 +122,32 @@ public:
             background.cargar(vista.window, nivel);
             background.draw1(vista.window);
             elegir.dibujar(vista.window);
-            //jugadores=elegir.elegir(vista.window);
+            if(elegidos)
+            {
+                j1=jugadores.front();
+                j2=jugadores.back();
+                vista.cargarJugadores(j1,j2); 
+            }
+            
             break;
         case 1:
-            j1=jugadores.front();
-            j2=jugadores.back();
+            
             background.cargar(vista.window, nivel);
             background.draw1(vista.window);
-            vista.cargarJugadores(j1,j2);
+            
             vista.plataformas.clear();
             vista.dibujarCup(jugador1,jugador2);
             break;
         case 2:
             background.cargar(vista.window, nivel);
             background.draw2(vista.window);
-            map.eliminarPlataformas();
+            eliminarplataformas();
+            cout<<map.platforms.size()<<endl;
             crearplataformas();
             vista.plataformas.clear();
             mover_plataformas();
-            vista.dibujarCup(jugador1,jugador2);
             dibujarPlataformas();
+            vista.dibujarCup(jugador1,jugador2);
             break;
         case 3:
             background.cargar(vista.window, nivel);
@@ -147,9 +157,17 @@ public:
             break;
         }
     }
+    void eliminarplataformas()
+    {
+        if (clock5.getElapsedTime().asSeconds() >= 1.0f)
+        {
+            map.eliminarPlataformas();
+            clock5.restart();
+        }
+    }
     void crearplataformas()
     {
-        if (clock2.getElapsedTime().asSeconds() >= 2.5f)
+        if (clock2.getElapsedTime().asSeconds() >= 2.75f)
         {
             map.crearPlataformas();
             clock2.restart();
@@ -192,7 +210,6 @@ public:
         float delta = clock.restart().asSeconds();
         for (auto& platform : map.platforms) {
             platform.caida(delta);
-            dibujarPlataformas();
         }
         background.actualizar(vista.window, delta);
     }
