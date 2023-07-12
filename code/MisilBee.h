@@ -1,6 +1,8 @@
 #ifndef MISILBEE_H
 #define MISILBEE_H
 #include "Enemigos.h"
+#include <iostream>
+#include <memory>
 class MisilM : public Enemigo
 {
     private:
@@ -86,9 +88,9 @@ class MisilV
     private:
     sf::RectangleShape misil;
     sf::Color color;
-    MisilM* misilm;
+    std::shared_ptr<MisilM> misilm;
     public:
-    MisilV(MisilM*& a): color(sf::Color::Yellow), misilm(a)
+    MisilV(std::shared_ptr<MisilM> a): color(sf::Color::Yellow), misilm(a)
     {
         misil.setFillColor(color);
         misil.setSize(sf::Vector2f(misilm->getGetXsize(), misilm->getGetYsize()));

@@ -8,16 +8,19 @@
 #include "WorkerBee.h"
 #include "Espina.h"
 #include "triangulo.h"
+#include "MisilBee.h"
 class VistaBee
 {
 private:
+    std::shared_ptr<MisilM> misilM;
+    std::shared_ptr<MisilV> misilV;
     std::shared_ptr<PoliceM> policeM;
     std::shared_ptr<PoliceV> policeV;
     std::shared_ptr<TrianguloM> triangleM;
     std::shared_ptr<TrianguloV> triangleV;
     std::shared_ptr<WorkerBeeM> workerBeeM;
     std::shared_ptr<WorkerBeeV> workerBeeV;
-    bool activeWorker, activeTriangle;
+    bool activeWorker, activeTriangle, activeMisil;
     sf::RenderWindow window;
     sf::Clock clock;
     sf::Time elapsedtime;
@@ -62,6 +65,7 @@ public:
         policeV -> update(elapsedtime);
         updateTriangle();
         updateWorker();
+        updateMisil();
     }
     bool isOpen()
     {
@@ -87,6 +91,7 @@ public:
             }
         }
     }
+
     void updateTriangle()
     {
         if (!activeTriangle)
@@ -107,13 +112,53 @@ public:
             }
         }
     }
+        void updateMisil()
+    {
+        if (!activeMisil)
+        {
+            misilM = std::make_shared<MisilM>(xBorder, yBorder);
+            misilV = std::make_shared<MisilV>(misilM);
+            activeMisil = true;
+        }
+        if (activeMisil)
+        {
+            misilM->move();
+            misilV->update();
+            if (misilM->isExpired())
+            {
+                misilM.reset();
+                misilV.reset();
+                activeMisil = false;
+            }
+        }
+    }
     void drawEntitys()
     {
-        policeV -> draw(window);
+        drawPolice();
+        drawWorker();
+        drawTriangle();
+        drawMisil();
+    }
+    void drawMisil()
+    {
+        if (activeMisil)
+        {
+            misilV ->draw(window);
+        }
+    }
+    void drawWorker()
+    {
         if (activeWorker)
         {
             workerBeeV -> draw(window);
         }
+    }
+    void drawPolice()
+    {
+        policeV -> draw(window);
+    }
+    void drawTriangle()
+    {
         if (activeTriangle)
         {
             triangleV -> draw(window);
