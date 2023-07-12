@@ -14,7 +14,7 @@ class PlataformaVista
     public:
         PlataformaVista(const Plataforma& plat):pla(plat)
         {
-            if (!texture.loadFromFile("img\\plataforma\\plataforma.png")) {
+            if (!texture.loadFromFile("img/plataforma/plataforma.png")) {
                 cout << "Error al cargar la imagen plataforma.png" <<endl;
             }
             platformShape.setTexture(texture);

@@ -44,7 +44,7 @@ public:
         for(int j=1;j<5;j++)
         {
             sf::Texture textura;
-            if (!textura.loadFromFile("img\\cup\\"+jugador+"\\derecha"+std::to_string(j)+".png")) {
+            if (!textura.loadFromFile("img/cup/"+jugador+"/derecha"+std::to_string(j)+".png")) {
                 cout << "Error al cargar la imagen salto.png" <<endl;
             }
             derecha.push_back(textura);
@@ -52,7 +52,7 @@ public:
         for(int k=1;k<5;k++)
         {
             sf::Texture textura;
-            if (!textura.loadFromFile("img\\cup\\"+jugador+"\\izquierda"+std::to_string(k)+".png")) {
+            if (!textura.loadFromFile("img/cup/"+jugador+"/izquierda"+std::to_string(k)+".png")) {
                 cout << "Error al cargar la imagen salto.png" <<endl;
             }
             izquierda.push_back(textura);
@@ -60,7 +60,7 @@ public:
         for(int l=1;l<5;l++)
         {
             sf::Texture textura;
-            if (!textura.loadFromFile("img\\cup\\"+jugador+"\\abajo"+std::to_string(l)+".png")) {
+            if (!textura.loadFromFile("img/cup/"+jugador+"/abajo"+std::to_string(l)+".png")) {
                 cout << "Error al cargar la imagen salto.png" <<endl;
             }
             abajo.push_back(textura);
@@ -68,7 +68,7 @@ public:
         for(int m=1;m<5;m++)
         {
             sf::Texture textura;
-            if (!textura.loadFromFile("img\\cup\\"+jugador+"\\disparar"+std::to_string(m)+".png")) {
+            if (!textura.loadFromFile("img/cup/"+jugador+"/disparar"+std::to_string(m)+".png")) {
                 cout << "Error al cargar la imagen salto.png" <<endl;
             }
             disparar.push_back(textura);
@@ -76,7 +76,7 @@ public:
         for(int n=1;n<5;n++)
         {
             sf::Texture textura;
-            if (!textura.loadFromFile("img\\cup\\"+jugador+"\\quieto"+std::to_string(n)+".png")) {
+            if (!textura.loadFromFile("img/cup/"+jugador+"/quieto"+std::to_string(n)+".png")) {
                 cout << "Error al cargar la imagen quieto.png" <<endl;
             }
             quieto.push_back(textura);
