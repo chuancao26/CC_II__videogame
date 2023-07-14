@@ -102,6 +102,7 @@ int main()
     sf::RenderWindow window(sf::VideoMode(800, 800), "Cuadrado Movimiento Alas de Mariposa");
     std::shared_ptr<WorkerBeeM> workerBeeM;
     std::shared_ptr<WorkerBeeV> workerBeeV;
+    window.setFramerateLimit(60);
     workerBeeM = std::make_shared<WorkerBeeM> (800, 800);
     workerBeeV = std::make_shared<WorkerBeeV> (workerBeeM);
     float rate = 0.0f;
@@ -113,11 +114,13 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-        rate += 0.01;
+        rate += 0.1;
+        window.clear();
+         workerBeeV->draw(window);
         workerBeeV->update(rate);
         workerBeeM->move();
-        window.clear();
-        workerBeeV->draw(window);
+        
+       
         window.display();
     }
     return 0;
