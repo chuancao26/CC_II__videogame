@@ -18,7 +18,10 @@ private:
     std::shared_ptr<PoliceV> policeV;
     std::shared_ptr<TrianguloM> triangleM;
     std::shared_ptr<TrianguloV> triangleV;
+    std::shared_ptr<WorkerBeeM> workerBeeM;
+    std::shared_ptr<WorkerBeeV> workerBeeV;
     bool activeWorker, activeTriangle, activeMisil;
+    float rate;
     sf::RenderWindow window;
     sf::Clock clock;
     sf::Time elapsedtime;
@@ -29,9 +32,10 @@ private:
 public:
     // constructor
     VistaBee():
-    xBorder(1280), yBorder(720), windowName("Prueba"), activeWorker(false), activeTriangle(false)
+    xBorder(1280), yBorder(720), windowName("Prueba"), activeWorker(false), activeTriangle(false), rate(0.0f)
     {
         std::random_device rd;
+        window.setFramerateLimit(60);
         generator.seed(rd());
         distributionY = std::uniform_int_distribution<int>(150,yBorder);
         window.create(sf::VideoMode(xBorder, yBorder), windowName);
@@ -58,37 +62,38 @@ public:
     }
     void update()
     {
+        rate += 0.01f;
         elapsedtime = clock.getElapsedTime();
         policeM ->move();
         policeV -> update(elapsedtime);
         updateTriangle();
-        // updateWorker();
+        updateWorker();
         updateMisil();
     }
     bool isOpen()
     {
         return window.isOpen();
     }
-    // void updateWorker()
-    // {           
-    //     if(!activeWorker)
-    //     {
-    //         workerBeeM = std::make_shared<WorkerBeeM> (xBorder, distributionY(generator));
-    //         workerBeeV = std::make_shared<WorkerBeeV> (workerBeeM);
-    //         activeWorker = true;
-    //     }
-    //     if (activeWorker)
-    //     {
-    //         workerBeeM -> move();
-    //         workerBeeV -> move();
-    //         if(workerBeeM -> isExpired())
-    //         {
-    //             workerBeeM.reset();
-    //             workerBeeV.reset();
-    //             activeWorker = false;
-    //         }
-    //     }
-    // }
+    void updateWorker()
+    {           
+        if(!activeWorker)
+        {
+            workerBeeM = std::make_shared<WorkerBeeM> (xBorder, distributionY(generator));
+            workerBeeV = std::make_shared<WorkerBeeV> (workerBeeM);
+            activeWorker = true;
+        }
+        if (activeWorker)
+        {
+            workerBeeM -> move();
+            workerBeeV -> update(rate);
+            if(workerBeeM -> isExpired())
+            {
+                workerBeeM.reset();
+                workerBeeV.reset();
+                activeWorker = false;
+            }
+        }
+    }
 
     void updateTriangle()
     {
@@ -133,7 +138,7 @@ public:
     void drawEntitys()
     {
         drawPolice();
-        // drawWorker();
+        drawWorker();
         drawTriangle();
         drawMisil();
     }
@@ -144,13 +149,13 @@ public:
             misilV ->draw(window);
         }
     }
-    // void drawWorker()
-    // {
-    //     if (activeWorker)
-    //     {
-    //         workerBeeV -> draw(window);
-    //     }
-    // }
+    void drawWorker()
+    {
+        if (activeWorker)
+        {
+            workerBeeV -> draw(window);
+        }
+    }
     void drawPolice()
     {
         policeV -> draw(window);

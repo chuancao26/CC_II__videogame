@@ -12,7 +12,6 @@ public:
         while (view.isOpen()) {
             view.render();
             view.handleInput();
-            
         }
     }
 };
