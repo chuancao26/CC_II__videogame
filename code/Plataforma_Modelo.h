@@ -25,13 +25,16 @@ class Mapa
     float platformSpacingW ; // Espacio predeterminado entre plataformas
     float currentY;
     bool recorrer;
+    int size;
     public:
     Mapa();
     void parseMap(const std::vector<std::string>& mapStrings);
-    vector<Plataforma> platforms;
+    Plataforma* platforms;
     vector<std::string> crearMapa(int n);
     std::string generarSecuenciaFila();
     void eliminarPlataformas();
+    void remove(int pos);
+    void push_back(const Plataforma&& plat);
     bool se_elimina(const Plataforma& plat);
     void crearPlataformas();
 };

@@ -12,6 +12,14 @@ class PlataformaVista
         float gravedad;
         float posx,posy;
     public:
+        PlataformaVista()=default;
+        PlataformaVista(PlataformaVista&& other)
+        : texture(std::move(other.texture)), platformShape(std::move(other.platformShape))
+        {
+            posx=std::move(other.posx);
+            posy=std::move(other.posy);
+        }
+
         PlataformaVista(const Plataforma& plat):pla(plat)
         {
             if (!texture.loadFromFile("img/plataforma/plataforma.png")) {
@@ -23,6 +31,7 @@ class PlataformaVista
             posx=pla.getPosx();
             posy=pla.getPosy();
         }
+
         sf::Sprite& get(){
             return platformShape;
         }

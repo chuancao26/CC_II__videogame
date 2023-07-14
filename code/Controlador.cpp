@@ -13,7 +13,7 @@ private:
     Cup jugador1;
     Cup jugador2;
     Vista vista;
-    Mapa map;
+    Mapa* map;
     ElegirPlayer elegir;
     Plataforma pla;
     sf::Clock clock, clock2, clock3, clock4,clock5;
@@ -26,12 +26,15 @@ public:
     Controlador()
         : jugador1(20,100,80), jugador2(200,100,80), vista(1280, 720)
     {
-        std::vector<std::string> mapStrings = map.crearMapa(10);
-        map.parseMap(mapStrings);
-        nivel = 0;j1=0;j2=0;
+        nivel = 0;
         elegidos=false;
+        map= new Mapa();
     }
-
+    void crearMapa()
+    {
+        std::vector<std::string> mapStrings = map->crearMapa(5);
+        map->parseMap(mapStrings);
+    }
     void manejarEventos() {
         // Obtener eventos de la ventana SFML
         sf::Event event;
@@ -134,17 +137,13 @@ public:
             
             background.cargar(vista.window, nivel);
             background.draw1(vista.window);
-            
-            vista.plataformas.clear();
             vista.dibujarCup(jugador1,jugador2);
             break;
         case 2:
             background.cargar(vista.window, nivel);
             background.draw2(vista.window);
-            eliminarplataformas();
-            cout<<map.platforms.size()<<endl;
             crearplataformas();
-            vista.plataformas.clear();
+            eliminarplataformas();
             mover_plataformas();
             dibujarPlataformas();
             vista.dibujarCup(jugador1,jugador2);
@@ -159,19 +158,28 @@ public:
     }
     void eliminarplataformas()
     {
-        if (clock5.getElapsedTime().asSeconds() >= 1.0f)
+        if (clock5.getElapsedTime().asSeconds() >= 2.5f)
         {
-            map.eliminarPlataformas();
+            map->eliminarPlataformas();
             clock5.restart();
         }
     }
     void crearplataformas()
     {
-        if (clock2.getElapsedTime().asSeconds() >= 2.75f)
+        if(map->size==0)
         {
-            map.crearPlataformas();
-            clock2.restart();
+            crearMapa();
         }
+        else
+        {
+            if (clock2.getElapsedTime().asSeconds() >= 1.0f)
+            {
+                map->crearPlataformas();
+                clock2.restart();
+                
+            }
+        }
+        
     }
     void renderizar() {
         vista.window.clear();
@@ -179,27 +187,27 @@ public:
         vista.window.display();
     }
     void dibujarPlataformas() {
-        for (auto& platform : map.platforms)
+        for(int i=0;i<map->size;i++)
         {
-            vista.dibujarPlat(platform);
+            vista.dibujarPlat(map->platforms[i]);
         }
     }
     void colisiones() {
-        for (auto platform : vista.plataformas)
+        for (int i=0;i<map->size;i++)
         {
-            if (vista.colision(vista.jugador_v.cupShape, platform))
+            if (vista.colision(vista.jugador_v.cupShape, map->platforms[i]))
             {
                 jugador1.enPlataforma(true);
-                jugador1.estaColisionando(platform->pla.getPosy());
+                jugador1.estaColisionando(map->platforms[i].y);
             }
             else {
                 jugador1.enPlataforma(false);
             }
 
-            if (vista.colision(vista.jugador_v2.cupShape, platform))
+            if (vista.colision(vista.jugador_v2.cupShape, map->platforms[i]))
             {
                 jugador2.enPlataforma(true);
-                jugador2.estaColisionando(platform->pla.getPosy());
+                jugador2.estaColisionando(map->platforms[i].y);
             }
             else {
                 jugador2.enPlataforma(false);
@@ -208,8 +216,9 @@ public:
     }
     void mover_plataformas() {
         float delta = clock.restart().asSeconds();
-        for (auto& platform : map.platforms) {
-            platform.caida(delta);
+        for(int i=0;i<map->size;i++)
+        {
+            map->platforms[i].caida(delta);
         }
         background.actualizar(vista.window, delta);
     }

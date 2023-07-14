@@ -4,12 +4,12 @@
 class Vista {
 public:
     sf::RenderWindow window;
-    vector<PlataformaVista*> plataformas;
     JugadorVista jugador_v;
     JugadorVista jugador_v2;
     float width,height;
     float elapsedSeconds;
     float interval;
+    int size;
     sf::Time tiempoAcumulado;
     sf::Clock relojMovimiento;
     sf::Clock clock;
@@ -40,21 +40,21 @@ public:
         jugador_v2.dibujar(jugador2,window);
         
     }
+
     void dibujarPlat(const Plataforma& plataforma) {
        
-        PlataformaVista* plat = new PlataformaVista(plataforma);
-        plat->setPosition(plataforma.getPosx(), plataforma.getPosy());
-        window.draw(plat->get());
-        plataformas.push_back(plat);
+        PlataformaVista plat(plataforma);
+        plat.setPosition(plataforma.getPosx(), plataforma.getPosy());
+        window.draw(plat.get());
     }
     void actualizar_Plataformas() {
         
     }
     
-    bool colision(sf::Sprite& jugador, PlataformaVista* platform)
+    bool colision(sf::Sprite& jugador, Plataforma& platform)
     {
         sf::FloatRect jugadorBounds = jugador.getGlobalBounds();
-        sf::FloatRect plataformaBounds = platform->platformShape.getGlobalBounds();
+        sf::FloatRect plataformaBounds(platform.x, platform.y, platform.width,platform.height);
         return jugadorBounds.intersects(plataformaBounds);
     }
 
