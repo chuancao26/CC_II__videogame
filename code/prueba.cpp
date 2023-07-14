@@ -1,49 +1,110 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
+#include <memory>
+#include <vector>
 #include <iostream>
-
+#include "WorkerBee.h"
 class Fist
 {
 private:
-    sf::RectangleShape cuad;
     sf::Color color;
+    sf::Sprite sprite;
+    std::vector<std::shared_ptr<sf::Texture>> textures;
+    // std::shared_ptr<sf::Texture> texture;
     int xBorder, yBorder, size;
-    float posx, posy, x, y, radiusX, radiusY, angle;
+    float posx, posy, x, y, radiusX, radiusY, angle, speed;
+    bool leftMove, charged;
 
 public:
     Fist(const int& xb, const int& yb)
-        : color(sf::Color::Magenta), xBorder(xb), yBorder(yb),
-          posx(xBorder / 2), posy(yBorder / 2), size(50), radiusX(200), radiusY(100), angle(0.0f)
+        : color(sf::Color::Magenta), xBorder(xb), yBorder(yb), leftMove(true), speed(0.1f),
+          posx(xBorder / 2), posy(yBorder / 2), size(50), radiusX(200), radiusY(100), angle(0.0f),
+          charged(false) //texture(new sf::Texture())
     {
-        cuad.setSize(sf::Vector2f(size, size));
-        cuad.setFillColor(color);
-        cuad.setPosition(posx, posy);
+        textures.reserve(16);
+        if (!charged)
+        {
+            load();
+            charged = true;
+        }
     }
+    void load()
+    {
+        for (size_t i{1}; i < 16; ++i)
+        {
+            textures.push_back(std::make_shared<sf::Texture>());
+            std::string tmp = (i < 10 ? "0" : "");
+            std::string filename = "img/nivel_Bee/Bee_Worker/bee_grunt_flying_00" + tmp + std::to_string(i) + ".png";
+            std::cout << filename << std::endl;
+            if(!textures[i - 1]->loadFromFile(filename))
+                std::cout << "Problemas para cargar la imagen" << std::endl;
+        }
 
+    }
     void move()
     {
-        x = posx + std::sin(2 * angle) * std::pow(std::abs(std::cos(angle)), 0.5f) * radiusX;
-        y = posy - std::sin(angle) * std::pow(std::abs(std::cos(2 * angle)), 0.5f) * radiusY;
-        cuad.setPosition(x, y);
+        if (leftMove)
+        {
+            posx -= speed;
+        }
+        if (!leftMove)
+        {
+            posx += speed;
+        }
     }
-
-    void update(const bool& tecla)
+    void update()
     {
         angle += 0.01f;
+        if (posx < 0 - size)
+        {
+            leftMove = false;
+            
+        }
+        if (posx > xBorder + size)
+        {
+            leftMove = true;
+        }
         move();
     }
 
-    void draw(sf::RenderWindow& window)
-    {
-        window.draw(cuad);
-    }
-};
+void draw(sf::RenderWindow& window)
+{
+    size_t textureIndex = static_cast<size_t>(std::round(angle)) % textures.size();
 
+    sprite.setTexture(*textures[textureIndex]);
+    sprite.setPosition(posx, posy);
+
+    sf::FloatRect bounds = sprite.getLocalBounds();
+
+    // Establecer el origen de la rotación en el centro de la textura
+    sprite.setOrigin(bounds.width / 2, bounds.height / 2);
+
+    // Establecer la escala del sprite
+    sprite.setScale(0.8f, 0.8f); // Puedes ajustar los valores según tu necesidad
+
+    // Rotar la textura para que mire hacia la derecha
+    if (!leftMove)
+    {
+        sprite.setRotation(180.0f);
+    }
+    else
+    {
+        sprite.setRotation(0.0f);
+    }
+
+    window.draw(sprite);
+}
+
+
+};
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(800, 800), "Cuadrado Movimiento Alas de Mariposa");
-    Fist a(800, 800);
-
+    std::shared_ptr<WorkerBeeM> workerBeeM;
+    std::shared_ptr<WorkerBeeV> workerBeeV;
+    workerBeeM = std::make_shared<WorkerBeeM> (800, 800);
+    workerBeeV = std::make_shared<WorkerBeeV> (workerBeeM);
+    float rate = 0.0f;
     while (window.isOpen())
     {
         sf::Event event;
@@ -52,13 +113,12 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-
-        a.update();
-
-        // window.clear();
-        a.draw(window);
+        rate += 0.01;
+        workerBeeV->update(rate);
+        workerBeeM->move();
+        window.clear();
+        workerBeeV->draw(window);
         window.display();
     }
-
     return 0;
 }

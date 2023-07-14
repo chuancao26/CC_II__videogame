@@ -25,13 +25,14 @@ private:
     sf::Clock clock;
     sf::Time elapsedtime;
     int xBorder, yBorder;
+    float rateTexture;
     std::string windowName;
     std::mt19937 generator;
     std::uniform_int_distribution<int> distributionY;
 public:
     // constructor
     VistaBee():
-    xBorder(1280), yBorder(720), windowName("Prueba"), activeWorker(false), activeTriangle(false)
+    xBorder(1280), yBorder(720), windowName("Prueba"), activeWorker(false), activeTriangle(false), rateTexture(0.0f)
     {
         std::random_device rd;
         generator.seed(rd());
@@ -60,6 +61,7 @@ public:
     }
     void update()
     {
+        rateTexture += 0.01f;
         elapsedtime = clock.getElapsedTime();
         policeM ->move();
         policeV -> update(elapsedtime);
@@ -82,7 +84,7 @@ public:
         if (activeWorker)
         {
             workerBeeM -> move();
-            workerBeeV -> move();
+            workerBeeV -> update(rateTexture);
             if(workerBeeM -> isExpired())
             {
                 workerBeeM.reset();
