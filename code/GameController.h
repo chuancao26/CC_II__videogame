@@ -10,8 +10,8 @@ public:
     void Run() 
     {
         while (view.isOpen()) {
-            view.render();
             view.handleInput();
+            view.render();
         }
     }
 };
