@@ -7,13 +7,13 @@ class MisilM : public Enemigo
 {
     private:
         int width, height, sizeY, sizeX;
-        float avance, speed;
+        float avance, speed, scale;
         bool moveLeft, moveUp, avanceFlag, change;
     public:
         // Constructor
         MisilM(const int& width, const int& height):width(width), change(false),
         height(height), avance(0.0f), speed(0.1f), moveLeft(true), moveUp(false),
-        avanceFlag(false), Enemigo(width* 0.5f, height * 0.9f, 100), sizeY(50), sizeX(size)
+        scale(1.0f), avanceFlag(false), Enemigo(width* 0.5f, height * 0.9f, 100), sizeY(50), sizeX(size)
         {
         }
         void move()
@@ -82,29 +82,41 @@ class MisilM : public Enemigo
         bool getChange(){return change;}
         void setPosX(const float& posx_){posx = posx_;}
         void setPosY(const float& posy_){posy = posy_;}
+        float getScale(){return scale;}
 };
 class MisilV
 {
     private:
-    sf::RectangleShape misil;
-    sf::Color color;
     std::shared_ptr<MisilM> misilm;
+    std::vector<std::shared_ptr<sf::Texture>> textures;
+    sf::Sprite sprite;
+    float elapsedTime;
     public:
-    MisilV(std::shared_ptr<MisilM> a): color(sf::Color::Yellow), misilm(a)
+    MisilV(std::shared_ptr<MisilM> a, std::vector<std::shared_ptr<sf::Texture>> textures_):misilm(a), 
+    textures(textures_)
     {
-        misil.setFillColor(color);
-        misil.setSize(sf::Vector2f(misilm->getGetXsize(), misilm->getGetYsize()));
-        misil.setPosition(misilm->getPosX(), misilm->getPosY());
+        
     }
-    void update()
+    void update(const float& elapsedTime_)
     {
+        elapsedTime = elapsedTime_;
         move();
+        updateTextures();
+    }
+    void updateTextures()
+    {
+        size_t textureIndex = static_cast<size_t>(std::round(elapsedTime * 6)) % textures.size();
+        sprite.setScale(misilm->getScale(), misilm->getScale());
+        sprite.setTexture(*textures[textureIndex]);
+        sf::FloatRect bounds = sprite.getLocalBounds();
+        sprite.setOrigin(bounds.width / 2, bounds.height / 2);
     }
     void move()
     {
         if ( misilm->getPosX() >= 0.5 * misilm->getWidth())
         {
-            misil.setSize(sf::Vector2f(misilm->getGetYsize(),misilm->getGetXsize()));
+            // misil.setSize(sf::Vector2f(misilm->getGetYsize(),misilm->getGetXsize()));
+            sprite.setRotation(90.0f);
             if(!misilm -> getavanceFlag())
             {
                 misilm->setPosY(misilm->getPosY() - 50);
@@ -112,7 +124,8 @@ class MisilV
         }
         if ( misilm->getPosX() <= 0.05 * misilm->getWidth())
         {
-            misil.setSize(sf::Vector2f(misilm->getGetYsize(),misilm->getGetXsize()));
+            // misil.setSize(sf::Vector2f(misilm->getGetYsize(),misilm->getGetXsize()));
+            sprite.setRotation(90.0f);
             if(!misilm -> getavanceFlag())
             {
                 misilm->setPosY(misilm->getPosY() - 50);
@@ -120,14 +133,21 @@ class MisilV
         }
         if (misilm->getChange())
         {
-            misil.setSize(sf::Vector2f(misilm->getGetXsize(),misilm->getGetYsize()));
+            if (!misilm->getMoveLeft())
+            {
+                sprite.setRotation(180.f);
+            }
+            else
+            {
+                sprite.setRotation(0.0f);
+            }
         }
-        misil.setPosition(misilm->getPosX(), misilm->getPosY());
+        sprite.setPosition(misilm->getPosX(), misilm->getPosY());
 
     }
     void draw(sf::RenderWindow& window)
     {
-        window.draw(misil);
+        window.draw(sprite);
     }
 };
 

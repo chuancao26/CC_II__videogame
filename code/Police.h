@@ -9,14 +9,15 @@
 class PoliceM : public Enemigo
 {
 private:
-    float life, speed;
+    float life, speed, scale;
     int HeightSize, WidthSize, xBorder, yBorder;
     bool movingLeft;
+
     public:
     PoliceM(const int& limitx, const int& limity):
     Enemigo(limitx * 0.8, limity * 0.5, 200), life(100), speed(0.2),
     WidthSize(100), HeightSize(100), xBorder(limitx),
-    yBorder(limity), movingLeft(false)
+    yBorder(limity), movingLeft(false), scale(0.60f)
     {
     }
     void move()
@@ -40,31 +41,49 @@ private:
     int getHeight(){return HeightSize;}
     int getXborder(){return xBorder;}
     int getYborder(){return yBorder;}
+    float getScale(){return scale;}
+    bool getMoveLeft(){return movingLeft;}
 };
 class PoliceV
 {
 private:
     bool activeBomb, activeEspinas;
     sf::Color color;
-    sf::RectangleShape police;
     sf::Clock clock;
     float elapsedTime;
     std::shared_ptr<PoliceM> p; 
     std::shared_ptr<BombaPoliceM> bombM;
     std::shared_ptr<BombaPoliceV> bombV;
+    std::vector<std::shared_ptr<sf::Texture>> textures;
+    sf::Sprite sprite;
     EspinaM** espinasM;
     EspinaV** espinasV;
 public:
-    PoliceV(std::shared_ptr<PoliceM> police_): p(police_),
-    color(sf::Color::Cyan), activeBomb(false), activeEspinas(false)
+    PoliceV(std::shared_ptr<PoliceM> police_, const std::vector<std::shared_ptr<sf::Texture>>& textures_): p(police_),
+    color(sf::Color::Cyan), activeBomb(false), activeEspinas(false), textures(textures_)
     {
-        police.setPosition(p->getPosx(), p->getPosy());
-        police.setFillColor(color);
-        police.setSize(sf::Vector2f(p->getWidth(), p->getHeight()));
+    }
+    void updateTexture()
+    {
+        size_t textureIndex = static_cast<size_t>(std::round(elapsedTime * 6)) % textures.size();
+        sprite.setScale(p->getScale(), p->getScale());
+        sprite.setTexture(*textures[textureIndex]);
+        sf::FloatRect bounds = sprite.getLocalBounds();
+        sprite.setOrigin(bounds.width / 2, bounds.height / 2);
+        
+
     }
     void move()
     {
-        police.setPosition(p->getPosx(), p->getPosy());
+        if (!p->getMoveLeft())
+        {
+            sprite.setScale(-p->getScale(),p->getScale());
+        }
+        else
+        {
+            sprite.setScale(p->getScale(),p->getScale());
+        }
+        sprite.setPosition(p->getPosx(), p->getPosy());
     }
     void updateBomb()
     {
@@ -132,11 +151,12 @@ public:
             }
         }  
     }
-    void update(sf::Time& timeDelta)
+    void update(const float& timeDelta)
     {
+        updateTexture();
         updateBomb();
         updateEspinas();
-        elapsedTime = timeDelta.asSeconds();
+        elapsedTime = timeDelta;
         move();
         
     }
@@ -158,7 +178,7 @@ public:
     {
         drawBomb(window);
         drawEspinas(window);
-        window.draw(police);
+        window.draw(sprite);
     }
     void crearEspinas()
     {

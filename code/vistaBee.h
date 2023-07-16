@@ -7,7 +7,7 @@
 #include "Police.h"
 #include "WorkerBee.h"
 #include "Espina.h"
-#include "triangulo.h"
+#include "Triangulo.h"
 #include "MisilBee.h"
 #include "Textures.h"
 class VistaBee
@@ -26,7 +26,7 @@ private:
     float rate;
     sf::RenderWindow window;
     sf::Clock clock;
-    sf::Time elapsedtime;
+    float elapsedtime;
     int xBorder, yBorder;
     std::string windowName;
     std::mt19937 generator;
@@ -42,7 +42,7 @@ public:
         distributionY = std::uniform_int_distribution<int>(150,yBorder);
         window.create(sf::VideoMode(xBorder, yBorder), windowName);
         policeM = std::make_shared<PoliceM>(xBorder,yBorder);
-        policeV = std::make_shared<PoliceV>(policeM);
+        policeV = std::make_shared<PoliceV>(policeM, textures.getPoliceTextures());
     }
     void render()
     {
@@ -65,7 +65,7 @@ public:
     void update()
     {
         rate += 0.01f;
-        elapsedtime = clock.getElapsedTime();
+        elapsedtime = clock.getElapsedTime().asSeconds();
         policeM ->move();
         policeV -> update(elapsedtime);
         updateTriangle();
@@ -82,13 +82,12 @@ public:
         {
             workerBeeM = std::make_shared<WorkerBeeM> (xBorder, distributionY(generator));
             workerBeeV = std::make_shared<WorkerBeeV> (workerBeeM, textures.getWorkerTextures());
-            std::cout << "se creo" << std::endl;
             activeWorker = true;
         }
         if (activeWorker)
         {
             workerBeeM -> move();
-            workerBeeV -> update(rate);
+            workerBeeV -> update(elapsedtime);
             if(workerBeeM -> isExpired())
             {
                 workerBeeM.reset();
@@ -97,19 +96,18 @@ public:
             }
         }
     }
-
     void updateTriangle()
     {
         if (!activeTriangle)
         {
             triangleM = std::make_shared<TrianguloM>(0,0, xBorder, yBorder, 'e');
-            triangleV = std::make_shared<TrianguloV>(triangleM);
+            triangleV = std::make_shared<TrianguloV>(triangleM, textures.getTriangleTextures());
             activeTriangle = true;
         }
         if(activeTriangle)
         {
             triangleM->move();
-            triangleV->move();
+            triangleV->update(elapsedtime);
             if (triangleM->isExpired())
             {
                 triangleM.reset();
@@ -118,18 +116,18 @@ public:
             }
         }
     }
-        void updateMisil()
+    void updateMisil()
     {
         if (!activeMisil)
         {
             misilM = std::make_shared<MisilM>(xBorder, yBorder);
-            misilV = std::make_shared<MisilV>(misilM);
+            misilV = std::make_shared<MisilV>(misilM, textures.getMisilBeeTextures());
             activeMisil = true;
         }
         if (activeMisil)
         {
             misilM->move();
-            misilV->update();
+            misilV->update(elapsedtime);
             if (misilM->isExpired())
             {
                 misilM.reset();

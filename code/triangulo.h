@@ -8,11 +8,11 @@ class TrianguloM : public Enemigo
 {
 private:
     int radius, xBorder, yBorder;
-    float speed, rotationSpeed;
+    float speed, scale, rotationSpeed;
     char type;
 public:
     TrianguloM(const float& posx_, const float& posy_, const int& xlimit, const int& ylimit, const char& type_):
-    Enemigo(posx_, posy_, 100), speed(0.01f), xBorder(xlimit), yBorder(ylimit),
+    Enemigo(posx_, posy_, 100), speed(0.01f), xBorder(xlimit), yBorder(ylimit), scale(0.0f),
     type(type_), rotationSpeed(0.01f)
     {
 
@@ -65,6 +65,7 @@ public:
     int getSize(){return size;}
     char getType(){return type;}
     float getRotationSpeed(){return rotationSpeed;}
+    float getScale(){return scale;}
 
 };
 
@@ -72,32 +73,36 @@ class TrianguloV
 {
 private:
     std::shared_ptr<TrianguloM> tm;
-    sf::ConvexShape triangle;
-    sf::Color color;
-    sf::Time start;
-    sf::Time elapsedTime;
+    std::vector<std::shared_ptr<sf::Texture>> textures;
+    sf::Sprite sprite;
+    float rotation;
+    float elapsedTime;
 public:
-    TrianguloV(std::shared_ptr<TrianguloM> tm_):tm(tm_), color(sf::Color::White), triangle(3)
+    TrianguloV(std::shared_ptr<TrianguloM> tm_,std::vector<std::shared_ptr<sf::Texture>> textures_):tm(tm_), rotation(0.0f),
+    textures(textures_)
     {
-        triangle.setPoint(0, sf::Vector2f(0.0f, 0.0f));
-        triangle.setPoint(1, sf::Vector2f(0.0f, 100.0f));
-        triangle.setPoint(2, sf::Vector2f(100.0f, 50.0f));
-        triangle.setFillColor(color);
-        triangle.setOrigin(50.0f,50.0f);
-        triangle.setPosition(tm->getPosx(), tm->getPosy());
     }
     void draw(sf::RenderWindow& window)
     {
-        window.draw(triangle);
+        window.draw(sprite);
     } 
     void move()
     {
-        triangle.setRotation(triangle.getRotation() + tm->getRotationSpeed());
-        triangle.setPosition(tm->getPosx(), tm->getPosy());
+        sprite.setRotation( rotation += tm->getRotationSpeed());
+        sprite.setPosition(tm->getPosx(), tm->getPosy());
     }
-    void update()
+    void update(const float& elapsedTime_)
     {
         move();
+        elapsedTime = elapsedTime_;
+        updateTexture();
+        
+    }
+    void updateTexture()
+    {
+        size_t textureIndex = static_cast<size_t>(std::round(elapsedTime * 6)) % textures.size();
+        sprite.setScale(tm->getScale(), tm->getScale());
+        sprite.setTexture(*textures[textureIndex]);
     }
 };
 

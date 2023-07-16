@@ -93,7 +93,7 @@ private:
 
 public:
     Fist(const int& xb, const int& yb, const std::vector<std::shared_ptr<sf::Texture>>& textures_)
-        : textures(textures_), xBorder(xb), yBorder(yb), leftMove(true), speed(1.0f),
+        : textures(textures_), xBorder(xb), yBorder(yb), leftMove(true), speed(2.0f),
           posx(xBorder / 2), posy(yBorder / 2), size(50), radiusX(200), radiusY(100), angle(0.0f),
           charged(false) //texture(new sf::Texture())
     {
@@ -175,7 +175,7 @@ int main()
     // std::vector<std::shared_ptr<sf::Texture>> workerBeeTextures = ;
     Textures textures;
     window.setFramerateLimit(60);
-    std::shared_ptr<Fist> fist = std::make_shared<Fist>(800,800,textures.getWorkerTextures());
+    std::shared_ptr<Fist> fist = std::make_shared<Fist>(800,800,textures.getMisilBeeTextures());
     while (window.isOpen())
     {
         sf::Event event;
