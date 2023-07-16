@@ -227,7 +227,7 @@ class BombController {
 private:
     std::vector<BombModel> bombs;
     BombView cuadradoView;
-
+    bool Eliminar;
 public:
     BombController(float ventanaAncho, float ventanaAlto) : bombs(1), cuadradoView(){
         //float elapsedSeconds = 0.0f;
@@ -263,9 +263,19 @@ public:
                 }
 
                 cuadradoView.draw(window);
+                bool Eliminar=false;
+            }
+            else if (!cuadrado.isEliminado()){
+                Eliminar=true;
             }
         }
     }
+    
+    bool Eliminado(){
+
+        return Eliminar;
+    }
+    
 
 };
 class BoomerangController {
@@ -518,6 +528,11 @@ int main() {
     if (boomerang[0].shouldDelete()==true){
             delete boomerang;
         }
+        /*
+    if (bombs.Eliminado()==true){
+            delete bombs;
+    }
+    */
 
     return 0;
 }
