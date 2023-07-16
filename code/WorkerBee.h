@@ -42,28 +42,17 @@ class WorkerBeeV
         std::vector<std::shared_ptr<sf::Texture>> textures;
         sf::Sprite sprite;
         float rateTexture;
-        bool charged;
 
     public:
-        WorkerBeeV(std::shared_ptr<WorkerBeeM> wb_): wb(wb_),
-        charged(false)
+        WorkerBeeV(std::shared_ptr<WorkerBeeM> wb_, const std::vector<std::shared_ptr<sf::Texture>>& textures_): wb(wb_),
+        textures(textures_)
         {
-            textures.reserve(5);
         }
         void update(const float& rateTexture_)
         {  
             rateTexture = rateTexture_;
-            if (!charged)
-            {
-                load();
-                charged = true;
-            }
-            if (charged)
-            {
-                updateTexture();
-                move();
-
-            }
+            updateTexture();
+            move();
         }
         void updateTexture()
         {
@@ -77,22 +66,8 @@ class WorkerBeeV
         }
         void draw(sf::RenderWindow& window)
         {
-            if (charged)
-            {
-                window.draw(sprite);
-            }
+            window.draw(sprite);
         }
-        void load()
-        {
-            for (size_t i{1}; i < 5; ++i)
-            {
-                textures.push_back(std::make_shared<sf::Texture>());
-                std::string tmp = (i < 10 ? "0" : "");
-                std::string filename = "img/nivel_Bee/Bee_Worker/bee_grunt_flying_00" + tmp + std::to_string(i) + ".png";
-                std::cout << filename << std::endl;
-                if(!textures[i - 1]->loadFromFile(filename))
-                    std::cout << "Problemas para cargar la imagen" << std::endl;
-            }
-        }
+
     };
 #endif 

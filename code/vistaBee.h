@@ -9,9 +9,11 @@
 #include "Espina.h"
 #include "triangulo.h"
 #include "MisilBee.h"
+#include "Textures.h"
 class VistaBee
 {
 private:
+    Textures textures;
     std::shared_ptr<MisilM> misilM;
     std::shared_ptr<MisilV> misilV;
     std::shared_ptr<PoliceM> policeM;
@@ -79,7 +81,8 @@ public:
         if(!activeWorker)
         {
             workerBeeM = std::make_shared<WorkerBeeM> (xBorder, distributionY(generator));
-            workerBeeV = std::make_shared<WorkerBeeV> (workerBeeM);
+            workerBeeV = std::make_shared<WorkerBeeV> (workerBeeM, textures.getWorkerTextures());
+            std::cout << "se creo" << std::endl;
             activeWorker = true;
         }
         if (activeWorker)
