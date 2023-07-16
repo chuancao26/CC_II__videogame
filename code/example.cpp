@@ -25,7 +25,8 @@ private:
 public:
     ThornsRoot(sf::RenderWindow& window) : window(window) {
         if (!finalTexture1.loadFromFile("final1.png") || !finalTexture2.loadFromFile("final2.png") ||
-            !finalTexture3.loadFromFile("final3.png") || !finalTexture4.loadFromFile("final4.png") || !raizEnganchadaTexture2.loadFromFile("espina.png") ||
+            !finalTexture3.loadFromFile("final3.png") || !finalTexture4.loadFromFile("final4.png") || 
+            !raizEnganchadaTexture2.loadFromFile("espina.png") ||
             !raizEnganchadaTexture.loadFromFile("enganchar.png") || !finalTexture.loadFromFile("final.png")) {
             std::cerr << "Error al cargar las texturas." << std::endl;
         }
@@ -49,42 +50,39 @@ public:
             sf::Time elapsed1 = clock1.getElapsedTime();
 
             handleEvents();
-
-            if (elapsed1.asSeconds() <= 2.f) {
+            
+            if (elapsed1.asSeconds() <= 2.5f) {
                 if (elapsed1.asSeconds() < 0.5f) {
                     drawImage(finalTexture1);
                 } else if (elapsed1.asSeconds() < 1.f) {
                     drawImage(finalTexture2);
                 } else if (elapsed1.asSeconds() < 1.5f) {
                     drawImage(finalTexture3);
-                } else {
+                } else if (elapsed1.asSeconds() < 2.f){
                     drawImage(finalTexture4);
                 }
-
+                else{
+                    drawImage2(finalTexture);   
+                }
             } 
-            else {
-                drawImage2(finalTexture);
+            
+            else{
+                //drawImage2(finalTexture);
 
-                //if ((elapsed.asSeconds() <= 6.f) && (elapsed.asSeconds() > 2.f)) {
-                    //float deltaTime = elapsed.asSeconds() - 3.f;
-                    //float rectX = window.getSize().x - (window.getSize().x * 1 / 4) * (deltaTime / 3.f);
-                    //raiz.setPosition(sf::Vector2f(rectX, window.getSize().y * 2 / 3));
-                    //draw();
-                //} else 
-                if(elapsed.asSeconds() > 2.5f){
-                    if (elapsed.asSeconds() <= 6.f) {
+                    if ((elapsed.asSeconds() <= 5.f) && (elapsed.asSeconds() > 3.f)) {
                         //drawRectangles(sf::Color::Green, sf::Color::Magenta);
                         drawRaiz(raizEnganchadaTexture);
-                    } else if (elapsed.asSeconds() <= 8.f){
+                    } else if ((elapsed.asSeconds() <= 8.f) && (elapsed.asSeconds() > 5.f)){
                         drawRaiz2(raizEnganchadaTexture2);
                     } 
-                    else{
-                        //reset();
+                    else if (elapsed.asSeconds() > 8.f){
+                        window.clear();
+                        window.display();
                         //drawImage2(finalTexture);
                         loadRandomValues();
                         clock.restart();
+                        window.clear();
                     }
-                }
             }
         }
     }
