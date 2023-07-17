@@ -1,6 +1,9 @@
 #include <SFML/Graphics.hpp>
 #include "Jugador_Vista.cpp"
 #include "Plataforma_Vista.cpp"
+#include <memory>
+using FloatPtr = std::shared_ptr<float>;
+
 class Vista {
 public:
     sf::RenderWindow window;
@@ -35,7 +38,6 @@ public:
     }
     
     void dibujarCup(const Cup& jugador1,const Cup& jugador2) {
-        //jugadorSprite.setPosition(jugador.getPosx(), jugador.getPosy());
         jugador_v.dibujar(jugador1,window);
         jugador_v2.dibujar(jugador2,window);
         
@@ -62,14 +64,72 @@ public:
         return window.isOpen();
     }
 
-    void procesarEventos() {
+    int procesarEventos(std::vector<FloatPtr>& Posicion) {
         sf::Event event;
-        while (window.pollEvent(event)) {
+        if (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
             
+            else if (event.type == sf::Event::KeyPressed) {
+                // Manejar teclas presionadas para el jugador 1
+                if (event.key.code == sf::Keyboard::Up) {
+                    //Acciones.push_back(std::make_shared<std::string>("Up"));
+                    return 1;
+                }
+                else if (event.key.code == sf::Keyboard::Left) {
+                    return 2;
+                }
+                else if (event.key.code == sf::Keyboard::Right) {
+                    return 3;
+                }
+                else if (event.key.code == sf::Keyboard::Down) {
+                    return 4;
+                }
+                else if (event.key.code == sf::Keyboard::Space) {
+                    return 5;
+                }
+                // Manejar teclas presionadas para el jugador 2
+                if (event.key.code == sf::Keyboard::W) {
+                    return 6;
+                }
+                else if (event.key.code == sf::Keyboard::A) {
+                    return 7;
+                }
+                else if (event.key.code == sf::Keyboard::D) {
+                    return 8;
+                }
+                else if (event.key.code == sf::Keyboard::S) {
+                    return 9;
+                }
+            }
+            else if (event.type == sf::Event::KeyReleased) {
+                // Manejar teclas liberadas para el jugador 1
+                if (event.key.code == sf::Keyboard::Left || event.key.code == sf::Keyboard::Right) {
+                    return 10;
+                }
+                if (event.key.code == sf::Keyboard::Up) {
+                    return 11;
+                }
+                // Manejar teclas liberadas para el jugador 2
+                if (event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::D) {
+                    return 12;
+                }
+                if (event.key.code == sf::Keyboard::W) {
+                    return 13;
+                }
+            }
+            else if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+                    sf::Vector2f mousePos(mousePosition.x, mousePosition.y);
+                    Posicion.push_back(std::make_shared<float>(mousePosition.x));
+                    Posicion.push_back(std::make_shared<float>(mousePosition.y));
+                    return 14;
+                }
+            }
         }
+        return 0;
     }
 };
 

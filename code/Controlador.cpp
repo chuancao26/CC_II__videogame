@@ -7,6 +7,8 @@
 #include "Bomba_Controlador.cpp"
 #include "Elegir.cpp"
 #include <thread>
+#include <memory>
+using FloatPtr = std::shared_ptr<float>;
 
 class Controlador {
 private:
@@ -36,81 +38,66 @@ public:
         map->parseMap(mapStrings);
     }
     void manejarEventos() {
-        // Obtener eventos de la ventana SFML
-        sf::Event event;
-        while (vista.window.pollEvent(event)) {
-            // Manejar eventos relevantes para los jugadores
-            if (event.type == sf::Event::Closed) {
-                vista.window.close();
-            }
-            else if (event.type == sf::Event::KeyPressed) {
-                // Manejar teclas presionadas para el jugador 1
-                if (event.key.code == sf::Keyboard::Up) {
-                    jugador1.estaSaltando(true);
-                    jugador1.saltar();
-                }
-                else if (event.key.code == sf::Keyboard::Left) {
-                    jugador1.vaizquierda(true);
-                    jugador1.moverIzquierda();
-                }
-                else if (event.key.code == sf::Keyboard::Right) {
-                    jugador1.vaderecha(true);
-                    jugador1.moverDerecha();
-                }
-                else if (event.key.code == sf::Keyboard::Down) {
-                    jugador1.moverAbajo();
-                }
-                else if (event.key.code == sf::Keyboard::Space) {
-                    nivel += 1;
-                }
-                // Manejar teclas presionadas para el jugador 2
-                if (event.key.code == sf::Keyboard::W) {
-                    jugador2.estaSaltando(true);
-                    jugador2.saltar();
-                }
-                else if (event.key.code == sf::Keyboard::A) {
-                    jugador2.vaizquierda(true);
-                    jugador2.moverIzquierda();
-                }
-                else if (event.key.code == sf::Keyboard::D) {
-                    jugador2.vaderecha(true);
-                    jugador2.moverDerecha();
-                }
-                else if (event.key.code == sf::Keyboard::S) {
-                    jugador2.moverAbajo();
-                }
-            }
-            else if (event.type == sf::Event::KeyReleased) {
-                // Manejar teclas liberadas para el jugador 1
-                if (event.key.code == sf::Keyboard::Left || event.key.code == sf::Keyboard::Right) {
-                    jugador1.vaizquierda(false);
-                    jugador1.vaderecha(false);
-                }
-                if (event.key.code == sf::Keyboard::Up) {
-                    jugador1.estaSaltando(false);
-                }
-                // Manejar teclas liberadas para el jugador 2
-                if (event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::D) {
-                    jugador2.vaizquierda(false);
-                    jugador2.vaderecha(false);
-                }
-                if (event.key.code == sf::Keyboard::W) {
-                    jugador2.estaSaltando(false);
-                }
-            }
-            else if (event.type == sf::Event::MouseButtonPressed) {
-                if (event.mouseButton.button == sf::Mouse::Left) {
-                    sf::Vector2i mousePosition = sf::Mouse::getPosition(vista.window);
-                    sf::Vector2f mousePos(mousePosition.x, mousePosition.y);
-                    jugadores.push_back(elegir.seleccionar(mousePos,true));
-                    if(jugadores.size()==2)
-                        elegidos=true;
-                }
-                else if (event.mouseButton.button == sf::Mouse::Right) {
-                    // Código para el clic derecho del mouse
-                    std::cout << "Clic derecho del mouse" << std::endl;
-                }
-            }
+        std::vector<FloatPtr> Posicion=std::vector<FloatPtr>();
+        int m=vista.procesarEventos(Posicion);
+        switch (m)
+        {
+            case 1:
+                jugador1.estaSaltando(true);
+                jugador1.saltar();
+                break;
+            case 2:
+                jugador1.vaizquierda(true);
+                jugador1.moverIzquierda();
+                break;
+            case 3:
+                jugador1.vaderecha(true);
+                jugador1.moverDerecha();
+                break;
+            case 4:
+                jugador1.moverAbajo();
+                break;
+            case 5:
+                nivel += 1;
+                break;
+            case 6:
+                jugador2.estaSaltando(true);
+                jugador2.saltar();
+                break;
+            case 7:
+                jugador2.vaizquierda(true);
+                jugador2.moverIzquierda();
+                break;
+            case 8:
+                jugador2.vaderecha(true);
+                jugador2.moverDerecha();
+                break;
+            case 9:
+                jugador2.moverAbajo();
+                break;
+            case 10:
+                jugador1.vaizquierda(false);
+                jugador1.vaderecha(false);
+                break;
+            case 11:
+                jugador1.estaSaltando(false);
+                break;
+            case 12:
+                jugador2.vaizquierda(false);
+                jugador2.vaderecha(false);
+                break;
+            case 13:
+                jugador2.estaSaltando(false);
+                break;
+            case 14:
+                FloatPtr primerElemento = Posicion.front();
+                FloatPtr segundoElemento = Posicion.back();
+                sf::Vector2f mousePos(*primerElemento, *segundoElemento);
+                jugadores.push_back(elegir.seleccionar(mousePos,true));
+                if(jugadores.size()==2)
+                    elegidos=true;
+                break;
+                        
         }
         float delta = clock3.restart().asSeconds();
         jugador1.caida(delta);
