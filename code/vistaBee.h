@@ -96,7 +96,7 @@ public:
             }
         }
     }
-    void updateTriangle()
+    void updateTriangle()   
     {
         if (!activeTriangle)
         {
@@ -126,7 +126,7 @@ public:
         }
         if (activeMisil)
         {
-            misilM->move();
+            misilM->update(elapsedtime);
             misilV->update(elapsedtime);
             if (misilM->isExpired())
             {

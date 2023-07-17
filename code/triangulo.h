@@ -12,7 +12,7 @@ private:
     char type;
 public:
     TrianguloM(const float& posx_, const float& posy_, const int& xlimit, const int& ylimit, const char& type_):
-    Enemigo(posx_, posy_, 100), speed(0.01f), xBorder(xlimit), yBorder(ylimit), scale(0.0f),
+    Enemigo(posx_, posy_, 100), speed(0.01f), xBorder(xlimit), yBorder(ylimit), scale(0.50f),
     type(type_), rotationSpeed(0.01f)
     {
 
@@ -93,16 +93,18 @@ public:
     }
     void update(const float& elapsedTime_)
     {
-        move();
         elapsedTime = elapsedTime_;
         updateTexture();
+        move();
         
     }
     void updateTexture()
     {
-        size_t textureIndex = static_cast<size_t>(std::round(elapsedTime * 6)) % textures.size();
+        size_t textureIndex = static_cast<size_t>(std::round(elapsedTime * 4)) % textures.size();
         sprite.setScale(tm->getScale(), tm->getScale());
         sprite.setTexture(*textures[textureIndex]);
+        sf::FloatRect bounds = sprite.getLocalBounds();
+        sprite.setOrigin(bounds.width / 2, bounds.height / 2);
     }
 };
 

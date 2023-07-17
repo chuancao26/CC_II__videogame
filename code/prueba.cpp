@@ -175,7 +175,7 @@ int main()
     // std::vector<std::shared_ptr<sf::Texture>> workerBeeTextures = ;
     Textures textures;
     window.setFramerateLimit(60);
-    std::shared_ptr<Fist> fist = std::make_shared<Fist>(800,800,textures.getMisilBeeTextures());
+    std::shared_ptr<Fist> fist = std::make_shared<Fist>(800,800,textures.getTriangleTextures());
     while (window.isOpen())
     {
         sf::Event event;
