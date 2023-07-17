@@ -4,6 +4,7 @@
 #include "Espina.h"
 #include "Enemigos.h"
 #include <iostream>
+#include <memory>
 class BombaPoliceM : public Enemigo
 {
 private:
@@ -43,12 +44,12 @@ public:
 class BombaPoliceV
 {
 private:
-    BombaPoliceM* bombaM;
+    std::shared_ptr<BombaPoliceM> bombaM;
     sf::CircleShape bomb;
     sf::Clock clock;
     sf::Color color;
 public:
-    BombaPoliceV(BombaPoliceM*& bp):bombaM(bp),color(sf::Color::White)
+    BombaPoliceV(std::shared_ptr<BombaPoliceM> bp):bombaM(bp),color(sf::Color::White)
     {
         bomb.setPosition(bombaM->getPosx(), bombaM->getPosy());
         bomb.setRadius(bombaM->getSize());
