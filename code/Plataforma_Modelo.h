@@ -12,15 +12,31 @@ class Plataforma
     float getPosx() const;
     float getPosy() const;
     void setPosition(float px, float py); 
-    void caida();
+    void caida(float d);
+    
 };
 
 class Mapa
 {
     public:
-    static Mapa parseMap(const std::vector<std::string>& mapStrings);
+    float platformWidth ;  // Ancho predeterminado de la plataforma
+    float platformHeight;  // Alto predeterminado de la plataforma
+    float platformSpacingH; // Espacio predeterminado entre plataformas
+    float platformSpacingW ; // Espacio predeterminado entre plataformas
+    float currentY;
+    bool recorrer;
+    int size;
     public:
-    std::vector<Plataforma> platforms;
+    Mapa();
+    void parseMap(const std::vector<std::string>& mapStrings);
+    Plataforma* platforms;
+    vector<std::string> crearMapa(int n);
+    std::string generarSecuenciaFila();
+    void eliminarPlataformas();
+    void remove(int pos);
+    void push_back(const Plataforma&& plat);
+    bool se_elimina(const Plataforma& plat);
+    void crearPlataformas();
 };
 
 #endif

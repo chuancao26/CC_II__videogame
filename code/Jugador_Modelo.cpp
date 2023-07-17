@@ -8,9 +8,11 @@ Cup::Cup(const int &px, const int& py, const int& size_)
 {
     posx = px; posy = py; size = size_;
     saltando=false;
+    derecha=false;
+    izquierda=false;
     enplataforma=false;
     vidas=3;saltos=1;
-    gravedad=3;
+    gravedad=100;
     speed=10, salto = 150;
     clock_salto=0.f;
 }
@@ -49,10 +51,10 @@ void Cup::saltar()
     }
     mover(posx, posy);
 }
-void Cup::caida()
+void Cup::caida(float d)
 {
-    if (posy < 600.0f && !enplataforma && !saltando) {
-        posy += gravedad;
+    if (posy < 800.0f && !enplataforma && !saltando) {
+        posy += gravedad*d;
     }
     mover(posx,posy);
 }
@@ -63,9 +65,21 @@ void Cup::estaSaltando(bool t)
 {
     saltando=t;
 }
+void Cup::vaderecha(bool t)
+{
+    derecha=t;
+}
+void Cup::vaizquierda(bool t)
+{
+    izquierda=t;
+}
+void Cup::estaquieto(bool t)
+{
+    quieto=t;
+}
 void Cup::estaColisionando(const float& y)
 {
-    posy = y;
+    posy = y+10;
     mover(posx, posy);
 
 }

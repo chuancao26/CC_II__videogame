@@ -5,104 +5,227 @@
 #include "Background_Vista.cpp"
 #include "Boomerang_Controlador.cpp"
 #include "Bomba_Controlador.cpp"
+#include "Elegir.cpp"
+#include <thread>
+#include <memory>
+using FloatPtr = std::shared_ptr<float>;
 
 class Controlador {
 private:
-    Cup jugador;
+    Cup jugador1;
+    Cup jugador2;
     Vista vista;
-    Mapa map;
+    Mapa* map;
+    ElegirPlayer elegir;
     Plataforma pla;
-    sf::Clock clock;
+    sf::Clock clock, clock2, clock3, clock4,clock5;
+    Background background;
+    int nivel,j1,j2;
+    vector<int> jugadores;
+    bool elegidos;
 
 public:
-    Controlador(Cup& jugador,std::vector<std::string> mapStrings)
-        : jugador(jugador),vista(1280,720)
+    Controlador()
+        : jugador1(20,100,80), jugador2(200,100,80), vista(1280, 720)
     {
-        map = Mapa::parseMap(mapStrings);
+        nivel = 0;
+        elegidos=false;
+        map= new Mapa();
+    }
+    void crearMapa()
+    {
+        std::vector<std::string> mapStrings = map->crearMapa(5);
+        map->parseMap(mapStrings);
+    }
+    void manejarEventos() {
+        std::vector<FloatPtr> Posicion=std::vector<FloatPtr>();
+        int m=vista.procesarEventos(Posicion);
+        switch (m)
+        {
+            case 1:
+                jugador1.estaSaltando(true);
+                jugador1.saltar();
+                break;
+            case 2:
+                jugador1.vaizquierda(true);
+                jugador1.moverIzquierda();
+                break;
+            case 3:
+                jugador1.vaderecha(true);
+                jugador1.moverDerecha();
+                break;
+            case 4:
+                jugador1.moverAbajo();
+                break;
+            case 5:
+                nivel += 1;
+                break;
+            case 6:
+                jugador2.estaSaltando(true);
+                jugador2.saltar();
+                break;
+            case 7:
+                jugador2.vaizquierda(true);
+                jugador2.moverIzquierda();
+                break;
+            case 8:
+                jugador2.vaderecha(true);
+                jugador2.moverDerecha();
+                break;
+            case 9:
+                jugador2.moverAbajo();
+                break;
+            case 10:
+                jugador1.vaizquierda(false);
+                jugador1.vaderecha(false);
+                break;
+            case 11:
+                jugador1.estaSaltando(false);
+                break;
+            case 12:
+                jugador2.vaizquierda(false);
+                jugador2.vaderecha(false);
+                break;
+            case 13:
+                jugador2.estaSaltando(false);
+                break;
+            case 14:
+                FloatPtr primerElemento = Posicion.front();
+                FloatPtr segundoElemento = Posicion.back();
+                sf::Vector2f mousePos(*primerElemento, *segundoElemento);
+                jugadores.push_back(elegir.seleccionar(mousePos,true));
+                if(jugadores.size()==2)
+                    elegidos=true;
+                break;
+                        
+        }
+        float delta = clock3.restart().asSeconds();
+        jugador1.caida(delta);
+        jugador2.caida(delta);
     }
 
-    void manejarEventos() {
-        // Obtener eventos de la ventana SFML
-        sf::Event event;
-        while (vista.window.pollEvent(event)) {
-            // Manejar eventos relevantes para el jugador
-            if (event.type == sf::Event::Closed) {
-                vista.window.close();
+    void Menu()
+    {
+        switch (nivel)
+        {
+        case 0:
+            background.cargar(vista.window, nivel);
+            background.draw1(vista.window);
+            elegir.dibujar(vista.window);
+            if(elegidos)
+            {
+                j1=jugadores.front();
+                j2=jugadores.back();
+                vista.cargarJugadores(j1,j2); 
             }
-            else if (event.type == sf::Event::KeyPressed) {
-                // Manejar teclas presionadas
-                if (event.key.code == sf::Keyboard::Up) {
-                    jugador.estaSaltando(true);
-                    jugador.saltar();
-                }
-                else if (event.key.code == sf::Keyboard::Left) {
-                    jugador.moverIzquierda();
-                    //jugador.mover(jugador.getPosx()-1.0f,jugador.getPosy());
-                }
-                else if (event.key.code == sf::Keyboard::Right) {
-                    jugador.moverDerecha();
-                }
-                else if (event.key.code == sf::Keyboard::Down) {
-                    jugador.moverAbajo();
-                }
+            
+            break;
+        case 1:
+            
+            background.cargar(vista.window, nivel);
+            background.draw1(vista.window);
+            vista.dibujarCup(jugador1,jugador2);
+            break;
+        case 2:
+            background.cargar(vista.window, nivel);
+            background.draw2(vista.window);
+            crearplataformas();
+            eliminarplataformas();
+            mover_plataformas();
+            dibujarPlataformas();
+            vista.dibujarCup(jugador1,jugador2);
+            break;
+        case 3:
+            background.cargar(vista.window, nivel);
+            background.draw1(vista.window);
+            break;
+        default:
+            break;
+        }
+    }
+    void eliminarplataformas()
+    {
+        if (clock5.getElapsedTime().asSeconds() >= 2.5f)
+        {
+            map->eliminarPlataformas();
+            clock5.restart();
+        }
+    }
+    void crearplataformas()
+    {
+        if(map->size==0)
+        {
+            crearMapa();
+        }
+        else
+        {
+            if (clock2.getElapsedTime().asSeconds() >= 1.0f)
+            {
+                map->crearPlataformas();
+                clock2.restart();
                 
-                //jugador.caida();
-            }
-            else if (event.type == sf::Event::KeyReleased) {
-                // Manejar teclas liberadas
-                if (event.key.code == sf::Keyboard::Left || event.key.code == sf::Keyboard::Right) {
-                    //jugador.detenerMovimientoHorizontal();
-                }
-                if (event.key.code == sf::Keyboard::Up) {
-                    jugador.estaSaltando(false);
-                }
             }
         }
-        jugador.caida();
+        
     }
-
     void renderizar() {
         vista.window.clear();
-        vista.plataformas.clear();
-        vista.dibujarCup(jugador);
-        dibujarPlataformas();
+        Menu();
         vista.window.display();
     }
-    void dibujarPlataformas(){
-        for (const auto& platform : map.platforms)
+    void dibujarPlataformas() {
+        for(int i=0;i<map->size;i++)
         {
-            vista.dibujarPlat(platform);
+            vista.dibujarPlat(map->platforms[i]);
         }
     }
-    void colisiones(){
-        for (const auto& platform : vista.plataformas)
+    void colisiones() {
+        for (int i=0;i<map->size;i++)
         {
-            if (vista.colision(vista.jugador_v.cupShape,platform))
+            if (vista.colision(vista.jugador_v.cupShape, map->platforms[i]))
             {
-                jugador.enPlataforma(true);
-                jugador.estaColisionando(platform.pla.getPosy());
+                jugador1.enPlataforma(true);
+                jugador1.estaColisionando(map->platforms[i].y);
             }
-            jugador.enPlataforma(false);
+            else {
+                jugador1.enPlataforma(false);
+            }
+
+            if (vista.colision(vista.jugador_v2.cupShape, map->platforms[i]))
+            {
+                jugador2.enPlataforma(true);
+                jugador2.estaColisionando(map->platforms[i].y);
+            }
+            else {
+                jugador2.enPlataforma(false);
+            }
         }
     }
     void mover_plataformas() {
-        if (clock.getElapsedTime().asSeconds() >= 1.0f) 
+        float delta = clock.restart().asSeconds();
+        for(int i=0;i<map->size;i++)
         {
-            for (auto& platform : map.platforms) {
-                platform.caida();
-                dibujarPlataformas();
-            }
-
-        clock.restart();
+            map->platforms[i].caida(delta);
         }
+        background.actualizar(vista.window, delta);
     }
-    
+
     void ejecutar() {
+        if(nivel>0)
+        {
+            std::thread hiloJugador2([this] {
+                while (vista.window.isOpen()) {
+                    manejarEventos();
+                }
+            }); 
+            
+            hiloJugador2.join();
+        }
+
         while (vista.window.isOpen()) {
-            mover_plataformas();
             colisiones();
             manejarEventos();
             renderizar();
-        }
+        }  
     }
 };

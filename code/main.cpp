@@ -27,7 +27,7 @@ void ejecutar(){
     FlorBossView florBoss(window); //Crear view del Boss
     sf::Clock clock2;
 
-    Background background(window); //Fondo del juego "Cagney Carnation"
+    Background background; //Fondo del juego "Cagney Carnation"
 
     while (window.isOpen()) {
         sf::Event event;
@@ -68,7 +68,8 @@ void ejecutar(){
         florBoss.update(deltaTime2);
 
         window.clear(sf::Color::White);
-        background.draw();
+        background.cargar(window,0);
+        background.draw1(window);
         if (!boomerang.shouldDelete()) {
             boomerang.draw(window);
         }
@@ -91,22 +92,10 @@ void ejecutar(){
     }
 }
 int main() {
-    int xedge = 1280, yedge = 720, size = 60;
-    float posx = 20, posy = 600;
-    std::vector<std::string> mapStrings =
-    {
-        "A   A  A",
-        "  A    A",
-        " P P   A",
-        "PPPPPP  "
-    };
-    Cup a(posx, posy, size); 
-    Controlador controlador(a,mapStrings);
+    Controlador controlador;
     controlador.ejecutar();
     
-    GameController gameController;
-    gameController.Run();
-
-    ejecutar();
+    //GameController gameController;
+    //gameController.Run();
     return 0;
 }
