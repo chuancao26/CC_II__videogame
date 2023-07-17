@@ -67,10 +67,8 @@ public:
             } 
             
             else{
-                //drawImage2(finalTexture);
-
+               
                     if ((elapsed.asSeconds() <= 5.f) && (elapsed.asSeconds() > 3.f)) {
-                        //drawRectangles(sf::Color::Green, sf::Color::Magenta);
                         drawRaiz(raizEnganchadaTexture);
                     } else if ((elapsed.asSeconds() <= 8.f) && (elapsed.asSeconds() > 5.f)){
                         drawRaiz2(raizEnganchadaTexture2);
@@ -78,7 +76,7 @@ public:
                     else if (elapsed.asSeconds() > 8.f){
                         window.clear();
                         window.display();
-                        //drawImage2(finalTexture);
+          
                         loadRandomValues();
                         clock.restart();
                         window.clear();
