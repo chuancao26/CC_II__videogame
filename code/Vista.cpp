@@ -2,10 +2,12 @@
 #include "Jugador_Vista.cpp"
 #include "Plataforma_Vista.cpp"
 #include <memory>
+#include "vistaBee.h"
 using FloatPtr = std::shared_ptr<float>;
 
 class Vista {
 public:
+    VistaBee beeView;  
     sf::RenderWindow window;
     JugadorVista jugador_v;
     JugadorVista jugador_v2;
@@ -19,7 +21,8 @@ public:
     sf::Clock timer;
     
 public:
-    Vista(int xedge, int yedge) : width(xedge), height(yedge), window(sf::VideoMode(xedge, yedge), "CUPHEAD!")
+    Vista(int xedge, int yedge) : width(xedge), height(yedge), window(sf::VideoMode(xedge, yedge), "CUPHEAD!"),
+    beeView(window)
     {
         width = window.getSize().x;
         height = window.getSize().y;
@@ -36,7 +39,6 @@ public:
         }
         
     }
-    
     void dibujarCup(const Cup& jugador1,const Cup& jugador2) {
         jugador_v.dibujar(jugador1,window);
         jugador_v2.dibujar(jugador2,window);
@@ -130,6 +132,11 @@ public:
             }
         }
         return 0;
+    }
+    void loadBeeView()
+    {
+        beeView.handleInput();
+        beeView.render();
     }
 };
 

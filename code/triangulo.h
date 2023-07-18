@@ -12,8 +12,8 @@ private:
     char type;
 public:
     TrianguloM(const float& posx_, const float& posy_, const int& xlimit, const int& ylimit, const char& type_):
-    Enemigo(posx_, posy_, 100), speed(0.01f), xBorder(xlimit), yBorder(ylimit), scale(0.50f),
-    type(type_), rotationSpeed(0.01f)
+    Enemigo(posx_, posy_, 100), speed(7.0f), xBorder(xlimit), yBorder(ylimit), scale(0.50f),
+    type(type_), rotationSpeed(5.0f)
     {
 
     } 

@@ -11,9 +11,11 @@ class Textures
         std::vector<std::shared_ptr<sf::Texture>> policeBeeTextures;
         std::vector<std::shared_ptr<sf::Texture>> misilTextures;
         std::vector<std::shared_ptr<sf::Texture>> trianguloTextures;
-        int cantWB, cantPolice, cantMisil, cantTriangle;
+        std::vector<std::shared_ptr<sf::Texture>> espinasTextures;
+        std::vector<std::shared_ptr<sf::Texture>> bombTextures;
+        int cantWB, cantPolice, cantMisil, cantTriangle, cantEspinas, cantBomb;
     public:
-    Textures():cantWB(5), cantMisil(9), cantPolice(5), cantTriangle(4)
+    Textures():cantWB(6), cantMisil(10), cantPolice(6), cantTriangle(5), cantEspinas(7), cantBomb(4)
     {
         loadTextures();
     }
@@ -63,22 +65,52 @@ class Textures
             if(!trianguloTextures[i - 1]->loadFromFile(filename))
                 std::cout << "Problemas para cargar la imagen" << std::endl;
         }  
+        // Espinas
+        espinasTextures.reserve(cantEspinas);
+        for (size_t i{1}; i < cantEspinas; ++i)
+        {
+            espinasTextures.push_back(std::make_shared<sf::Texture>());
+            std::string tmp = (i < 10 ? "0" : "");
+            std::string filename = "img/nivel_Bee/Espinas/bee_bomb_stinger_b_00" + tmp + std::to_string(i) + ".png";
+            std::cout << filename << std::endl;
+            if(!espinasTextures[i - 1]->loadFromFile(filename))
+                std::cout << "Problemas para cargar la imagen" << std::endl;
+        }  
+        // Espinas
+        bombTextures.reserve(cantBomb);
+        for (size_t i{1}; i < cantBomb; ++i)
+        {
+            bombTextures.push_back(std::make_shared<sf::Texture>());
+            std::string tmp = (i < 10 ? "0" : "");
+            std::string filename = "img/nivel_Bee/Bomb/bee_bomb_warning_b_00" + tmp + std::to_string(i) + ".png";
+            std::cout << filename << std::endl;
+            if(!bombTextures[i - 1]->loadFromFile(filename))
+                std::cout << "Problemas para cargar la imagen" << std::endl;
+        } 
     }
     std::vector<std::shared_ptr<sf::Texture>> getTriangleTextures()
     {
-            return trianguloTextures;
+        return trianguloTextures;
     }
     std::vector<std::shared_ptr<sf::Texture>> getPoliceTextures()
     {
-            return policeBeeTextures;
+        return policeBeeTextures;
     }
     std::vector<std::shared_ptr<sf::Texture>> getMisilBeeTextures()
     {
-            return misilTextures;
+        return misilTextures;
     }
     std::vector<std::shared_ptr<sf::Texture>> getWorkerTextures()
     {
-            return workerBeeTextures;
+        return workerBeeTextures;
+    }
+    std::vector<std::shared_ptr<sf::Texture>> getEspinasTextures()
+    {
+        return espinasTextures;
+    }
+    std::vector<std::shared_ptr<sf::Texture>> getBombTextures()
+    {
+        return bombTextures;
     }
 };
 #endif
