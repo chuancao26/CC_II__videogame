@@ -134,6 +134,7 @@ public:
             mover_plataformas();
             dibujarPlataformas();
             vista.dibujarCup(jugador1,jugador2);
+            vista.loadBeeView();
             break;
         case 3:
             background.cargar(vista.window, nivel);

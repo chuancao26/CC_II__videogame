@@ -13,7 +13,7 @@ private:
 public:
     // constructor
     WorkerBeeM(const float& posx_, const float& posy_):
-    Enemigo(posx_, posy_, 50), xSpeed(0.2), ySpeed(0.1), life(100), scale(0.80f)// to define
+    Enemigo(posx_, posy_, 50), xSpeed(9.0f), ySpeed(3.0f), life(100), scale(0.80f)// to define
     {
     }
 

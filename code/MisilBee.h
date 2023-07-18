@@ -12,7 +12,7 @@ class MisilM : public Enemigo
     public:
         // Constructor
         MisilM(const int& width, const int& height):width(width), change(false),
-        height(height), avance(0.0f), speed(0.01f), moveLeft(true), moveUp(false),
+        height(height), avance(0.0f), speed(10.0f), moveLeft(true), moveUp(false),
         scale(1.0f), avanceFlag(false), Enemigo(width* 0.5f, height * 0.9f, 100), sizeY(50), sizeX(size)
         {
         }
@@ -28,7 +28,7 @@ class MisilM : public Enemigo
                 posx -= speed;
             }
             if (!moveLeft && !moveUp)
-            {
+            {   
                 posx += speed;
             }
             if (posx >= 0.5 * width)
