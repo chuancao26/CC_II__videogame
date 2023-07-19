@@ -4,18 +4,6 @@ using namespace std;
 float Jugador::getPosx() const {return posx;}
 float Jugador::getPosy() const {return posy;}
 int Jugador::getSize() const {return size;}
-Cup::Cup(const int &px, const int& py, const int& size_)
-{
-    posx = px; posy = py; size = size_;
-    saltando=false;
-    derecha=false;
-    izquierda=false;
-    enplataforma=false;
-    vidas=3;saltos=1;
-    gravedad=100;
-    speed=10, salto = 150;
-    clock_salto=0.f;
-}
 
 void Cup::mover(const float& px, const float& py)
 {

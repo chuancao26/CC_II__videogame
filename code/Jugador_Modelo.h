@@ -10,18 +10,30 @@ class Jugador
         int size,saltos;
         bool vulnerable;
     public:
+        Jugador(float px, float py, float grav, float spd, float clk_salto, int sz, int s, bool v)
+        : posx(px), posy(py), gravedad(grav), speed(spd), clock_salto(clk_salto),
+          size(sz), saltos(s), vulnerable(v)
+        {
+        
+        }
         float getPosx() const;
         float getPosy() const;
         int getSize() const;
         virtual void mover(const float& px, const float& py)=0;
 };
+
 class Cup: public Jugador {
 public:
     bool saltando,enplataforma,derecha,izquierda,quieto;
     float salto;
     int jumps, vidas;
 public:
-    Cup(const int &px, const int& py, const int& size_);
+    Cup(float px, float py, int size_)
+    :Jugador(px, py, 100.0f, 20.0f, 0.0f, size_, 1, false), saltando(false),
+    derecha(false), izquierda(false), enplataforma(false), vidas(3),
+    salto(150)
+    {
+    }
     virtual void mover(const float& px, const float& py) override;
     void moverIzquierda();
     void moverDerecha();

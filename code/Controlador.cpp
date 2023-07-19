@@ -8,6 +8,7 @@
 #include "Elegir.cpp"
 #include <thread>
 #include <memory>
+#include "vistaBee.h"
 using FloatPtr = std::shared_ptr<float>;
 
 class Controlador {
@@ -15,10 +16,11 @@ private:
     Cup jugador1;
     Cup jugador2;
     Vista vista;
+    VistaBee vistaBee;
     Mapa* map;
     ElegirPlayer elegir;
     Plataforma pla;
-    sf::Clock clock, clock2, clock3, clock4,clock5;
+    sf::Clock clock, clock2, clock3,clock5;
     Background background;
     int nivel,j1,j2;
     vector<int> jugadores;
@@ -26,7 +28,7 @@ private:
 
 public:
     Controlador()
-        : jugador1(20,100,80), jugador2(200,100,80), vista(1280, 720)
+        : jugador1(20,100,80), jugador2(200,100,80), vista(1280, 720), vistaBee(vista.getWindow())
     {
         nivel = 0;
         elegidos=false;
@@ -134,7 +136,7 @@ public:
             mover_plataformas();
             dibujarPlataformas();
             vista.dibujarCup(jugador1,jugador2);
-            vista.loadBeeView();
+            loadBeeView();
             break;
         case 3:
             background.cargar(vista.window, nivel);
@@ -210,23 +212,18 @@ public:
         }
         background.actualizar(vista.window, delta);
     }
-
     void ejecutar() {
-        if(nivel>0)
-        {
-            std::thread hiloJugador2([this] {
-                while (vista.window.isOpen()) {
-                    manejarEventos();
-                }
-            }); 
-            
-            hiloJugador2.join();
-        }
+
 
         while (vista.window.isOpen()) {
             colisiones();
             manejarEventos();
             renderizar();
         }  
+    }
+    void loadBeeView()
+    {
+        vistaBee.handleInput(jugador1.getPosx(),jugador2.getPosy());
+        vistaBee.render();
     }
 };

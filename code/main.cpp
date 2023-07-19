@@ -1,5 +1,4 @@
 #include "Controlador.cpp"
-#include "GameController.h"
 #include <iostream>
 using namespace std;
 using namespace sf;
@@ -95,7 +94,6 @@ int main() {
     Controlador controlador;
     controlador.ejecutar();
     
-    //GameController gameController;
-    //gameController.Run();
+
     return 0;
 }
