@@ -10,21 +10,13 @@ public:
     JugadorVista jugador_v;
     JugadorVista jugador_v2;
     float width,height;
-    float elapsedSeconds;
-    float interval;
-    int size;
     sf::Time tiempoAcumulado;
-    sf::Clock relojMovimiento;
-    sf::Clock clock;
-    sf::Clock timer;
     
 public:
     Vista(const int& xedge, const int& yedge) : width(xedge), height(yedge), window(sf::VideoMode(xedge, yedge), "CUPHEAD!")
     {
         width = window.getSize().x;
         height = window.getSize().y;
-        elapsedSeconds = 0.0f;
-        interval = 1.0f;
         tiempoAcumulado = sf::Time::Zero;
     }
     void cargarJugadores(int j1,int j2)

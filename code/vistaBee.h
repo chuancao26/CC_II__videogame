@@ -14,7 +14,8 @@
 class VistaBee
 {
 private:
-    float posxCup,posyCup; 
+    Cup cup1;
+    Cup cup2;
     Textures textures;
     std::shared_ptr<MisilM> misilM;
     std::shared_ptr<MisilV> misilV;
@@ -53,7 +54,7 @@ public:
         drawEntitys();
         // window.display();
     }
-    void handleInput(const float& posxC, const float& posyC) 
+    void handleInput(const Cup& cup1_, const Cup& cup2_) 
     {
         // sf::Event event;
         // while (window.isOpen() && window.pollEvent(event)) 
@@ -63,8 +64,8 @@ public:
         //         window.close();
         //     }
         // }
-        posxCup = posxC;
-        posyCup = posyC;
+        cup1 = cup1_;
+        cup2 = cup2_;
         update();
     }
     void update()
@@ -200,7 +201,7 @@ public:
     }
     void updatePositionsCup()
     {
-        if (posxCup < xBorder / 2)
+        if (cup1.getPosx() < xBorder / 2)
         {
             cupLeft = true;
         }

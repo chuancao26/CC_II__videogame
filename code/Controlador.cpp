@@ -20,7 +20,7 @@ private:
     Mapa* map;
     ElegirPlayer elegir;
     Plataforma pla;
-    sf::Clock clock, clock2, clock3,clock5;
+    sf::Clock clock, clock2,clock5;
     Background background;
     int nivel,j1,j2;
     vector<int> jugadores;
@@ -101,9 +101,8 @@ public:
                 break;
                         
         }
-        float delta = clock3.restart().asSeconds();
-        jugador1.caida(delta);
-        jugador2.caida(delta);
+        jugador1.caida();
+        jugador2.caida();
     }
 
     void Menu()
@@ -223,7 +222,7 @@ public:
     }
     void loadBeeView()
     {
-        vistaBee.handleInput(jugador1.getPosx(),jugador2.getPosy());
+        vistaBee.handleInput(jugador1,jugador2);
         vistaBee.render();
     }
 };

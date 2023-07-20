@@ -4,7 +4,6 @@ using namespace std;
 float Jugador::getPosx() const {return posx;}
 float Jugador::getPosy() const {return posy;}
 int Jugador::getSize() const {return size;}
-
 void Cup::mover(const float& px, const float& py)
 {
     posx = px;
@@ -39,10 +38,10 @@ void Cup::saltar()
     }
     mover(posx, posy);
 }
-void Cup::caida(float d)
+void Cup::caida()
 {
     if (posy < 800.0f && !enplataforma && !saltando) {
-        posy += gravedad*d;
+        posy += gravedad;
     }
     mover(posx,posy);
 }
