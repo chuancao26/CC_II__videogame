@@ -76,7 +76,7 @@ int main() {
     Seed* seeds[3] = {&seed1, &seed2, &seed3};
    
 
-    sf::Clock clock;
+    sf::Clock clockSeed;
 
     while (window.isOpen()) {
         sf::Event event;
@@ -85,7 +85,7 @@ int main() {
                 window.close();
         }
 
-        sf::Time elapsed = clock.restart();
+        sf::Time elapsed = clockSeed.restart();
 
         for (int i = 0; i < 3; ++i) {
             seeds[i]->update();
