@@ -4,20 +4,23 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include "Textures.h"
+#include <random> 
 class CupHeadM
 {
 private:
-    float posx, posy, speed, gravity, elapsedTime, jumpTime, sizeX, sizeY, jumpY;
+    float posx, posy, speed, gravity, deltaTime, elapsedTime, sizeX, sizeY, jumpY, scale;
     bool left, right, jump, bottom, inPlatform;
-    int jumpCounter, xBorder, yBorder;
+    int xBorder, yBorder;
 
 public:
-    CupHeadM(const float& posx_, const float& posy_, const int& xBorder_, const int& yBorder_) : posx(posx_), posy(posy_), speed(3.0f), jump(0.0f),
-    gravity(0.01f), left(false), right(false), jump(false), bottom(false), jumpCounter(0), jumpTime(0.0f),
-    xBorder(xBorder_), yBorder(yBorder_), jumpY(0.1f * yBorder), inPlatform(false)
+    CupHeadM(const float& posx_, const float& posy_, const int& xBorder_, const int& yBorder_) : 
+    posx(posx_),posy(posy_), speed(200.0f), deltaTime(0.0f), gravity(5.0f), left(false), right(false),
+    jump(false), bottom(false), xBorder(xBorder_), yBorder(yBorder_), jumpY(200.f), inPlatform(false),
+    scale(0.50f)
     {
     }
-    void mover()
+    void move()
     {
         direction();
     }
@@ -25,75 +28,107 @@ public:
     {
         if (left)
         {
-            posx -= speed;
+            posx -= speed * deltaTime;
         }
         if (right)
         {
-             posx += speed
+             posx += speed * deltaTime;
         }
-        jumping();
+        if (jump && inPlatform)
+        {
+            posy -= jumpY;
+        }
         if (bottom)
         {
-            posy += speed;
+            posy += speed * deltaTime;
         }
     }
-    void update() 
+    void update(const float& deltaTime_,const bool& left_, const bool& right_, const bool& jump_, const bool& inPlatform_) 
     {
+        elapsedTime += deltaTime_; 
+        deltaTime = deltaTime_;
+        left = left_;
+        right = right_;
+        jump = jump_;
+        inPlatform = inPlatform_;
         move();
         gravedad();
     }
     void gravedad()
     {  
         if (!inPlatform)
-        {
             posy += gravity;
-        }
     }
-    void colisionPlatform()
-    {
-        if (inPlatform)
-        {
-            jumpCounter = 0;
-        }
-    }
-    void setLeft(const bool& left_)
-    {
-        left = left_;
-    }
-    void setRight(const bool& right_)
-    {
-        right = right_;
-    }
-    void setJump(const bool& jump_)
-    {
-        jump = jump_;
-    }
-    void jumping()
-    {
-        if (jump && jumpCounter < 2)
-        {
-            posy -= jumpY;
+    float getPosX(){return posx;}
+    float getPosY(){return posy;}
+    bool isJumping(){return jump;}
+    bool isLeft(){return left;}
+    bool isRight(){return right;}
+    float getScale(){return scale;}
+    float getDeltaTime(){return deltaTime;}
+    float getElapsedTime(){return elapsedTime;}
+    bool isInPlatform(){return inPlatform;}
+    // bool isLeft(){return left;}
 
-            ++jumpCount;
-        }
-    }
-    bool getJumped()
-    {
-        if(jumpCounter == 1)
-        {
-            return true;
-        }
-        return false;
-    }
 };
 class CupHeadV
 {
 private:
-    std::shared_ptr<CupHeadM> cupM;
-    std::vector<std::shared_ptr<sf::Texture>> textures;
     sf::Sprite sprite;
+    std::shared_ptr<CupHeadM> cupM; 
+    std::vector<std::shared_ptr<sf::Texture>> runTexture;
+    std::vector<std::shared_ptr<sf::Texture>> jumpTexture;
+    std::vector<std::shared_ptr<sf::Texture>> standingTexture;
 public:
-    CupHeadV(const std::shared_ptr<CupHeadM> cupheadM):cupM(cupheadM)
+    CupHeadV(const std::shared_ptr<CupHeadM>& cupM_, std::vector<std::shared_ptr<sf::Texture>> runTexture_,
+            std::vector<std::shared_ptr<sf::Texture>> jumpTexture_,
+            std::vector<std::shared_ptr<sf::Texture>> standingTexture_):cupM(cupM_), runTexture(runTexture_),
+            jumpTexture(jumpTexture_), standingTexture(standingTexture_)
+    {
+    }
+    void update()
+    {
+        updateTextures();
+    }
+    void updateTextures()
+    {
+        std::cout << cupM->isInPlatform() << std::endl;
+        if (cupM->isLeft())
+        {
+            size_t textureIndex = static_cast<size_t>(std::round(cupM->getElapsedTime()* 10)) % (runTexture.size());
+            sprite.setScale(-cupM->getScale(), cupM->getScale());
+            sprite.setTexture(*runTexture[textureIndex]);
 
+            sprite.setPosition(cupM->getPosX(), cupM->getPosY());
+        }
+        if (cupM->isRight())
+        {
+            size_t textureIndex = static_cast<size_t>(std::round(cupM->getElapsedTime()* 10)) % (runTexture.size());
+            sprite.setScale(cupM->getScale(), cupM->getScale());
+            sprite.setTexture(*runTexture[textureIndex]);
+            sprite.setPosition(cupM->getPosX(), cupM->getPosY());
+        }
+        if (cupM->isJumping() || !cupM->isInPlatform())
+        {
+            size_t textureIndex = static_cast<size_t>(std::round(cupM->getElapsedTime()* 10)) % (jumpTexture.size());
+            sprite.setScale(cupM->getScale(), cupM->getScale());
+            sprite.setTexture(*jumpTexture[textureIndex]);
+            sprite.setPosition(cupM->getPosX(), cupM->getPosY());
+        }
+        if (!cupM->isLeft() && !cupM->isRight() && !cupM->isJumping())
+        {
+            size_t textureIndex = static_cast<size_t>(std::round(cupM->getElapsedTime()* 10)) % (standingTexture.size());
+            sprite.setScale(cupM->getScale(), cupM->getScale());
+            sprite.setTexture(*standingTexture[textureIndex]);
+        }
+        sf::FloatRect bounds = sprite.getLocalBounds();
+        sprite.setOrigin(bounds.width / 2, bounds.height / 2);
+        sprite.setPosition(cupM->getPosX(), cupM->getPosY());
+        
+    }
+    void draw(sf::RenderWindow& window)
+    {
+        window.draw(sprite);
+    }
 };
 #endif
