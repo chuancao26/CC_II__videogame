@@ -67,7 +67,7 @@ public:
         window.draw(sprite_);
     }
 
-    void actualizar(sf::RenderWindow& window,float d)
+    void actualizar(sf::RenderWindow& window, const float& d)
     {
         float nuevaPosicion = sprite_.getPosition().y + gravedad_*d;// desplazamiento;
 

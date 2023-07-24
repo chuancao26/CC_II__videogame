@@ -17,7 +17,7 @@ public:
     
 public:
     JugadorVista(){}
-    void cargar(int n)
+    void cargar(const int& n)
     {
         switch (n)
         {
@@ -114,6 +114,10 @@ public:
     }
     void actualizar(Cup& jugador) {
 
+    }
+    sf::Sprite& getSprite()
+    {
+        return cupShape;
     }
 };
 

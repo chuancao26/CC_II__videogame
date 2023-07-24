@@ -48,19 +48,19 @@ void Cup::caida()
 void Cup::actualizar() {
 
 }
-void Cup::estaSaltando(bool t)
+void Cup::estaSaltando(const bool& t)
 {
     saltando=t;
 }
-void Cup::vaderecha(bool t)
+void Cup::vaderecha(const bool& t)
 {
     derecha=t;
 }
-void Cup::vaizquierda(bool t)
+void Cup::vaizquierda(const bool& t)
 {
     izquierda=t;
 }
-void Cup::estaquieto(bool t)
+void Cup::estaquieto(const bool& t)
 {
     quieto=t;
 }
@@ -70,6 +70,6 @@ void Cup::estaColisionando(const float& y)
     mover(posx, posy);
 
 }
-void Cup::enPlataforma(bool t){
+void Cup::enPlataforma(const bool& t){
     enplataforma=t;
 }

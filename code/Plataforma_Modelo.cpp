@@ -33,7 +33,7 @@ std::string Mapa::generarSecuenciaFila()
     }
     return fila;
 }
-std::vector<std::string> Mapa::crearMapa(int n)
+std::vector<std::string> Mapa::crearMapa(const int& n)
 {
     srand(time(0));  // Semilla aleatoria basada en el tiempo actual
     
@@ -106,7 +106,7 @@ void Plataforma::caida(float d)
     setPosition(x,y);
 }
 
-void Mapa::push_back(const Plataforma&& plat)
+void Mapa::push_back(const Plataforma& plat)//&&
 {
     Plataforma *newplat= new Plataforma[size+1];
     for(int i=0;i<size;i++)
@@ -125,7 +125,7 @@ bool Mapa::se_elimina(const Plataforma& plat)
         return false;
 }
 
-void Mapa::remove(int pos)
+void Mapa::remove(const int& pos)
 {
     Plataforma *newdata= new Plataforma[size-1];
     for(int i=pos;i<size-1;i++)

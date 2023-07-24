@@ -48,13 +48,13 @@ public:
     void moverAbajo();
     void saltar();
     void actualizar();
-    void estaSaltando(bool t);
-    void vaderecha(bool t);
-    void vaizquierda(bool t);
-    void estaquieto(bool t);
+    void estaSaltando(const bool& t);
+    void vaderecha(const bool& t);
+    void vaizquierda(const bool& t);
+    void estaquieto(const bool& t);
     void caida();
     void estaColisionando(const float& y);
-    void enPlataforma(bool t);
+    void enPlataforma(const bool& t);
 };
 
 class CupMuerto : public Jugador

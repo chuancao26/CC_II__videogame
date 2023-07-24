@@ -69,7 +69,7 @@ class ElegirPlayer{
                     if (event.mouseButton.button == sf::Mouse::Left) {
                         sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
                         sf::Vector2f mousePos(mousePosition.x, mousePosition.y);
-                        elegidos.push_back(seleccionar(mousePos,true));
+                        elegidos.push_back(seleccionar(mousePos));
                     }
                     else if (event.mouseButton.button == sf::Mouse::Right) {
                         // Código para el clic derecho del mouse
@@ -80,25 +80,22 @@ class ElegirPlayer{
         }  
         return elegidos;
     }
-    int seleccionar(const sf::Vector2f& mousePos, bool clic)
+    int seleccionar(const sf::Vector2f& mousePos)
     {
         if (sprite1.getGlobalBounds().contains(mousePos)) {
-            if (clic) {
-                cuadro1.seleccionado = !cuadro1.seleccionado;
-                return 1;
-            }
+            cuadro1.seleccionado = !cuadro1.seleccionado;
+            return 1;
+
         }
         if (sprite2.getGlobalBounds().contains(mousePos)) {
-            if (clic) {
-                cuadro2.seleccionado = !cuadro2.seleccionado;
-                return 2;
-            }
+            cuadro2.seleccionado = !cuadro2.seleccionado;
+            return 2;
+
         }
         if (sprite3.getGlobalBounds().contains(mousePos)) {
-            if (clic) {
-                cuadro3.seleccionado = !cuadro3.seleccionado;
-                return 3;
-            }
+
+            cuadro3.seleccionado = !cuadro3.seleccionado;
+            return 3;
         }
         return 0; 
     }

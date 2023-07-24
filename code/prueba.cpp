@@ -11,7 +11,7 @@ int main()
     std::shared_ptr<CupHeadV> cupV = std::make_shared<CupHeadV>(cupM, textures.getRedRunTextures(),
                                                                 textures.getRedJumpTextures(),
                                                                 textures.getRedStandingTextures());
-    bool inPlatform = false;
+    bool inPlatform = true;
     sf::Clock clock;
     window.setFramerateLimit(60);
     while (window.isOpen())
