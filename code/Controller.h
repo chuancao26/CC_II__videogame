@@ -48,9 +48,8 @@ public:
         while(view2.isOpen())
         {
             view2.handleInput();
-            // update();
             view2.render();
-            
+            std::cout << view2.getElapsedTime() << std::endl;
         }
     }
 
