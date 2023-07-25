@@ -19,6 +19,7 @@ private:
 public:
     Controller() // elapsedTime(view.getElapsedTime())
     {
+        
     }
     // void render()
     // {
@@ -49,7 +50,6 @@ public:
         {
             view2.handleInput();
             view2.render();
-            std::cout << view2.getElapsedTime() << std::endl;
         }
     }
 

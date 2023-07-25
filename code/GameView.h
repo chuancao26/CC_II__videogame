@@ -4,11 +4,15 @@
 #include <memory>
 #include "Background_Vista.h"
 #include <iostream>
+#include "Textures.h"
+#include "Cup.h"
 #include "Plataforma_Vista.h"
 class GameView
 {
 private:
-    
+    Textures textures;
+    std::shared_ptr<CupHeadM> cupM;
+    std::shared_ptr<CupHeadV> cupV;
     float width, height, deltaTimePlat, timeElapsed;
     sf::Clock clock, clock2;
     sf::RectangleShape rect;

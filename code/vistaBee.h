@@ -14,6 +14,7 @@
 class VistaBee
 {
 private:
+    
     Cup cup1;
     Cup cup2;
     Textures textures;
