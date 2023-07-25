@@ -1,9 +1,17 @@
 #include <SFML/Graphics.hpp>
 #include "Jugador_Vista.cpp"
 #include "Plataforma_Vista.cpp"
+#include "Boss_Vista.cpp"
+#include "Background_Vista.cpp"
+#include "Boomerang_Controlador.cpp"
+#include "Bomba_Controlador.cpp"
+#include "Elegir.cpp"
+#include <thread>
 #include <memory>
+#include "vistaBee.h"
+#include <memory>
+#include <iostream>
 using FloatPtr = std::shared_ptr<float>;
-
 class Vista {
 public:
     sf::RenderWindow window;
@@ -11,9 +19,15 @@ public:
     JugadorVista jugador_v2;
     float width,height;
     sf::Time tiempoAcumulado;
+    VistaBee vistaBee;
+    ElegirPlayer elegir;
+    Background background;
+    sf::Clock clock, clock2, clock5;
+
     
 public:
     Vista(const int& xedge, const int& yedge) : width(xedge), height(yedge), window(sf::VideoMode(xedge, yedge), "CUPHEAD!")
+    , vistaBee(window)
     {
         width = window.getSize().x;
         height = window.getSize().y;
@@ -41,6 +55,11 @@ public:
     }
     void actualizar_Plataformas() {
         
+    }
+    void loadBeeView(const Cup& player1, const Cup& player2 )
+    {
+        vistaBee.handleInput(player1,player2);
+        vistaBee.render();
     }
     
     bool colision(sf::Sprite& jugador, Plataforma& platform)
@@ -124,6 +143,14 @@ public:
     sf::RenderWindow& getWindow()
     {
         return window;
+    }
+    void eliminarplataformas(Mapa*& map)
+    {
+        if (clock5.getElapsedTime().asSeconds() >= 2.5f)
+        {
+            map->eliminarPlataformas();
+            clock5.restart();
+        }
     }
 };
 

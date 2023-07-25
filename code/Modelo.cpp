@@ -15,4 +15,16 @@ class Modelo
     {
         map= new Mapa();
     }
+    void crearMapa()
+    {
+        std::vector<std::string> mapStrings = map->crearMapa(50);
+        map->parseMap(mapStrings);
+    }
+    void crearplataformas()
+    {
+        if(map->size==0)
+        {
+            crearMapa();
+        }
+    }
 };
