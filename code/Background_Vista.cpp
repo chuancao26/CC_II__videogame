@@ -1,5 +1,3 @@
-#ifndef BACKGROUND_VISTA_H
-#define BACKGROUND_VISTA_H
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
@@ -69,7 +67,7 @@ public:
         window.draw(sprite_);
     }
 
-    void actualizar(sf::RenderWindow& window, const float& d)
+    void actualizar(sf::RenderWindow& window,float d)
     {
         float nuevaPosicion = sprite_.getPosition().y + gravedad_*d;// desplazamiento;
 
@@ -85,4 +83,3 @@ private:
     sf::Sprite sprite_;
     float gravedad_,altura_;
 };
-#endif

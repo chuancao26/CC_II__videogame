@@ -15,9 +15,11 @@ public:
 public:
     Vista(const int& xedge, const int& yedge) : width(xedge), height(yedge), window(sf::VideoMode(xedge, yedge), "CUPHEAD!")
     {
+        width = window.getSize().x;
+        height = window.getSize().y;
         tiempoAcumulado = sf::Time::Zero;
     }
-    void cargarJugadores(const int& j1, int& j2)
+    void cargarJugadores(int j1,int j2)
     {
         if(j1!=0 && j2!=0)
         {

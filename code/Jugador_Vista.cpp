@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "Jugador_Modelo.cpp"
+#include "Plataforma_Vista.cpp"
 
 class JugadorVista {
 public:
@@ -16,7 +17,7 @@ public:
     
 public:
     JugadorVista(){}
-    void cargar(const int& n)
+    void cargar(int n)
     {
         switch (n)
         {
@@ -113,10 +114,6 @@ public:
     }
     void actualizar(Cup& jugador) {
 
-    }
-    sf::Sprite& getSprite()
-    {
-        return cupShape;
     }
 };
 

@@ -1,36 +1,38 @@
 #include "Jugador_Modelo.h"
 #include "Plataforma_Modelo.h"
+#include "Vista.cpp"
 #include "Boss_Vista.cpp"
+#include "Background_Vista.cpp"
 #include "Boomerang_Controlador.cpp"
 #include "Bomba_Controlador.cpp"
 #include "Elegir.cpp"
 #include <thread>
 #include <memory>
-#include "View.h"
+#include "vistaBee.h"
 using FloatPtr = std::shared_ptr<float>;
 
 class Controlador {
 private:
-    ViewG view;
-    //Modelo
     Cup jugador1;
     Cup jugador2;
-    std::shared_ptr<Mapa> map;
+    Vista vista;
+    VistaBee vistaBee;
+    Mapa* map;
+    ElegirPlayer elegir;
     Plataforma pla;
-    
-    sf::Clock clock5, clock2;
+    sf::Clock clock, clock2,clock5;
+    Background background;
     int nivel,j1,j2;
     vector<int> jugadores;
     bool elegidos;
 
-    
 public:
     Controlador()
-    :jugador1(20,100,80), jugador2(200,100,80), view(1280, 720)
+        : jugador1(20,100,80), jugador2(200,100,80), vista(1280, 720), vistaBee(vista.getWindow())
     {
         nivel = 0;
         elegidos=false;
-        map = std::make_shared<Mapa>();
+        map= new Mapa();
     }
     void crearMapa()
     {
@@ -39,7 +41,7 @@ public:
     }
     void manejarEventos() {
         std::vector<FloatPtr> Posicion=std::vector<FloatPtr>();
-        int m = view.procesarEventos(Posicion);
+        int m=vista.procesarEventos(Posicion);
         switch (m)
         {
             case 1:
@@ -93,7 +95,7 @@ public:
                 FloatPtr primerElemento = Posicion.front();
                 FloatPtr segundoElemento = Posicion.back();
                 sf::Vector2f mousePos(*primerElemento, *segundoElemento);
-                jugadores.push_back(view.getEleccion(mousePos));
+                jugadores.push_back(elegir.seleccionar(mousePos,true));
                 if(jugadores.size()==2)
                     elegidos=true;
                 break;
@@ -108,30 +110,36 @@ public:
         switch (nivel)
         {
         case 0:
-            view.backgroundMenu(nivel);
-            view.eleccionDraw();
+            background.cargar(vista.window, nivel);
+            background.draw1(vista.window);
+            elegir.dibujar(vista.window);
             if(elegidos)
             {
                 j1=jugadores.front();
                 j2=jugadores.back();
-                view.cargarJugadores(j1,j2); 
+                vista.cargarJugadores(j1,j2); 
             }
             
             break;
         case 1:
-            view.backgroundMenu(nivel);
-            view.dibujarCup(jugador1,jugador2);
+            
+            background.cargar(vista.window, nivel);
+            background.draw1(vista.window);
+            vista.dibujarCup(jugador1,jugador2);
             break;
         case 2:
-            view.backgroundMenu(nivel);
+            background.cargar(vista.window, nivel);
+            background.draw2(vista.window);
             crearplataformas();
             eliminarplataformas();
-            view.moverPlatforms(map);
+            mover_plataformas();
             dibujarPlataformas();
-            view.dibujarCup(jugador1,jugador2);
+            vista.dibujarCup(jugador1,jugador2);
+            loadBeeView();
             break;
         case 3:
-            view.backgroundMenu(nivel);
+            background.cargar(vista.window, nivel);
+            background.draw1(vista.window);
             break;
         default:
             break;
@@ -162,23 +170,21 @@ public:
         }
         
     }
-    void renderizar()
-    {
-        view.getWindow().setFramerateLimit(5);
-        view.getWindow().clear();
+    void renderizar() {
+        vista.window.clear();
         Menu();
-        view.getWindow().display();
+        vista.window.display();
     }
     void dibujarPlataformas() {
         for(int i=0;i<map->size;i++)
         {
-            view.dibujarPlat(map->platforms[i]);
+            vista.dibujarPlat(map->platforms[i]);
         }
     }
     void colisiones() {
         for (int i=0;i<map->size;i++)
         {
-            if (view.colision(view.getCup1().getSprite(), map->platforms[i]))
+            if (vista.colision(vista.jugador_v.cupShape, map->platforms[i]))
             {
                 jugador1.enPlataforma(true);
                 jugador1.estaColisionando(map->platforms[i].y);
@@ -187,7 +193,7 @@ public:
                 jugador1.enPlataforma(false);
             }
 
-            if (view.colision(view.getCup2().getSprite(), map->platforms[i]))
+            if (vista.colision(vista.jugador_v2.cupShape, map->platforms[i]))
             {
                 jugador2.enPlataforma(true);
                 jugador2.estaColisionando(map->platforms[i].y);
@@ -197,12 +203,26 @@ public:
             }
         }
     }
+    void mover_plataformas() {
+        float delta = clock.restart().asSeconds();
+        for(int i=0;i<map->size;i++)
+        {
+            map->platforms[i].caida(delta);
+        }
+        background.actualizar(vista.window, delta);
+    }
     void ejecutar() {
-        while (view.getWindow().isOpen()) {
+
+
+        while (vista.window.isOpen()) {
             colisiones();
             manejarEventos();
             renderizar();
         }  
     }
-
+    void loadBeeView()
+    {
+        vistaBee.handleInput(jugador1,jugador2);
+        vistaBee.render();
+    }
 };

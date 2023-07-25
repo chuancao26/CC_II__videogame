@@ -14,7 +14,6 @@
 class VistaBee
 {
 private:
-    
     Cup cup1;
     Cup cup2;
     Textures textures;
@@ -51,10 +50,20 @@ public:
     }
     void render()
     {
+        // window.clear();
         drawEntitys();
+        // window.display();
     }
     void handleInput(const Cup& cup1_, const Cup& cup2_) 
     {
+        // sf::Event event;
+        // while (window.isOpen() && window.pollEvent(event)) 
+        // {
+        //     if (event.type == sf::Event::Closed)
+        //     {
+        //         window.close();
+        //     }
+        // }
         cup1 = cup1_;
         cup2 = cup2_;
         update();
