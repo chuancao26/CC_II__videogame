@@ -10,9 +10,12 @@
 #include "Triangulo.h"
 #include "MisilBee.h"
 #include "Textures.h"
+#include "Jugador_Modelo.h"
 class VistaBee
 {
 private:
+    Cup cup1;
+    Cup cup2;
     Textures textures;
     std::shared_ptr<MisilM> misilM;
     std::shared_ptr<MisilV> misilV;
@@ -22,7 +25,7 @@ private:
     std::shared_ptr<TrianguloV> triangleV;
     std::shared_ptr<WorkerBeeM> workerBeeM;
     std::shared_ptr<WorkerBeeV> workerBeeV;
-    bool activeWorker, activeTriangle, activeMisil;
+    bool activeWorker, activeTriangle, activeMisil, cupLeft;
     float rate;
     sf::RenderWindow& window;
     sf::Clock clock;
@@ -34,6 +37,7 @@ public:
     // constructor
     VistaBee(sf::RenderWindow& window_):
     xBorder(1280), yBorder(720), activeWorker(false), activeTriangle(false), rate(0.0f), window(window_)
+    , cupLeft(false) 
     {
         std::random_device rd;
         generator.seed(rd());
@@ -50,7 +54,7 @@ public:
         drawEntitys();
         // window.display();
     }
-    void handleInput() 
+    void handleInput(const Cup& cup1_, const Cup& cup2_) 
     {
         // sf::Event event;
         // while (window.isOpen() && window.pollEvent(event)) 
@@ -60,41 +64,68 @@ public:
         //         window.close();
         //     }
         // }
+        cup1 = cup1_;
+        cup2 = cup2_;
         update();
     }
     void update()
     {
-        rate += 0.01f;
         elapsedtime = clock.getElapsedTime().asSeconds();
         policeM ->move();
         policeV -> update(elapsedtime);
         updateTriangle();
         updateWorker();
         updateMisil();
+        updatePositionsCup();
     }
     bool isOpen()
     {
         return window.isOpen();
     }
     void updateWorker()
-    {           
-        if(!activeWorker)
+    {     
+        if (cupLeft)
         {
-            workerBeeM = std::make_shared<WorkerBeeM> (xBorder, distributionY(generator));
-            workerBeeV = std::make_shared<WorkerBeeV> (workerBeeM, textures.getWorkerTextures());
-            activeWorker = true;
-        }
-        if (activeWorker)
-        {
-            workerBeeM -> move();
-            workerBeeV -> update(elapsedtime);
-            if(workerBeeM -> isExpired())
+            if(!activeWorker)
             {
-                workerBeeM.reset();
-                workerBeeV.reset();
-                activeWorker = false;
+                workerBeeM = std::make_shared<WorkerBeeM> (xBorder, distributionY(generator),cupLeft);
+                workerBeeV = std::make_shared<WorkerBeeV> (workerBeeM, textures.getWorkerTextures());
+                activeWorker = true;
+            }
+            if (activeWorker)
+            {
+                workerBeeM -> update(elapsedtime);
+                workerBeeV -> update();
+                if(workerBeeM -> isExpired())
+                {
+                    workerBeeM.reset();
+                    workerBeeV.reset();
+                    activeWorker = false;
+                }
             }
         }
+        else
+        {
+            if(!activeWorker)
+            {
+                workerBeeM = std::make_shared<WorkerBeeM> (0, distributionY(generator),cupLeft);
+                workerBeeV = std::make_shared<WorkerBeeV> (workerBeeM, textures.getWorkerTextures());
+                activeWorker = true;
+            }
+            if (activeWorker)
+            {
+                workerBeeM -> update(elapsedtime);
+                workerBeeV -> update();
+                if(workerBeeM -> isExpired())
+                {
+                    workerBeeM.reset();
+                    workerBeeV.reset();
+                    activeWorker = false;
+                }
+            }
+        }
+
+
     }
     void updateTriangle()   
     {
@@ -166,6 +197,17 @@ public:
         if (activeTriangle)
         {
             triangleV -> draw(window);
+        }
+    }
+    void updatePositionsCup()
+    {
+        if (cup1.getPosx() < xBorder / 2)
+        {
+            cupLeft = true;
+        }
+        else
+        {
+            cupLeft = false;
         }
     }
     ~VistaBee()

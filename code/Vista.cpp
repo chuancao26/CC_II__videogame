@@ -1,33 +1,36 @@
 #include <SFML/Graphics.hpp>
 #include "Jugador_Vista.cpp"
 #include "Plataforma_Vista.cpp"
+#include "Boss_Vista.cpp"
+#include "Background_Vista.cpp"
+#include "Boomerang_Controlador.cpp"
+#include "Bomba_Controlador.cpp"
+#include "Elegir.cpp"
+#include <thread>
 #include <memory>
 #include "vistaBee.h"
+#include <memory>
+#include <iostream>
 using FloatPtr = std::shared_ptr<float>;
-
 class Vista {
 public:
-    VistaBee beeView;  
     sf::RenderWindow window;
     JugadorVista jugador_v;
     JugadorVista jugador_v2;
     float width,height;
-    float elapsedSeconds;
-    float interval;
-    int size;
     sf::Time tiempoAcumulado;
-    sf::Clock relojMovimiento;
-    sf::Clock clock;
-    sf::Clock timer;
+    VistaBee vistaBee;
+    ElegirPlayer elegir;
+    Background background;
+    sf::Clock clock, clock2, clock5;
+
     
 public:
-    Vista(int xedge, int yedge) : width(xedge), height(yedge), window(sf::VideoMode(xedge, yedge), "CUPHEAD!"),
-    beeView(window)
+    Vista(const int& xedge, const int& yedge) : width(xedge), height(yedge), window(sf::VideoMode(xedge, yedge), "CUPHEAD!")
+    , vistaBee(window)
     {
         width = window.getSize().x;
         height = window.getSize().y;
-        elapsedSeconds = 0.0f;
-        interval = 1.0f;
         tiempoAcumulado = sf::Time::Zero;
     }
     void cargarJugadores(int j1,int j2)
@@ -42,7 +45,6 @@ public:
     void dibujarCup(const Cup& jugador1,const Cup& jugador2) {
         jugador_v.dibujar(jugador1,window);
         jugador_v2.dibujar(jugador2,window);
-        
     }
 
     void dibujarPlat(const Plataforma& plataforma) {
@@ -53,6 +55,11 @@ public:
     }
     void actualizar_Plataformas() {
         
+    }
+    void loadBeeView(const Cup& player1, const Cup& player2 )
+    {
+        vistaBee.handleInput(player1,player2);
+        vistaBee.render();
     }
     
     bool colision(sf::Sprite& jugador, Plataforma& platform)
@@ -133,10 +140,17 @@ public:
         }
         return 0;
     }
-    void loadBeeView()
+    sf::RenderWindow& getWindow()
     {
-        beeView.handleInput();
-        beeView.render();
+        return window;
+    }
+    void eliminarplataformas(Mapa*& map)
+    {
+        if (clock5.getElapsedTime().asSeconds() >= 2.5f)
+        {
+            map->eliminarPlataformas();
+            clock5.restart();
+        }
     }
 };
 

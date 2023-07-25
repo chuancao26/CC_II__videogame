@@ -9,21 +9,29 @@
 class WorkerBeeM : public Enemigo
 {
 private:
-    float life, xSpeed, ySpeed, scale;
+    float life, xSpeed, ySpeed, scale, isLeft, elapsedTime;
 public:
     // constructor
-    WorkerBeeM(const float& posx_, const float& posy_):
-    Enemigo(posx_, posy_, 50), xSpeed(9.0f), ySpeed(3.0f), life(100), scale(0.80f)// to define
+    WorkerBeeM(const float& posx_, const float& posy_, const bool& isLeft_):
+    Enemigo(posx_, posy_, 50), xSpeed(9.0f), ySpeed(3.0f), life(100), scale(0.80f), isLeft(isLeft_)// to define
     {
     }
-
     void move()
     {
-        posx -= xSpeed;
-        posy -= ySpeed;
+        if(isLeft)
+        {
+            posx -= xSpeed;
+            posy -= ySpeed;
+        }
+        else
+        {
+            posx += xSpeed;
+            posy -= ySpeed;
+        }
     }
-    void update()
+    void update(const float& elapsedTime_)
     {
+        elapsedTime = elapsedTime_;
         move();
     }
     bool isExpired()
@@ -34,6 +42,8 @@ public:
     float getPosy(){return posy;}
     int getSize(){return size;}
     float getScale(){return scale;}
+    float getElapsedTime(){return elapsedTime;}
+    bool getIsLeft(){return isLeft;}
 };
 class WorkerBeeV
 {
@@ -41,23 +51,28 @@ class WorkerBeeV
         std::shared_ptr<WorkerBeeM> wb;
         std::vector<std::shared_ptr<sf::Texture>> textures;
         sf::Sprite sprite;
-        float elapsedTime;
 
     public:
         WorkerBeeV(std::shared_ptr<WorkerBeeM> wb_, const std::vector<std::shared_ptr<sf::Texture>>& textures_): wb(wb_),
         textures(textures_)
         {
         }
-        void update(const float& elapsedTime_)
+        void update()
         {  
-            elapsedTime = elapsedTime_;
             updateTextures();
             move();
         }
         void updateTextures()
         {
-            size_t textureIndex = static_cast<size_t>(std::round(elapsedTime * 6)) % textures.size();
-            sprite.setScale(wb->getScale(), wb->getScale());
+            size_t textureIndex = static_cast<size_t>(std::round(wb ->getElapsedTime() * 6)) % textures.size();
+            if (wb->getIsLeft())
+            {
+                sprite.setScale(wb->getScale(), wb->getScale());
+            }
+            else
+            {
+                sprite.setScale(-wb->getScale(), wb->getScale());
+            }
             sprite.setTexture(*textures[textureIndex]);
         }
         void move()
