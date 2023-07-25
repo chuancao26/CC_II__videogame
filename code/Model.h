@@ -1,27 +1,20 @@
 #ifndef MODEL_H
 #define MODEL_H
-#include "Jugador_Modelo.h"
+// #include "Jugador_Modelo.h"
 #include "Plataforma_Modelo.h"
-#include "Vista.cpp"
-#include "Boss_Vista.cpp"
-#include "Background_Vista.cpp"
-#include "Boomerang_Controlador.cpp"
-#include "Bomba_Controlador.cpp"
-#include "Elegir.cpp"
 #include <thread>
 #include <iostream> 
 #include <memory>
 #include <vector>
-#include "vistaBee.h"
 class Model
 {
 private:
-    Cup player1;
+    // Cup player1;
     std::shared_ptr<Mapa> map;
     Plataforma pla;
     float elapsedTime, platDeleteTime, platCreatTime;
 public:
-    Model():player1(20,100,80), platDeleteTime(0.0f), platCreatTime(0.0f)
+    Model():platDeleteTime(0.0f), platCreatTime(0.0f)
     , map(std::make_shared<Mapa>())
     {
 
@@ -37,7 +30,7 @@ public:
     }
     void manejarEventos()
     {
-
+        
     }
     void eliminarPlataformas()
     {
@@ -66,10 +59,10 @@ public:
     {
         return map;
     }
-    Cup& getPlayer1()
-    {
-        return player1;
-    }
+    // Cup& getPlayer1()
+    // {
+    //     return player1;
+    // }
 };
 
 #endif

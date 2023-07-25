@@ -1,3 +1,5 @@
+#ifndef BACKGROUND_VISTA_H
+#define BACKGROUND_VISTA_H
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
@@ -83,3 +85,4 @@ private:
     sf::Sprite sprite_;
     float gravedad_,altura_;
 };
+#endif

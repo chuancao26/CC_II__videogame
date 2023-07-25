@@ -1,42 +1,31 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
-#include "Jugador_Modelo.h"
-#include "Plataforma_Modelo.h"
-#include "Boss_Vista.cpp"
-#include "Boomerang_Controlador.cpp"
-#include "Bomba_Controlador.cpp"
-#include "Elegir.cpp"
 #include <thread>
 #include <memory>
+#include <iostream>
 #include "View.h"
 #include "Model.h"
+#include "GameView.h"
 class Controller
 {
 private:
     ViewG view;
     Model model;
-    
+    GameView view2;
     //teclas
-    bool isUp, isLeft, isright, isSpace;
     float elapsedTime;
-    int xEdge, yEdge;
     std::shared_ptr<Mapa> map;
     Plataforma pla;
 public:
-    Controller():xEdge(1280), yEdge(720), view(xEdge, yEdge), elapsedTime(view.getElapsedTime())
+    Controller() // elapsedTime(view.getElapsedTime())
     {
-        view.getWindow().setFramerateLimit(60);
     }
-    void render()
-    {
-        view.getWindow().clear();
-
-        view.getWindow().display();
-    }
-    void manejarTeclas()
-    {
-
-    }
+    // void render()
+    // {
+    //     view.getWindow().clear();
+    //     // nivelBee();
+    //     view.getWindow().display();
+    // }
     void nivelBee()
     {
         //Background nivel bee = 2
@@ -45,23 +34,28 @@ public:
         model.eliminarPlataformas();
         view.moverPlatforms(model.getMap());
         view.dibujarPlat(model.getMap());
-        view.dibujarCup(model.getPlayer1());
+        // view.dibujarCup(model.getPlayer1());
     }
     void update()
     {
         elapsedTime = view.getElapsedTime();
         model.update(elapsedTime);
+        view.update();
+
     }
-    void ejecutar()
+    void run()
     {
-        while(view.getWindow().isOpen())
+        while(view2.isOpen())
         {
-            update();
-            render();
+            view2.handleInput();
+            // update();
+            view2.render();
+            
         }
     }
 
 
 
 };
+
 #endif

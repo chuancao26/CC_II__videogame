@@ -1,6 +1,5 @@
 #include <SFML/Graphics.hpp>
 #include "Jugador_Modelo.cpp"
-#include "Plataforma_Vista.cpp"
 
 class JugadorVista {
 public:

@@ -1,9 +1,9 @@
-#include "Controlador.h"
+#include  "Controller.h"
 #include <iostream>
 using namespace std;
 using namespace sf;
 int main() {
-    Controlador controlador;
-    controlador.ejecutar();
+    Controller controlador;
+    controlador.run();
     return 0;
 }
