@@ -9,9 +9,8 @@
 class Controller
 {
 private:
-    ViewG view;
     Model model;
-    GameView view2;
+    GameView view;
     //teclas
     float elapsedTime;
     std::shared_ptr<Mapa> map;
@@ -30,26 +29,22 @@ public:
     void nivelBee()
     {
         //Background nivel bee = 2
-        view.backgroundMenu(2);
         model.crearPlataformas();
         model.eliminarPlataformas();
-        view.moverPlatforms(model.getMap());
-        view.dibujarPlat(model.getMap());
         // view.dibujarCup(model.getPlayer1());
     }
     void update()
     {
         elapsedTime = view.getElapsedTime();
         model.update(elapsedTime);
-        view.update();
 
     }
     void run()
     {
-        while(view2.isOpen())
+        while(view.isOpen())
         {
-            view2.handleInput();
-            view2.render();
+            view.handleInput(model.getMap());
+            view.render();
         }
     }
 

@@ -2,6 +2,7 @@
 #define GAMEVIEW_H
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include "Plataforma_Modelo.h"
 #include "Background_Vista.h"
 #include <iostream>
 #include "Textures.h"
@@ -18,10 +19,12 @@ private:
     sf::RectangleShape rect;
     Background background;
     bool isRight, isLeft, isUp;
+    std::shared_ptr<Mapa> map;
 public:
     sf::RenderWindow window;
     GameView():window(sf::VideoMode(1280,720), "Prueba")
     {
+        background.cargar(window, 2);
         rect.setFillColor(sf::Color::Red);
         rect.setSize(sf::Vector2f(50,50));
         rect.setPosition(400,200);
@@ -29,6 +32,8 @@ public:
     void render()
     {
         window.clear();
+        background.draw2(window);
+        dibujarPlat()
         window.draw(rect);
         window.display();
     }
@@ -75,14 +80,6 @@ public:
     }
     bool getIsRight(){return isRight;}
     bool getIsUp(){return isUp;}
-    void backgroundMenu(const int& n)
-    {
-        background.cargar(window, n);
-        if (n == 0 || n == 1 || n == 3)
-            background.draw1(window);
-        else
-            background.draw2(window);
-    }
     void moverPlatforms(const std::shared_ptr<Mapa>& map)
     {
         deltaTimePlat = clock.restart().asSeconds();
@@ -95,6 +92,12 @@ public:
     float getElapsedTime()
     {
         return clock2.getElapsedTime().asSeconds();
+    }
+    void update(const std::shared_ptr<Mapa>& map))
+    {
+
+        moverPlatforms();
+
     }
 };
 
