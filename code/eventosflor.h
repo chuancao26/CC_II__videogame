@@ -1,7 +1,11 @@
+#ifndef EVENTOSFLOR_H
+#define EVENTOSFLOR_H
+
 #include <SFML/Graphics.hpp>
 #include "bombcontroller.h"
 #include "boomerangcontroller.h"    
 #include "seed_controller.h"
+#include "bosscreates_controller.h"
 #include <vector>
 #include <iostream>
 #include <ctime>
@@ -10,10 +14,9 @@
 #include <string>
 #include <memory>
 
-int main() {
+void Mapa1(sf::RenderWindow& window) {
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "Seeds");
 
     window.setFramerateLimit(60);
     BoomerangController *boomerang= new BoomerangController(window.getSize().x * 45 / 64, window.getSize().y / 3, window.getSize().x / 7, window.getSize().y / 10);
@@ -28,9 +31,8 @@ int main() {
     sf::Clock clock;
     sf::Clock timer; // Reloj para controlar el intervalo de tiempo
 
-
-
-
+//BOSS
+    BossController bossController(window);
 //SEEDS
     SeedController seed1(window.getSize().x * 2.f / 3.f, window.getSize().y * 2.f / 6.f);
     seed1.setDestino(0, 500);
@@ -85,13 +87,18 @@ int main() {
             seeds[i]->update();
         }
 
+        //BOSS
+        bossController.update();
+
         //SEEDS
         for (int i = 0; i < 3; ++i) {
             seeds[i]->update();
         }
-
+//CLEAR
         window.clear();
-
+        //BOSS
+        bossController.draw();
+        
         if (!boomerang[0].shouldDelete()) {
             boomerang[0].draw(window);
         }
@@ -107,6 +114,7 @@ int main() {
         for (int i = 0; i < 3; ++i) {
             seeds[i]->draw(window);
         }
+        
 
         //SEEDS
         for (int i = 0; i < 3; ++i) {
@@ -116,7 +124,7 @@ int main() {
            }
         }
 
-
+//DISPLAY
         window.display();
         //if (seed1.canDelete() && seed2.canDelete() && seed3.canDelete()) {
             // Todos los objetos se pueden eliminar, se sale del bucle
@@ -136,7 +144,6 @@ int main() {
     for (int i = 0; i < 3; i++) {
                 delete seeds[i];
             }
-
-
-    return 0;
 }
+
+#endif

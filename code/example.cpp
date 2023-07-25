@@ -1,131 +1,113 @@
+/*
 #include <SFML/Graphics.hpp>
-#include <SFML/System.hpp>
 #include <iostream>
-#include <memory>
-#include <random>
+#include <string>
 
-
-class SeedModel {
+//BossView
+class FlorBoss {
 private:
-    sf::Vector2f position;
-    sf::Vector2f direction;
-    bool canBeDeleted;
-    float ang;
-
+    sf::RenderWindow& window_;
+    sf::Texture normal1T;
+    sf::Texture normal2T;
+    sf::Sprite spriteN1;
+    sf::Sprite spriteN2;
+    int state;
+    float timer_;
+    float duration_;
+    float growthTimer_;
+    float growthDuration_;
 public:
-    SeedModel(float x, float y) : canBeDeleted(false) {
-        position = sf::Vector2f(x, y);
-        ang = 0.f;
-    }
-
-    void update() {
-        float co = direction.y - position.y;
-        float ca = direction.x - position.x;
-
-        float speedX, speedY;
-
-        if (co == 0.f) {
-            speedX = 4.f;
-            speedY = 0.f;
-            ang = 0;
-        } else {
-            float h = std::sqrt(ca * ca + co * co);
-            float k1 = ca / h;
-            float k2 = co / h;
-
-            speedX = k1;
-            speedY = k2;
-            ang = std::atan2(-speedY, -speedX) * 180.f / M_PI;
+    FlorBoss(sf::RenderWindow& window) : window_(window) {
+        if ((!normal1T.loadFromFile("normal1.png"))||(!normal2T.loadFromFile("normal2.png"))) {
+            // Error al cargar la imagen normal1.png
+            std::cerr << "Error al cargar las texturas." << std::endl;
         }
+        spriteN1.setTexture(normal1T);
+        spriteN2.setTexture(normal2T);
 
-        position.x += speedX;
-        position.y += speedY;
+        spriteN1.setScale(window.getSize().x / 3 / spriteN1.getLocalBounds().width,
+                              ((window.getSize().y * 4) / 5) / spriteN1.getLocalBounds().height);
+        spriteN2.setScale(window.getSize().x / 3 / spriteN2.getLocalBounds().width,
+                               ((window.getSize().y * 4) / 5) / spriteN2.getLocalBounds().height);
 
-        if (position.x <= 0) {
-            canBeDeleted = true;
+        spriteN1.setPosition(window_.getSize().x - (spriteN1.getLocalBounds().width)/1.1,
+                                 window.getSize().y / 12);
+        spriteN2.setPosition(window_.getSize().x - (spriteN2.getLocalBounds().width)/1.1,
+                                  window.getSize().y / 12);
+        normal1T.setSmooth(true);
+        normal2T.setSmooth(true);
+        state = 1;
+        timer_ = 0.0f;
+        duration_ = 0.5f;
+        growthTimer_ = 0.0f;
+        growthDuration_ = 2.0f;
+    }
+
+    void update(float deltaTime) {
+        timer_ += deltaTime;
+        growthTimer_ += deltaTime;
+
+        if (timer_ >= duration_) {
+            if(state == 1){
+                state = 0;
+            }
+            else if(state == 0){
+                state = 1;
+            }
+            timer_ = 0.0f;
         }
     }
 
-    bool canDelete() const {
-        return canBeDeleted;
+    void draw() {
+        if (state==1) {
+            window_.draw(spriteN1);
+        } else if (state==0) {
+            window_.draw(spriteN2);
+        }
     }
-
-    const sf::Vector2f& getPosition() const {
-        return position;
-    }
-
-    float getAngle() const {
-        return ang;
-    }
-
-    void setDestino(float a, float b) {
-        direction = sf::Vector2f(a, b);
+    void removeRectangles() {
+        spriteN1.setScale(0.0f, 0.0f);
+        spriteN2.setScale(0.0f, 0.0f);
     }
 };
 
 
-class SeedView {
-private:
-    sf::Texture texture;
-    sf::Sprite sprite;
-
+//FondoView
+class Background {
 public:
-    SeedView(const sf::Vector2f& position) {
-        if (!texture.loadFromFile("seed.png")) {
-            // Manejo de error si no se puede cargar la textura
+    Background(sf::RenderWindow& window) : window_(window) {
+        if (!texture_.loadFromFile("fondoFlor.png")) {
+            // Error al cargar la imagen fondoFlor.png
+            return;
         }
 
-        sprite.setTexture(texture);
-        sprite.setOrigin(texture.getSize().x / 2.f, texture.getSize().y / 2.f);
-        sprite.setPosition(position);
+        sprite_.setTexture(texture_);
+
+        // Escala la imagen para que encaje con el tama�o de la ventana
+        float scaleX = static_cast<float>(window.getSize().x) / sprite_.getLocalBounds().width;
+        float scaleY = static_cast<float>(window.getSize().y) / sprite_.getLocalBounds().height;
+        sprite_.setScale(scaleX, scaleY);
     }
 
-    void updatePosition(const sf::Vector2f& position) {
-        sprite.setPosition(position);
+    void draw() {
+        window_.draw(sprite_);
     }
 
-    void draw(sf::RenderWindow& window, float angle) {
-        sprite.setRotation(angle);
-        window.draw(sprite);
-    }
-};
-
-class SeedController {
 private:
-    SeedModel model;
-    SeedView view;
-
-public:
-    SeedController(float x, float y) : model(x, y), view(model.getPosition()) {}
-
-    void setDestino(float a, float b) {
-        model.setDestino(a, b);
-    }
-
-    void update() {
-        model.update();
-        view.updatePosition(model.getPosition());
-    }
-
-    bool canDelete() const {
-        return model.canDelete();
-    }
-
-    void draw(sf::RenderWindow& window) {
-        if (!model.canDelete()){
-            view.draw(window, model.getAngle());
-        }
-    }
+    sf::RenderWindow& window_;
+    sf::Texture texture_;
+    sf::Sprite sprite_;
 };
+
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "Seeds");
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "Cuadrados");
+    window.setFramerateLimit(60);
+   
+    FlorBoss florBoss(window); //Crear view del Boss
+    sf::Clock clock2;
 
-    SeedController seed1(window.getSize().x * 2.f / 3.f, window.getSize().y * 2.f / 6.f);
-    seed1.setDestino(0, 500);
-    SeedController seed2(window.getSize().x * 2.f / 3.f, window.getSize().y * 3.f / 6.f);
-    SeedController seed3(window.getSize().x * 2.f / 3.f, window.getSize().y * 4.f / 6.f);
-    SeedController* seeds[3] = {&seed1, &seed2, &seed3};
+    Background background(window); //Fondo del juego "Cagney Carnation"
 
     sf::Clock clockSeed;
 
@@ -136,25 +118,405 @@ int main() {
                 window.close();
         }
 
-        sf::Time elapsed = clockSeed.restart();
+        // Calcular el tiempo transcurrido desde la última aparición de un cuadrado
 
-        for (int i = 0; i < 3; ++i) {
-            seeds[i]->update();
-        }
+        float deltaTime2 = clock2.restart().asSeconds();
+        florBoss.update(deltaTime2);
 
-        window.clear();
-
-        for (int i = 0; i < 3; ++i) {
-            //seeds[i]->draw(window);
-           if (!seeds[i]->canDelete()){
-            seeds[i]->draw(window);
-           }
-        }
-
+//WIDOW CLEAR
+        window.clear(sf::Color::White);
+        background.draw();
+        
+        florBoss.draw();
+      
         window.display();
+    
+    }
+
+    // Liberar la memoria de los CuadradoController creados
+    //for (int i = 0; i < 1; i++) {
+    //    delete florBoss[i];
+    //}
+    
+    return 0;
+}
+*/
+/*
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include <string>
+
+// Boss Model
+class BossModel {
+private:
+    int state;
+    float timer_;
+    float duration_;
+    bool isGrowing_;
+    float growthTimer_;
+    float growthDuration_;
+
+public:
+    BossModel() : state(1), timer_(0.0f), duration_(0.5f), isGrowing_(false), growthTimer_(0.0f), growthDuration_(2.0f) {}
+
+    void update(float deltaTime) {
+        timer_ += deltaTime;
+        growthTimer_ += deltaTime;
+
+        if (timer_ >= duration_) {
+            if (state == 1) {
+                state = 0;
+            } else if (state == 0) {
+                state = 1;
+            }
+            timer_ = 0.0f;
+        }
+    }
+
+    void startGrowing() {
+        if (!isGrowing_) {
+            isGrowing_ = true;
+            growthTimer_ = 0.0f;
+        }
+    }
+
+    bool isGrowing() const {
+        return isGrowing_;
+    }
+
+    void stopGrowing() {
+        isGrowing_ = false;
+    }
+
+    int getState() const {
+        return state;
+    }
+};
+
+// Boss View
+class FlorBossView {
+private:
+    sf::RenderWindow& window_;
+    sf::Texture normal1T;
+    sf::Texture normal2T;
+    sf::Sprite spriteN1;
+    sf::Sprite spriteN2;
+    sf::RectangleShape rectThird_;
+
+public:
+    FlorBossView(sf::RenderWindow& window) : window_(window) {
+                if ((!normal1T.loadFromFile("normal1.png"))||(!normal2T.loadFromFile("normal2.png"))) {
+            // Error al cargar la imagen normal1.png
+            std::cerr << "Error al cargar las texturas." << std::endl;
+        }
+        spriteN1.setTexture(normal1T);
+        spriteN2.setTexture(normal2T);
+
+        spriteN1.setScale(window.getSize().x / 3 / spriteN1.getLocalBounds().width,
+                              ((window.getSize().y * 4) / 5) / spriteN1.getLocalBounds().height);
+        spriteN2.setScale(window.getSize().x / 3 / spriteN2.getLocalBounds().width,
+                               ((window.getSize().y * 4) / 5) / spriteN2.getLocalBounds().height);
+
+        spriteN1.setPosition(window_.getSize().x - (spriteN1.getLocalBounds().width)/1.1,
+                                 window.getSize().y / 12);
+        spriteN2.setPosition(window_.getSize().x - (spriteN2.getLocalBounds().width)/1.1,
+                                  window.getSize().y / 12);
+        normal1T.setSmooth(true);
+        normal2T.setSmooth(true);
 
     }
 
+    void draw(int state) {
+        if (state == 1) {
+            window_.draw(spriteN1);
+        } else if (state == 0) {
+            window_.draw(spriteN2);
+        }
+        window_.draw(rectThird_);
+    }
+
+    void removeRectangles() {
+        spriteN1.setScale(0.0f, 0.0f);
+        spriteN2.setScale(0.0f, 0.0f);
+        rectThird_.setSize(sf::Vector2f(0.0f, 0.0f));
+    }
+
+    void startGrowing() {
+        // (Remain unchanged, this is a view method)
+    }
+};
+
+// Boss Controller
+class BossController {
+private:
+    BossModel model_;
+    FlorBossView view_;
+    sf::Clock clock2;
+
+public:
+    BossController(BossModel& model, FlorBossView& view) : model_(model), view_(view) {
+
+    }
+
+    void update() {
+        float deltaTime2 = clock2.restart().asSeconds();
+        model_.update(deltaTime2);
+
+        if (model_.isGrowing()) {
+            // Update the view to start growing animation
+            view_.startGrowing();
+
+            if (model_.getState() == 1) {
+                view_.draw(model_.getState());
+            } else if (model_.getState() == 0) {
+                view_.draw(model_.getState());
+            }
+        } else {
+            // Perform any other actions when not growing
+        }
+    }
+
+    void draw() {
+        view_.draw(model_.getState());
+    }
+};
+
+// ... Rest of the code remains unchanged ...
+class Background {
+public:
+    Background(sf::RenderWindow& window) : window_(window) {
+        if (!texture_.loadFromFile("fondoFlor.png")) {
+            // Error al cargar la imagen fondoFlor.png
+            return;
+        }
+
+        sprite_.setTexture(texture_);
+
+        // Escala la imagen para que encaje con el tama�o de la ventana
+        float scaleX = static_cast<float>(window.getSize().x) / sprite_.getLocalBounds().width;
+        float scaleY = static_cast<float>(window.getSize().y) / sprite_.getLocalBounds().height;
+        sprite_.setScale(scaleX, scaleY);
+    }
+
+    void draw() {
+        window_.draw(sprite_);
+    }
+
+private:
+    sf::RenderWindow& window_;
+    sf::Texture texture_;
+    sf::Sprite sprite_;
+};
+
+
+int main() {
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "Cuadrados");
+    window.setFramerateLimit(60);
+
+    BossModel bossModel; // Model
+    FlorBossView florBossView(window); // View
+    BossController bossController(bossModel, florBossView); // Controller
+
+    Background background(window);
+
+    sf::Clock clockSeed;
+
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+
+        bossController.update();
+        
+        window.clear(sf::Color::White);
+        //background.draw();
+
+        bossController.draw();
+
+        window.display();
+    }
+
+    return 0;
+}
+*/
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include <string>
+
+// Boss Model
+class BossModel {
+private:
+    int state;
+    float timer_;
+    float duration_;
+    bool isGrowing_;
+    float growthTimer_;
+    float growthDuration_;
+
+public:
+    BossModel() : state(1), timer_(0.0f), duration_(0.5f), isGrowing_(false), growthTimer_(0.0f), growthDuration_(2.0f) {}
+
+    void update(float deltaTime) {
+        timer_ += deltaTime;
+        growthTimer_ += deltaTime;
+
+        if (timer_ >= duration_) {
+            if (state == 1) {
+                state = 0;
+            } else if (state == 0) {
+                state = 1;
+            }
+            timer_ = 0.0f;
+        }
+    }
+
+    void startGrowing() {
+        if (!isGrowing_) {
+            isGrowing_ = true;
+            growthTimer_ = 0.0f;
+        }
+    }
+
+    bool isGrowing() const {
+        return isGrowing_;
+    }
+
+    void stopGrowing() {
+        isGrowing_ = false;
+    }
+
+    int getState() const {
+        return state;
+    }
+};
+
+// Boss View
+class FlorBossView {
+private:
+    sf::RenderWindow& window_;
+    sf::Texture normal1T;
+    sf::Texture normal2T;
+    sf::Sprite spriteN1;
+    sf::Sprite spriteN2;
+    sf::RectangleShape rectThird_;
+
+public:
+    FlorBossView(sf::RenderWindow& window) : window_(window) {
+        if ((!normal1T.loadFromFile("normal1.png")) || (!normal2T.loadFromFile("normal2.png"))) {
+            // Error al cargar las texturas.
+            std::cerr << "Error al cargar las texturas." << std::endl;
+        }
+        spriteN1.setTexture(normal1T);
+        spriteN2.setTexture(normal2T);
+
+        spriteN1.setScale(window.getSize().x / 3 / spriteN1.getLocalBounds().width,
+                          ((window.getSize().y * 4) / 5) / spriteN1.getLocalBounds().height);
+        spriteN2.setScale(window.getSize().x / 3 / spriteN2.getLocalBounds().width,
+                          ((window.getSize().y * 4) / 5) / spriteN2.getLocalBounds().height);
+
+        spriteN1.setPosition(window_.getSize().x - (spriteN1.getLocalBounds().width) / 1.1,
+                             window.getSize().y / 12);
+        spriteN2.setPosition(window_.getSize().x - (spriteN2.getLocalBounds().width) / 1.1,
+                             window.getSize().y / 12);
+        normal1T.setSmooth(true);
+        normal2T.setSmooth(true);
+    }
+
+    void draw(int state) {
+        if (state == 1) {
+            window_.draw(spriteN1);
+        } else if (state == 0) {
+            window_.draw(spriteN2);
+        }
+        window_.draw(rectThird_);
+    }
+
+    void removeRectangles() {
+        spriteN1.setScale(0.0f, 0.0f);
+        spriteN2.setScale(0.0f, 0.0f);
+        rectThird_.setSize(sf::Vector2f(0.0f, 0.0f));
+    }
+
+    void startGrowing() {
+        // (Remain unchanged, this is a view method)
+    }
+};
+
+// Boss Controller
+class BossController {
+private:
+    BossModel model_;
+    FlorBossView view_;
+    sf::Clock clock2;
+
+public:
+    BossController(sf::RenderWindow& window) : view_(window) {}
+
+    void update() {
+        float deltaTime2 = clock2.restart().asSeconds();
+        model_.update(deltaTime2);
+
+        if (model_.isGrowing()) {
+            // Update the view to start growing animation
+            view_.startGrowing();
+        }
+    }
+
+    void draw() {
+        view_.draw(model_.getState());
+    }
+};
+
+class Background {
+public:
+    Background(sf::RenderWindow& window) : window_(window) {
+        if (!texture_.loadFromFile("fondoFlor.png")) {
+            // Error al cargar la imagen fondoFlor.png
+            return;
+        }
+
+        sprite_.setTexture(texture_);
+
+        // Escala la imagen para que encaje con el tamaño de la ventana
+        float scaleX = static_cast<float>(window.getSize().x) / sprite_.getLocalBounds().width;
+        float scaleY = static_cast<float>(window.getSize().y) / sprite_.getLocalBounds().height;
+        sprite_.setScale(scaleX, scaleY);
+    }
+
+    void draw() {
+        window_.draw(sprite_);
+    }
+
+private:
+    sf::RenderWindow& window_;
+    sf::Texture texture_;
+    sf::Sprite sprite_;
+};
+
+int main() {
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "Cuadrados");
+    window.setFramerateLimit(60);
+
+    BossController bossController(window); // Controller
+
+    Background background(window);
+
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+
+        bossController.update();
+
+        window.clear(sf::Color::White);
+        background.draw();
+        bossController.draw();
+        window.display();
+    }
 
     return 0;
 }
