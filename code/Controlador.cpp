@@ -8,25 +8,32 @@
 #include "Elegir.cpp"
 #include <thread>
 #include <memory>
+#include "vistaBee.h"
 using FloatPtr = std::shared_ptr<float>;
 
 class Controlador {
 private:
+    //Modelo
     Cup jugador1;
     Cup jugador2;
-    Vista vista;
     Mapa* map;
-    ElegirPlayer elegir;
     Plataforma pla;
-    sf::Clock clock, clock2, clock3, clock4,clock5;
+
+    //Vista
+    Vista vista;
+    VistaBee vistaBee;
+    ElegirPlayer elegir;
     Background background;
+    sf::Clock clock, clock2,clock5;
+    bool elegidos;
+    
+    //float clock,clock2,clock3;
     int nivel,j1,j2;
     vector<int> jugadores;
-    bool elegidos;
 
 public:
     Controlador()
-        : jugador1(20,100,80), jugador2(200,100,80), vista(1280, 720)
+        : jugador1(20,100,80), jugador2(200,100,80), vista(1280, 720), vistaBee(vista.getWindow())
     {
         nivel = 0;
         elegidos=false;
@@ -34,7 +41,7 @@ public:
     }
     void crearMapa()
     {
-        std::vector<std::string> mapStrings = map->crearMapa(5);
+        std::vector<std::string> mapStrings = map->crearMapa(50);
         map->parseMap(mapStrings);
     }
     void manejarEventos() {
@@ -99,9 +106,8 @@ public:
                 break;
                         
         }
-        float delta = clock3.restart().asSeconds();
-        jugador1.caida(delta);
-        jugador2.caida(delta);
+        jugador1.caida();
+        jugador2.caida();
     }
 
     void Menu()
@@ -121,18 +127,19 @@ public:
             
             break;
         case 1:
-            
-            background.cargar(vista.window, nivel);
-            background.draw1(vista.window);
-            vista.dibujarCup(jugador1,jugador2);
-            break;
-        case 2:
             background.cargar(vista.window, nivel);
             background.draw2(vista.window);
             crearplataformas();
             eliminarplataformas();
             mover_plataformas();
             dibujarPlataformas();
+            vista.dibujarCup(jugador1,jugador2);
+            loadBeeView();
+            break;
+        case 2:
+            
+            background.cargar(vista.window, nivel);
+            background.draw1(vista.window);
             vista.dibujarCup(jugador1,jugador2);
             break;
         case 3:
@@ -157,7 +164,7 @@ public:
         {
             crearMapa();
         }
-        else
+        /*else
         {
             if (clock2.getElapsedTime().asSeconds() >= 1.0f)
             {
@@ -165,7 +172,7 @@ public:
                 clock2.restart();
                 
             }
-        }
+        }*/
         
     }
     void renderizar() {
@@ -209,23 +216,18 @@ public:
         }
         background.actualizar(vista.window, delta);
     }
-
     void ejecutar() {
-        if(nivel>0)
-        {
-            std::thread hiloJugador2([this] {
-                while (vista.window.isOpen()) {
-                    manejarEventos();
-                }
-            }); 
-            
-            hiloJugador2.join();
-        }
+
 
         while (vista.window.isOpen()) {
             colisiones();
             manejarEventos();
             renderizar();
         }  
+    }
+    void loadBeeView()
+    {
+        vistaBee.handleInput(jugador1,jugador2);
+        vistaBee.render();
     }
 };

@@ -33,7 +33,7 @@ std::string Mapa::generarSecuenciaFila()
     }
     return fila;
 }
-vector<std::string> Mapa::crearMapa(int n)
+std::vector<std::string> Mapa::crearMapa(int n)
 {
     srand(time(0));  // Semilla aleatoria basada en el tiempo actual
     

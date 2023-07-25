@@ -12,13 +12,13 @@ public:
             }
             break;
         case 1:
-            if (!texture_.loadFromFile("img\\menu\\fondoFlor.png")) {
-                std::cout<<"Error al cargar la imagen fondoFlor.png"<<std::endl;
+            if (!texture_.loadFromFile("img\\menu\\fondoBee.png")) {
+                std::cout<<"Error al cargar la imagen fondoBee2.png"<<std::endl;
             }
             break;
         case 2:
-            if (!texture_.loadFromFile("img\\menu\\fondoBee.png")) {
-                std::cout<<"Error al cargar la imagen fondoBee2.png"<<std::endl;
+            if (!texture_.loadFromFile("img\\menu\\fondoFlor.png")) {
+                std::cout<<"Error al cargar la imagen fondoFlor.png"<<std::endl;
             }
             break;
         case 3:

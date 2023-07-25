@@ -30,7 +30,7 @@ class Mapa
     Mapa();
     void parseMap(const std::vector<std::string>& mapStrings);
     Plataforma* platforms;
-    vector<std::string> crearMapa(int n);
+    std::vector<std::string> crearMapa(int n);
     std::string generarSecuenciaFila();
     void eliminarPlataformas();
     void remove(int pos);
