@@ -1,5 +1,4 @@
-#include "Jugador_Modelo.h"
-#include "Plataforma_Modelo.h"
+#include "Modelo.cpp"
 #include "Vista.cpp"
 #include "Boss_Vista.cpp"
 #include "Background_Vista.cpp"
@@ -14,10 +13,7 @@ using FloatPtr = std::shared_ptr<float>;
 class Controlador {
 private:
     //Modelo
-    Cup jugador1;
-    Cup jugador2;
-    Mapa* map;
-    Plataforma pla;
+    Modelo modelo;
 
     //Vista
     Vista vista;
@@ -33,16 +29,15 @@ private:
 
 public:
     Controlador()
-        : jugador1(20,100,80), jugador2(200,100,80), vista(1280, 720), vistaBee(vista.getWindow())
+        : vista(1280, 720), vistaBee(vista.getWindow())
     {
         nivel = 0;
         elegidos=false;
-        map= new Mapa();
     }
     void crearMapa()
     {
-        std::vector<std::string> mapStrings = map->crearMapa(50);
-        map->parseMap(mapStrings);
+        std::vector<std::string> mapStrings = modelo.map->crearMapa(50);
+        modelo.map->parseMap(mapStrings);
     }
     void manejarEventos() {
         std::vector<FloatPtr> Posicion=std::vector<FloatPtr>();
@@ -50,51 +45,51 @@ public:
         switch (m)
         {
             case 1:
-                jugador1.estaSaltando(true);
-                jugador1.saltar();
+                modelo.jugador1.estaSaltando(true);
+                modelo.jugador1.saltar();
                 break;
             case 2:
-                jugador1.vaizquierda(true);
-                jugador1.moverIzquierda();
+                modelo.jugador1.vaizquierda(true);
+                modelo.jugador1.moverIzquierda();
                 break;
             case 3:
-                jugador1.vaderecha(true);
-                jugador1.moverDerecha();
+                modelo.jugador1.vaderecha(true);
+                modelo.jugador1.moverDerecha();
                 break;
             case 4:
-                jugador1.moverAbajo();
+                modelo.jugador1.moverAbajo();
                 break;
             case 5:
                 nivel += 1;
                 break;
             case 6:
-                jugador2.estaSaltando(true);
-                jugador2.saltar();
+                modelo.jugador2.estaSaltando(true);
+                modelo.jugador2.saltar();
                 break;
             case 7:
-                jugador2.vaizquierda(true);
-                jugador2.moverIzquierda();
+                modelo.jugador2.vaizquierda(true);
+                modelo.jugador2.moverIzquierda();
                 break;
             case 8:
-                jugador2.vaderecha(true);
-                jugador2.moverDerecha();
+                modelo.jugador2.vaderecha(true);
+                modelo.jugador2.moverDerecha();
                 break;
             case 9:
-                jugador2.moverAbajo();
+                modelo.jugador2.moverAbajo();
                 break;
             case 10:
-                jugador1.vaizquierda(false);
-                jugador1.vaderecha(false);
+                modelo.jugador1.vaizquierda(false);
+                modelo.jugador1.vaderecha(false);
                 break;
             case 11:
-                jugador1.estaSaltando(false);
+                modelo.jugador1.estaSaltando(false);
                 break;
             case 12:
-                jugador2.vaizquierda(false);
-                jugador2.vaderecha(false);
+                modelo.jugador2.vaizquierda(false);
+                modelo.jugador2.vaderecha(false);
                 break;
             case 13:
-                jugador2.estaSaltando(false);
+                modelo.jugador2.estaSaltando(false);
                 break;
             case 14:
                 FloatPtr primerElemento = Posicion.front();
@@ -106,8 +101,8 @@ public:
                 break;
                         
         }
-        jugador1.caida();
-        jugador2.caida();
+        modelo.jugador1.caida();
+        modelo.jugador2.caida();
     }
 
     void Menu()
@@ -133,14 +128,14 @@ public:
             eliminarplataformas();
             mover_plataformas();
             dibujarPlataformas();
-            vista.dibujarCup(jugador1,jugador2);
+            vista.dibujarCup(modelo.jugador1,modelo.jugador2);
             loadBeeView();
             break;
         case 2:
             
             background.cargar(vista.window, nivel);
             background.draw1(vista.window);
-            vista.dibujarCup(jugador1,jugador2);
+            vista.dibujarCup(modelo.jugador1,modelo.jugador2);
             break;
         case 3:
             background.cargar(vista.window, nivel);
@@ -154,13 +149,13 @@ public:
     {
         if (clock5.getElapsedTime().asSeconds() >= 2.5f)
         {
-            map->eliminarPlataformas();
+            modelo.map->eliminarPlataformas();
             clock5.restart();
         }
     }
     void crearplataformas()
     {
-        if(map->size==0)
+        if(modelo.map->size==0)
         {
             crearMapa();
         }
@@ -181,38 +176,38 @@ public:
         vista.window.display();
     }
     void dibujarPlataformas() {
-        for(int i=0;i<map->size;i++)
+        for(int i=0;i<modelo.map->size;i++)
         {
-            vista.dibujarPlat(map->platforms[i]);
+            vista.dibujarPlat(modelo.map->platforms[i]);
         }
     }
     void colisiones() {
-        for (int i=0;i<map->size;i++)
+        for (int i=0;i<modelo.map->size;i++)
         {
-            if (vista.colision(vista.jugador_v.cupShape, map->platforms[i]))
+            if (vista.colision(vista.jugador_v.cupShape, modelo.map->platforms[i]))
             {
-                jugador1.enPlataforma(true);
-                jugador1.estaColisionando(map->platforms[i].y);
+                modelo.jugador1.enPlataforma(true);
+                modelo.jugador1.estaColisionando(modelo.map->platforms[i].y);
             }
             else {
-                jugador1.enPlataforma(false);
+                modelo.jugador1.enPlataforma(false);
             }
 
-            if (vista.colision(vista.jugador_v2.cupShape, map->platforms[i]))
+            if (vista.colision(vista.jugador_v2.cupShape, modelo.map->platforms[i]))
             {
-                jugador2.enPlataforma(true);
-                jugador2.estaColisionando(map->platforms[i].y);
+                modelo.jugador2.enPlataforma(true);
+                modelo.jugador2.estaColisionando(modelo.map->platforms[i].y);
             }
             else {
-                jugador2.enPlataforma(false);
+                modelo.jugador2.enPlataforma(false);
             }
         }
     }
     void mover_plataformas() {
         float delta = clock.restart().asSeconds();
-        for(int i=0;i<map->size;i++)
+        for(int i=0;i<modelo.map->size;i++)
         {
-            map->platforms[i].caida(delta);
+            modelo.map->platforms[i].caida(delta);
         }
         background.actualizar(vista.window, delta);
     }
@@ -227,7 +222,7 @@ public:
     }
     void loadBeeView()
     {
-        vistaBee.handleInput(jugador1,jugador2);
+        vistaBee.handleInput(modelo.jugador1,modelo.jugador2);
         vistaBee.render();
     }
 };
