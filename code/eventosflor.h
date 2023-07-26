@@ -17,6 +17,8 @@ class VistaFlor
 {
 private:
     // sf::RenderWindow& window;
+    Cup cup1;
+    Cup cup2;
     BoomerangController* boomerang;
     const int maxBombs = 5;
     BombController* bombs[5] = {};
@@ -58,7 +60,12 @@ public:
             delete seeds[i];
         }
     }
-
+    void handleInput(const Cup& cup1_, const Cup& cup2_,sf::RenderWindow& win) 
+    {
+        cup1 = cup1_;
+        cup2 = cup2_;
+        runMapaFlor(win);
+    }
     void runMapaFlor(sf::RenderWindow& win)
     {
         float deltaTime = timer.getElapsedTime().asSeconds();
@@ -90,6 +97,7 @@ public:
 
         for (int i = 0; i < 3; ++i)
         {
+            seeds[i]->setDestino(0.f,cup1.getPosy());
             seeds[i]->update();
         }
 
@@ -123,7 +131,7 @@ public:
             }
         }
     }
-
+    
 };
 
 // Usage example

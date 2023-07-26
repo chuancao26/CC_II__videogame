@@ -63,8 +63,9 @@ public:
         vistaBee.handleInput(player1,player2);
         vistaBee.render();
     }
-    void loadFlorView(sf::RenderWindow& win)
+    void loadFlorView(const Cup& player1, const Cup& player2, sf::RenderWindow& win)
     {
+        vistaFlor.handleInput(player1,player2,win);
         vistaFlor.render(win);
     }
     

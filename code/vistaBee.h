@@ -71,7 +71,7 @@ public:
     void update()
     {
         elapsedtime = clock.getElapsedTime().asSeconds();
-        policeM ->move();
+        policeM -> move();
         policeV -> update(elapsedtime);
         updateTriangle();
         updateWorker();

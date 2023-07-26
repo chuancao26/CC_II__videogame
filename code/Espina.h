@@ -11,7 +11,8 @@ private:
     char type;
 public:
     // constructor
-    EspinaM(const float& posx_, const float& posy_, const char& type_, const int& xBorder_, const int& yBorder_):
+    EspinaM(const float& posx_, const float& posy_, const char& type_, 
+    const int& xBorder_, const int& yBorder_):
     size(30), posx(posx_), posy(posy_), speed(20.0f), scale(1.0f), 
     type(type_), xBorder(xBorder_), yBorder(yBorder_)
     {

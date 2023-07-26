@@ -66,7 +66,8 @@ public:
             const std::vector<std::shared_ptr<sf::Texture>>& textures_,
             const std::vector<std::shared_ptr<sf::Texture>>& texturesEspi, 
             const std::vector<std::shared_ptr<sf::Texture>>& texturesBomb_):
-     p(police_),texturesBomb(texturesBomb_), activeBomb(false), activeEspinas(false), textures(textures_), texturesEspinas(texturesEspi)
+     p(police_),texturesBomb(texturesBomb_), activeBomb(false), activeEspinas(false), 
+     textures(textures_), texturesEspinas(texturesEspi)
     {
     }
     void updateTexture()
@@ -147,7 +148,10 @@ public:
                 espinasM[7] ->update(elapsedTime);
                 espinasV[7] ->update();
             }
-            if (espinasM[0]->isExpired() && espinasM[1]->isExpired() && espinasM[2]->isExpired() && espinasM[3]->isExpired() && espinasM[4]->isExpired() && espinasM[5]->isExpired() && espinasM[6]->isExpired() && espinasM[7]->isExpired())
+            if (espinasM[0]->isExpired() && espinasM[1]->isExpired() && 
+            espinasM[2]->isExpired() && espinasM[3]->isExpired() && 
+            espinasM[4]->isExpired() && espinasM[5]->isExpired() && 
+            espinasM[6]->isExpired() && espinasM[7]->isExpired())
             {
                 espinasM.clear();
                 espinasV.clear();
