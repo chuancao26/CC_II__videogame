@@ -11,7 +11,7 @@ private:
 
 public:
     SeedView(const sf::Vector2f& position) {
-        if (!texture.loadFromFile("seed.png")) {
+        if (!texture.loadFromFile("img\\nivel_flor\\seed.png")) {
             // Manejo de error si no se puede cargar la textura
         }
 

@@ -14,7 +14,7 @@ private:
     sf::RectangleShape rectThird_;
 public:
     FlorBossView(sf::RenderWindow& window) : window_(window) {
-        if ((!normal1T.loadFromFile("normal1.png")) || (!normal2T.loadFromFile("normal2.png"))) {
+        if ((!normal1T.loadFromFile("img\\nivel_flor\\normal1.png")) || (!normal2T.loadFromFile("img\\nivel_flor\\normal2.png"))) {
             // Error al cargar las texturas.
             std::cerr << "Error al cargar las texturas." << std::endl;
         }
