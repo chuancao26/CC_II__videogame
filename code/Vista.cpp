@@ -1,15 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include "Jugador_Vista.cpp"
 #include "Plataforma_Vista.cpp"
-#include "Boss_Vista.cpp"
 #include "Background_Vista.cpp"
-#include "Boomerang_Controlador.cpp"
-#include "Bomba_Controlador.cpp"
 #include "Elegir.cpp"
+#include "eventosflor.h"
 #include <thread>
 #include <memory>
 #include "vistaBee.h"
-#include <memory>
 #include <iostream>
 using FloatPtr = std::shared_ptr<float>;
 class Vista {
@@ -20,6 +17,7 @@ public:
     float width,height;
     sf::Time tiempoAcumulado;
     VistaBee vistaBee;
+    VistaFlor vistaFlor;
     ElegirPlayer elegir;
     Background background;
     sf::Clock clock, clock2, clock5;
@@ -27,12 +25,16 @@ public:
     
 public:
     Vista(const int& xedge, const int& yedge) : width(xedge), height(yedge), window(sf::VideoMode(xedge, yedge), "CUPHEAD!")
-    , vistaBee(window)
+    , vistaBee(window), vistaFlor(window)
     {
         width = window.getSize().x;
-        height = window.getSize().y;
+        height = window.getSize().y;  
         tiempoAcumulado = sf::Time::Zero;
     }
+    //void loadNivelFlor(sf::RenderWindow& win)
+    //{
+     //   vistaFlor.runMapaFlor(win);
+    //}
     void cargarJugadores(int j1,int j2)
     {
         if(j1!=0 && j2!=0)
@@ -60,6 +62,10 @@ public:
     {
         vistaBee.handleInput(player1,player2);
         vistaBee.render();
+    }
+    void loadFlorView(sf::RenderWindow& win)
+    {
+        vistaFlor.render(win);
     }
     
     bool colision(sf::Sprite& jugador, Plataforma& platform)

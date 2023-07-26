@@ -1,5 +1,6 @@
-#ifndef BOOMERANG_MODELO_H
-#define BOOMERANG_MODELO_H
+#ifndef BOOMERANGMODEL_H
+#define BOOMERANGMODEL_H
+#include <iostream>
 
 class BoomerangModel {
 private:
@@ -17,14 +18,14 @@ public:
     }
 
     void moveRight(float windowWidth) {
-        x += 7.0f;
+        x += 14.0f;
         if (x >= windowWidth - width) {  // Extremo derecho
             direction--;  // Cambiar dirección a izquierda
         }
     }
 
     void moveLeft() {
-        x -= 7.0f;
+        x -= 14.0f;
         if (x <= -2 * width) {  // Punto de inicio
             direction = 0;  // Cambiar dirección a derecha
         }

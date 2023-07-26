@@ -2,7 +2,6 @@
 #include "Vista.cpp"
 #include <thread>
 #include <memory>
-#include "vistaBee.h"
 using FloatPtr = std::shared_ptr<float>;
 
 class Controlador {
@@ -13,6 +12,7 @@ private:
     Vista vista;
 
     bool elegidos;
+    float elapsedTime;
     float clock5, clock;
     //float clock,clock2,clock5;
     int nivel,j1,j2;
@@ -123,10 +123,13 @@ public:
             vista.background.cargar(vista.window, nivel);
             vista.background.draw1(vista.window);
             vista.dibujarCup(modelo.jugador1,modelo.jugador2);
+            vista.loadFlorView(vista.window);
+            
             break;
         case 3:
             vista.background.cargar(vista.window, nivel);
             vista.background.draw1(vista.window);
+            
             break;
         default:
             break;

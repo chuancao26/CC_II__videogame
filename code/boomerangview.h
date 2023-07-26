@@ -1,5 +1,8 @@
+#ifndef BOOMERANGVIEW_H
+#define BOOMERANGVIEW_H
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include "boomerangmodel.h"
 
 class BoomerangView {
 private:
@@ -40,3 +43,4 @@ public:
         window.draw(sprite);
     }
 };
+#endif
