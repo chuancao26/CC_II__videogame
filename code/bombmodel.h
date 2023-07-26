@@ -17,7 +17,7 @@ public:
     bool llegoMaximo;
     BombModel(float ventanaAncho = 0.0f, float ventanaAlto = 0.0f)
         : x(0.0f), y(ventanaAlto / 20), size(50.0f),
-          maxY(ventanaAlto * 7 / 9), velocidad(8.0f),
+          maxY(ventanaAlto * 7 / 9), velocidad(4.0f),
           llegoMaximo(false), esperando(false), eliminado(false) {}
 
     void setX(float posX) {

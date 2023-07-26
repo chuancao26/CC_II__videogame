@@ -3,7 +3,6 @@
 
 #include <cmath>
 
-
 class SeedModel {
 private:
     sf::Vector2f position;
@@ -24,7 +23,7 @@ public:
         float speedX, speedY;
 
         if (co == 0.f) {
-            speedX = 8.f;
+            speedX = 5.f;
             speedY = 0.f;
             ang = 0;
         } else {
@@ -37,8 +36,8 @@ public:
             ang = std::atan2(-speedY, -speedX) * 180.f / M_PI;
         }
 
-        position.x += 8.f*speedX;
-        position.y += 8.f*speedY;
+        position.x += 5.f*speedX;
+        position.y += 5.f*speedY;
 
         if (position.x <= 0) {
             canBeDeleted = true;

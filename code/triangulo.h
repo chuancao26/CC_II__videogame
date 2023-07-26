@@ -58,7 +58,8 @@ public:
     }
     bool isExpired()
     {
-        return (posx > xBorder + size * 2  || posx < 0 - size * 2 || posy > yBorder + size * 2 || posy < 0 - size * 2)? true:false;
+        return (posx > xBorder + size * 2  || posx < 0 - size * 2 || posy > yBorder + size * 2 
+        || posy < 0 - size * 2)? true:false;
     }
     float getPosx(){return posx;}
     float getPosy(){return posy;}
@@ -78,7 +79,8 @@ private:
     float rotation;
     float elapsedTime;
 public:
-    TrianguloV(std::shared_ptr<TrianguloM> tm_,std::vector<std::shared_ptr<sf::Texture>> textures_):tm(tm_), rotation(0.0f),
+    TrianguloV(std::shared_ptr<TrianguloM> tm_,std::vector<std::shared_ptr<sf::Texture>> textures_):
+    tm(tm_), rotation(0.0f),
     textures(textures_)
     {
     }

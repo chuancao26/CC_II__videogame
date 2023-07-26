@@ -123,7 +123,7 @@ public:
             vista.background.cargar(vista.window, nivel);
             vista.background.draw1(vista.window);
             vista.dibujarCup(modelo.jugador1,modelo.jugador2);
-            vista.loadFlorView(vista.window);
+            vista.loadFlorView(modelo.jugador1,modelo.jugador2,vista.window);
             
             break;
         case 3:
