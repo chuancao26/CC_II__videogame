@@ -5,7 +5,6 @@
 #include "bombmodel.h"
 #include <iostream>
 
-
 class BombController {
 private:
     std::vector<BombModel> bombs;

@@ -3,9 +3,11 @@
 #define BOSSCREATES_MODEL_H
 #include "bosscreates_model.h"
 #include <iostream>
+
 class BossModel {
 private:
     int state;
+    int currentImageIndex;
     float timer_;
     float duration_;
     bool isGrowing_;
@@ -13,7 +15,7 @@ private:
     float growthDuration_;
 
 public:
-    BossModel() : state(1), timer_(0.0f), duration_(0.5f), isGrowing_(false), growthTimer_(0.0f), growthDuration_(2.0f) {}
+    BossModel() : state(1), currentImageIndex(0), timer_(0.0f), duration_(0.2f), isGrowing_(false), growthTimer_(0.0f), growthDuration_(1.0f) {}
 
     void update(float deltaTime) {
         timer_ += deltaTime;
@@ -25,6 +27,7 @@ public:
             } else if (state == 0) {
                 state = 1;
             }
+            currentImageIndex = 0;
             timer_ = 0.0f;
         }
     }
@@ -47,5 +50,14 @@ public:
     int getState() const {
         return state;
     }
+
+    int getCurrentImageIndex() const {
+        return currentImageIndex;
+    }
+
+    void incrementImageIndex() {
+        currentImageIndex++;
+    }
+    
 };
 #endif

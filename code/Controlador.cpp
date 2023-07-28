@@ -153,6 +153,7 @@ public:
             {
                 modelo.jugador1.enPlataforma(true);
                 modelo.jugador1.estaColisionando(modelo.map->platforms[i].y);
+
             }
             else {
                 modelo.jugador1.enPlataforma(false);
@@ -167,6 +168,7 @@ public:
                 modelo.jugador2.enPlataforma(false);
             }
         }
+        
     }
     void mover_plataformas() {
         float delta = vista.clock.restart().asSeconds();

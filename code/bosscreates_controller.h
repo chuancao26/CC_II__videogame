@@ -8,14 +8,12 @@ class BossController {
 private:
     BossModel model_;
     FlorBossView view_;
-    sf::Clock clock2;
 
 public:
-    BossController(sf::RenderWindow& window) : view_(window) {}
+    BossController(sf::RenderWindow& window) : view_(window, model_) {}
 
-    void update() {
-        float deltaTime2 = clock2.restart().asSeconds();
-        model_.update(deltaTime2);
+    void update(float deltaTime) {
+        model_.update(deltaTime);
 
         if (model_.isGrowing()) {
             view_.startGrowing();
@@ -23,7 +21,12 @@ public:
     }
 
     void draw() {
-        view_.draw(model_.getState());
+        view_.draw();
+    }
+
+    void setState(int state) {
+        view_.setcurrentState(state);
     }
 };
+
 #endif

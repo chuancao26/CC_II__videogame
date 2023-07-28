@@ -1,8 +1,63 @@
+#include <iostream>
+#include <vector>
+#include <SFML/Graphics.hpp>
 
-#ifndef BOSSCREATES_VIEW_H
-#define BOSSCREATES_VIEW_H
-#include "bosscreates_model.h"
-#include <iostream> 
+class BossModel {
+private:
+    int state;
+    int currentImageIndex;
+    float timer_;
+    float duration_;
+    bool isGrowing_;
+    float growthTimer_;
+    float growthDuration_;
+
+public:
+    BossModel() : state(1), currentImageIndex(0), timer_(0.0f), duration_(0.2f), isGrowing_(false), growthTimer_(0.0f), growthDuration_(0.042f) {}
+
+    void update(float deltaTime) {
+        timer_ += deltaTime;
+        growthTimer_ += deltaTime;
+
+        if (timer_ >= duration_) {
+            if (state == 1) {
+                state = 0;
+            } else if (state == 0) {
+                state = 1;
+            }
+            currentImageIndex = 0;
+            timer_ = 0.0f;
+        }
+    }
+
+    void startGrowing() {
+        if (!isGrowing_) {
+            isGrowing_ = true;
+            growthTimer_ = 0.0f;
+        }
+    }
+
+    bool isGrowing() const {
+        return isGrowing_;
+    }
+
+    void stopGrowing() {
+        isGrowing_ = false;
+    }
+
+    int getState() const {
+        return state;
+    }
+
+    int getCurrentImageIndex() const {
+        return currentImageIndex;
+    }
+
+    void incrementImageIndex() {
+        currentImageIndex++;
+    }
+    
+};
 
 class FlorBossView {
 private:
@@ -112,7 +167,8 @@ public:
         timerClock.restart();
 
         timeSinceLastImageChange = 0.0f;
-        imageChangeInterval = 0.035f; 
+        imageChangeInterval = 0.048f; // Cambiar la imagen cada cuarto de segundo (0.25 segundos)
+        //imageChangeInterval = 1.25f;
     }
 
     void draw() {
@@ -202,4 +258,57 @@ public:
         currentImageIndex = newImageIndex;
     }
 };
-#endif
+class BossController {
+private:
+    BossModel model_;
+    FlorBossView view_;
+
+public:
+    BossController(sf::RenderWindow& window) : view_(window, model_) {}
+
+    void update(float deltaTime) {
+        model_.update(deltaTime);
+
+        if (model_.isGrowing()) {
+            view_.startGrowing();
+        }
+    }
+
+    void draw() {
+        view_.draw();
+    }
+
+    void setState(int state) {
+        view_.setcurrentState(state);
+    }
+};
+
+
+int main() {
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "Boss Creates Game");
+    BossController bossController(window);
+
+
+    // Bucle principal del juego
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+        //bossController.state(2);
+        float deltaTime = 0.042f;
+        bossController.update(deltaTime);
+
+        window.clear(); // Limpiar el contenido anterior de la ventana
+
+        bossController.draw();
+
+        window.display();
+
+        // Pausa para reducir la velocidad de actualización
+        //sf::sleep(sf::milliseconds(100)); // Ajusta el valor para cambiar la velocidad de actualización
+    }
+
+    return 0;
+}

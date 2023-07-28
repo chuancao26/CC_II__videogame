@@ -101,7 +101,7 @@ public:
             seeds[i]->update();
         }
 
-        bossController.update();
+        bossController.update(0.01f);
         bossController.draw();
 
         if (!boomerang[0].shouldDelete())
