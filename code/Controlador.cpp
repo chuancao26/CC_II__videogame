@@ -6,15 +6,11 @@ using FloatPtr = std::shared_ptr<float>;
 
 class Controlador {
 private:
-    //Modelo
     Modelo modelo;
-    //Vista
     Vista vista;
 
     bool elegidos;
-    float elapsedTime;
     float clock5, clock;
-    //float clock,clock2,clock5;
     int nivel,j1,j2;
     vector<int> jugadores;
 
@@ -22,11 +18,13 @@ public:
     Controlador()
         : vista(1280, 720)
     {
+        vista.getWindow().setFramerateLimit(60);
         nivel = 0;
         elegidos=false;
     }
 
     void manejarEventos() {
+        // std::cout << vista.getGameTime() << std::endl;
         std::vector<FloatPtr> Posicion=std::vector<FloatPtr>();
         int m=vista.procesarEventos(Posicion);
         switch (m)

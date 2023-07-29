@@ -21,15 +21,18 @@ private:
     std::shared_ptr<MisilV> misilV;
     std::shared_ptr<PoliceM> policeM;
     std::shared_ptr<PoliceV> policeV;
-    std::shared_ptr<TrianguloM> triangleM;
-    std::shared_ptr<TrianguloV> triangleV;
+
+    std::vector<std::shared_ptr<TrianguloM>> triangulosM;    
+    std::vector<std::shared_ptr<TrianguloV>> triangulosV;    
+    
     std::shared_ptr<WorkerBeeM> workerBeeM;
     std::shared_ptr<WorkerBeeV> workerBeeV;
+
     bool activeWorker, activeTriangle, activeMisil, cupLeft;
     float rate;
     sf::RenderWindow& window;
     sf::Clock clock;
-    float elapsedtime;
+    float gameTime;
     int xBorder, yBorder;
     std::mt19937 generator;
     std::uniform_int_distribution<int> distributionY;
@@ -42,7 +45,6 @@ public:
         std::random_device rd;
         generator.seed(rd());
         distributionY = std::uniform_int_distribution<int>(150,yBorder);
-        // window.create(sf::VideoMode(xBorder, yBorder), windowName);
         policeM = std::make_shared<PoliceM>(xBorder,yBorder);
         policeV = std::make_shared<PoliceV>(policeM, textures.getPoliceTextures(), 
                                             textures.getEspinasTextures(),
@@ -50,29 +52,18 @@ public:
     }
     void render()
     {
-        // window.clear();
         drawEntitys();
-        // window.display();
     }
-    void handleInput(const Cup& cup1_, const Cup& cup2_) 
+    void handleInput(const Cup& cup1_, const Cup& cup2_,const float& gameTime_) 
     {
-        // sf::Event event;
-        // while (window.isOpen() && window.pollEvent(event)) 
-        // {
-        //     if (event.type == sf::Event::Closed)
-        //     {
-        //         window.close();
-        //     }
-        // }
         cup1 = cup1_;
         cup2 = cup2_;
         update();
+        gameTime = gameTime_;
     }
     void update()
     {
-        elapsedtime = clock.getElapsedTime().asSeconds();
-        policeM -> move();
-        policeV -> update(elapsedtime);
+        updatePolice();
         updateTriangle();
         updateWorker();
         updateMisil();
@@ -82,68 +73,134 @@ public:
     {
         return window.isOpen();
     }
-    void updateWorker()
-    {     
-        if (cupLeft)
+    void updatePolice()
+    {
+        if (gameTime <= 30.0f)
         {
-            if(!activeWorker)
-            {
-                workerBeeM = std::make_shared<WorkerBeeM> (xBorder, distributionY(generator),cupLeft);
-                workerBeeV = std::make_shared<WorkerBeeV> (workerBeeM, textures.getWorkerTextures());
-                activeWorker = true;
-            }
-            if (activeWorker)
-            {
-                workerBeeM -> update(elapsedtime);
-                workerBeeV -> update();
-                if(workerBeeM -> isExpired())
-                {
-                    workerBeeM.reset();
-                    workerBeeV.reset();
-                    activeWorker = false;
-                }
-            }
+            policeM -> move();
+            policeV -> update(gameTime);
         }
         else
         {
-            if(!activeWorker)
+            policeM.reset();
+            policeV.reset();
+        }
+    }
+    void drawPolice()
+    {
+        if (gameTime <= 30.0f)
+        {
+            policeV -> draw(window);
+        }
+    }
+    void updateWorker()
+    {     
+        if (gameTime < 60)
+        { 
+            if (cupLeft)
             {
-                workerBeeM = std::make_shared<WorkerBeeM> (0, distributionY(generator),cupLeft);
-                workerBeeV = std::make_shared<WorkerBeeV> (workerBeeM, textures.getWorkerTextures());
-                activeWorker = true;
-            }
-            if (activeWorker)
-            {
-                workerBeeM -> update(elapsedtime);
-                workerBeeV -> update();
-                if(workerBeeM -> isExpired())
+                if(!activeWorker)
                 {
-                    workerBeeM.reset();
-                    workerBeeV.reset();
-                    activeWorker = false;
+                    workerBeeM = std::make_shared<WorkerBeeM> (xBorder, distributionY(generator),cupLeft);
+                    workerBeeV = std::make_shared<WorkerBeeV> (workerBeeM, textures.getWorkerTextures());
+                    activeWorker = true;
+                }
+                if (activeWorker)
+                {
+                    workerBeeM -> update(gameTime);
+                    workerBeeV -> update();
+                    if(workerBeeM -> isExpired())
+                    {
+                        workerBeeM.reset();
+                        workerBeeV.reset();
+                        activeWorker = false;
+                    }
+                }
+            }
+            else
+            {
+                if(!activeWorker)
+                {
+                    workerBeeM = std::make_shared<WorkerBeeM> (0, distributionY(generator),cupLeft);
+                    workerBeeV = std::make_shared<WorkerBeeV> (workerBeeM, textures.getWorkerTextures());
+                    activeWorker = true;
+                }
+                if (activeWorker)
+                {
+                    workerBeeM -> update(gameTime);
+                    workerBeeV -> update();
+                    if(workerBeeM -> isExpired())
+                    {
+                        workerBeeM.reset();
+                        workerBeeV.reset();
+                        activeWorker = false;
+                    }
                 }
             }
         }
 
-
+    }
+    void drawWorker()
+    {
+        if (gameTime < 60)
+        {
+            if (activeWorker)
+            {
+                workerBeeV -> draw(window);
+            }
+        }
+        
     }
     void updateTriangle()   
     {
+        int selector = (distributionY(generator)) % 2 + 1;
         if (!activeTriangle)
         {
-            triangleM = std::make_shared<TrianguloM>(0,0, xBorder, yBorder, 'e');
-            triangleV = std::make_shared<TrianguloV>(triangleM, textures.getTriangleTextures());
-            activeTriangle = true;
+            if (selector == 1) // upward and downward
+            {
+                triangulosM.push_back(std::make_shared<TrianguloM>(xBorder*1/3,yBorder, xBorder, yBorder, 3));
+                triangulosM.push_back(std::make_shared<TrianguloM>(xBorder*2/3,0 , xBorder, yBorder, 4));
+                for (size_t i{0}; i<triangulosM.size();++i)
+                {
+                    triangulosV.push_back(std::make_shared<TrianguloV>(triangulosM[i], textures.getTriangleTextures()));
+                }
+                activeTriangle = true;
+            }
+            if (selector == 2) // leftward and right ward
+            {
+                triangulosM.push_back(std::make_shared<TrianguloM>(xBorder, yBorder*1/3, xBorder, yBorder, 2));
+                triangulosM.push_back(std::make_shared<TrianguloM>(0, yBorder*2/3, xBorder, yBorder, 1));
+                for (size_t i{0}; i<triangulosM.size();++i)
+                {
+                    triangulosV.push_back(std::make_shared<TrianguloV>(triangulosM[i], textures.getTriangleTextures()));
+                }
+                activeTriangle = true;
+            }
         }
         if(activeTriangle)
         {
-            triangleM->move();
-            triangleV->update(elapsedtime);
-            if (triangleM->isExpired())
+            for (size_t i{0}; i<triangulosM.size();++i)
             {
-                triangleM.reset();
-                triangleV.reset();
-                activeTriangle = false;
+                triangulosM[i]->move();
+                triangulosV[i]->update(gameTime);
+                if (triangulosM[i]->isExpired())
+                {
+                    triangulosM[i].reset();
+                    triangulosV[i].reset();
+                    triangulosM.clear();
+                    triangulosV.clear();
+                    activeTriangle = false;
+                }
+            }
+        }
+    }
+    void drawTriangle()
+    {
+        if (activeTriangle)
+        {
+            for (size_t i{0}; i<triangulosM.size();++i)
+            {
+                triangulosV[i]->draw(window);
             }
         }
     }
@@ -157,8 +214,8 @@ public:
         }
         if (activeMisil)
         {
-            misilM->update(elapsedtime);
-            misilV->update(elapsedtime);
+            misilM->update(gameTime);
+            misilV->update(gameTime);
             if (misilM->isExpired())
             {
                 misilM.reset();
@@ -181,24 +238,7 @@ public:
             misilV ->draw(window);
         }
     }
-    void drawWorker()
-    {
-        if (activeWorker)
-        {
-            workerBeeV -> draw(window);
-        }
-    }
-    void drawPolice()
-    {
-        policeV -> draw(window);
-    }
-    void drawTriangle()
-    {
-        if (activeTriangle)
-        {
-            triangleV -> draw(window);
-        }
-    }
+
     void updatePositionsCup()
     {
         if (cup1.getPosx() < xBorder / 2)

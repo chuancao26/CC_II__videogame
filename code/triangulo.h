@@ -7,50 +7,49 @@
 class TrianguloM : public Enemigo
 {
 private:
-    int radius, xBorder, yBorder;
+    int radius, xBorder, yBorder, type;
     float speed, scale, rotationSpeed;
-    char type;
 public:
-    TrianguloM(const float& posx_, const float& posy_, const int& xlimit, const int& ylimit, const char& type_):
-    Enemigo(posx_, posy_, 100), speed(7.0f), xBorder(xlimit), yBorder(ylimit), scale(0.50f),
+    TrianguloM(const float& posx_, const float& posy_, const int& xlimit, const int& ylimit, const int& type_):
+    Enemigo(posx_, posy_, 100), speed(15.0f), xBorder(xlimit), yBorder(ylimit), scale(0.50f),
     type(type_), rotationSpeed(5.0f)
     {
 
     } 
     virtual void move()
     {
-        if(type == 'r')
+        if(type == 1) // right
         {
             posx += speed;
         }
-        if(type == 'l')
+        if(type == 2) // left
         {
             posx -= speed;
         }
-        if(type == 'u')
+        if(type == 3) //up
         {
             posy -= speed;
         }
-        if(type == 'd')
+        if(type == 4) //down
         {
             posy += speed;
         }
-        if(type == 'a')
+        if(type == 5) //up left 
         {
             posx -= speed;
             posy -= speed;
         }
-        if(type == 'b')
+        if(type == 6) // up right
         {
             posx += speed;
             posy -= speed;
         }
-        if(type == 'c')
+        if(type == 7) // down left
         {
             posx -= speed;
             posy += speed;
         }
-        if(type == 'e')
+        if(type == 8) // down right
         {
             posx += speed;
             posy += speed;

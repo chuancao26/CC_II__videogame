@@ -170,7 +170,7 @@ public:
     }
     void drawBomb(sf::RenderWindow& window)
     {
-        if (!activeBomb)
+        if (!activeBomb && !activeEspinas)
         {
             bombM = std::make_shared<BombaPoliceM>(p->getPosx(), p->getPosy(), elapsedTime);
             bombV = std::make_shared<BombaPoliceV>(bombM, texturesBomb);

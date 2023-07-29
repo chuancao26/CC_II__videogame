@@ -17,7 +17,7 @@ public:
     CupHeadM(const float& posx_, const float& posy_, const int& xBorder_, const int& yBorder_) : 
     posx(posx_),posy(posy_), speed(200.0f), deltaTime(0.0f), gravity(5.0f), left(false), right(false),
     jump(false), bottom(false), xBorder(xBorder_), yBorder(yBorder_), jumpY(200.f), inPlatform(false),
-    scale(0.50f)
+    scale(1.0f)
     {
     }
     void move()

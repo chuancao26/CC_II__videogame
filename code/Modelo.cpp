@@ -8,6 +8,7 @@ class Modelo
     public:
     Cup jugador1;
     Cup jugador2;
+    int vidas; 
     Mapa* map;
     Plataforma pla;
 
