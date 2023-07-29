@@ -29,6 +29,7 @@ class Mapa
     public:
     Mapa();
     void parseMap(const std::vector<std::string>& mapStrings);
+    void parseMap2(const std::vector<std::string>& mapStrings);
     Plataforma* platforms;
     std::vector<std::string> crearMapa(int n);
     std::string generarSecuenciaFila();

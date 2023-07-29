@@ -1,5 +1,10 @@
-#include "Boomerang_Modelo.cpp"
-#include "Boomerang_Vista.cpp"
+#ifndef BOOMERANGCONTROLLER_H
+#define BOOMERANGCONTROLLER_H
+#include "boomerangview.h"
+#include "boomerangmodel.h"
+#include <iostream>
+
+
 class BoomerangController {
 private:
     BoomerangModel boomerangModel;
@@ -27,3 +32,4 @@ public:
         return boomerangModel.shouldDelete();
     }
 };
+#endif

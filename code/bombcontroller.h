@@ -1,10 +1,16 @@
-#include "Bomba_Modelo.cpp"
-#include "Bomba_Vista.cpp"
+
+#ifndef BOMBCONTROLLER_H
+#define BOMBCONTROLLER_H
+#include "bombview.h"
+#include "bombmodel.h"
+#include <iostream>
+
+
 class BombController {
 private:
     std::vector<BombModel> bombs;
     BombView cuadradoView;
-
+    bool Eliminar;
 public:
     BombController(float ventanaAncho, float ventanaAlto) : bombs(1), cuadradoView(){
         //float elapsedSeconds = 0.0f;
@@ -40,8 +46,19 @@ public:
                 }
 
                 cuadradoView.draw(window);
+                bool Eliminar=false;
+            }
+            else if (!cuadrado.isEliminado()){
+                Eliminar=true;
             }
         }
     }
+    
+    bool Eliminado(){
+
+        return Eliminar;
+    }
+    
 
 };
+#endif

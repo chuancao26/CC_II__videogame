@@ -1,11 +1,7 @@
-#ifndef CUADRADO_MODELO_H
-#define CUADRADO_MODELO_H
-#include <iostream>
-#include <vector>
-#include <ctime>
+#ifndef BOMBMODEL_H
+#define BOMBMODEL_H
 #include <chrono>
-#include <cmath>
-#include <string>
+#include <iostream>
 class BombModel {
 private:
     float x;
@@ -21,7 +17,7 @@ public:
     bool llegoMaximo;
     BombModel(float ventanaAncho = 0.0f, float ventanaAlto = 0.0f)
         : x(0.0f), y(ventanaAlto / 20), size(50.0f),
-          maxY(ventanaAlto * 7 / 9), velocidad(4.0f),
+          maxY(ventanaAlto * 7 / 9), velocidad(8.0f),
           llegoMaximo(false), esperando(false), eliminado(false) {}
 
     void setX(float posX) {
@@ -71,4 +67,5 @@ public:
         return eliminado;
     }
 };
+
 #endif

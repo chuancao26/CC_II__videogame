@@ -1,3 +1,7 @@
+
+#ifndef BOMBVIEW_H
+#define BOMBVIEW_H
+#include "bombmodel.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
@@ -42,3 +46,5 @@ public:
     }
 
 };
+
+#endif
