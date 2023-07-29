@@ -13,6 +13,8 @@ private:
     std::vector<sf::Sprite> crearObjetosSprites;
     std::vector<sf::Texture> crearObjetosbucleTextures;
     std::vector<sf::Sprite> crearObjetosbucleSprites;
+    std::vector<sf::Texture> InicioAtaqueTextures;
+    std::vector<sf::Sprite> InicioAtaqueSprites;
     std::vector<sf::Texture> finalTextures;
     std::vector<sf::Sprite> finalSprites;
     sf::Texture bossFinalTexture;
@@ -20,6 +22,7 @@ private:
     int numNormalStates;
     int numCrearObjetosStates;
     int numCrearObjetosBucle;
+    int numInicioAtaque;
     int numFinalStates;
     int currentState;
     int currentImageIndex;
@@ -31,9 +34,9 @@ private:
 
 public:
     FlorBossView(sf::RenderWindow& window, BossModel& model) : 
-    window_(window), model_(model), currentState(1), 
+    window_(window), model_(model), currentState(4), 
     currentImageIndex(0), numNormalStates(22), numCrearObjetosStates(20),
-    numCrearObjetosBucle(16),
+    numCrearObjetosBucle(16), numInicioAtaque(8),
     numFinalStates(4) {
         normalTextures.resize(numNormalStates);
         normalSprites.resize(numNormalStates);
@@ -43,6 +46,9 @@ public:
 
         crearObjetosbucleTextures.resize(numCrearObjetosBucle);
         crearObjetosbucleSprites.resize(numCrearObjetosBucle);
+
+        InicioAtaqueTextures.resize(numFinalStates);
+        InicioAtaqueSprites.resize(numFinalStates);
 
         finalTextures.resize(numFinalStates);
         finalSprites.resize(numFinalStates);
@@ -83,6 +89,18 @@ public:
             crearObjetosbucleSprites[i].setPosition(window_.getSize().x - (crearObjetosbucleSprites[i].getLocalBounds().width) / 1.1,
                 window.getSize().y / 12);
             crearObjetosbucleTextures[i].setSmooth(true);
+        }
+        //Ataque cabeza inicio
+        for (int i = 0; i < numInicioAtaque; ++i) {
+            if (!InicioAtaqueTextures[i].loadFromFile("img\\nivel_flor\\crearObjetos\\bucle\\Create_" + std::to_string(i + 1) + ".png")) {
+                std::cerr << "Error al cargar la textura para el estado crearObjetos" << i + 1 << std::endl;
+            }
+            InicioAtaqueSprites[i].setTexture(InicioAtaqueTextures[i]);
+            InicioAtaqueSprites[i].setScale(window.getSize().x / 3 / InicioAtaqueSprites[i].getLocalBounds().width,
+                ((window.getSize().y * 4) / 5) / InicioAtaqueSprites[i].getLocalBounds().height);
+            InicioAtaqueSprites[i].setPosition(window_.getSize().x - (InicioAtaqueSprites[i].getLocalBounds().width) / 1.1,
+                window.getSize().y / 12);
+            InicioAtaqueTextures[i].setSmooth(true);
         }
 
         // Cargamos las texturas para final
@@ -152,6 +170,17 @@ public:
                 currentImageIndex = 0; // Reiniciamos el índice de imagen
             }
         } else if (currentState == 4) {
+            if (currentImageIndex < numInicioAtaque) {
+                window_.draw(InicioAtaqueSprites[currentImageIndex]);
+                if (timeSinceLastImageChange >= imageChangeInterval) {
+                    currentImageIndex++;
+                    timeSinceLastImageChange = 0.0f; // Reiniciamos el contador
+                }
+            } else {
+                //currentState = 4; // Cambiamos al siguiente estado
+                currentImageIndex = 0; // Reiniciamos el índice de imagen
+            }
+        } else if (currentState == 5) {
             if (currentImageIndex < numFinalStates) {
                 window_.draw(finalSprites[currentImageIndex]);
                 if (timeSinceLastImageChange >= imageChangeInterval) {
@@ -161,7 +190,7 @@ public:
             } else {
                 //currentState = 4; // Cambiamos al siguiente estado
             }
-        } else if (currentState == 5) {
+        } else if (currentState == 6) {
             // Dibujamos la imagen final sin cambiar más
             window_.draw(bossFinalSprite);
         }

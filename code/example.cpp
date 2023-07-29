@@ -59,6 +59,7 @@ public:
     
 };
 
+
 class FlorBossView {
 private:
     sf::RenderWindow& window_;
@@ -68,14 +69,20 @@ private:
     std::vector<sf::Sprite> crearObjetosSprites;
     std::vector<sf::Texture> crearObjetosbucleTextures;
     std::vector<sf::Sprite> crearObjetosbucleSprites;
+    std::vector<sf::Texture> InicioAtaqueTextures;
+    std::vector<sf::Sprite> InicioAtaqueSprites;
     std::vector<sf::Texture> finalTextures;
     std::vector<sf::Sprite> finalSprites;
+    std::vector<sf::Texture> formaFinalTextures;
+    std::vector<sf::Sprite> formaFinalSprites;
     sf::Texture bossFinalTexture;
     sf::Sprite bossFinalSprite;
     int numNormalStates;
     int numCrearObjetosStates;
     int numCrearObjetosBucle;
+    int numInicioAtaque;
     int numFinalStates;
+    int numformaFinalStates;
     int currentState;
     int currentImageIndex;
     BossModel& model_;
@@ -86,10 +93,10 @@ private:
 
 public:
     FlorBossView(sf::RenderWindow& window, BossModel& model) : 
-    window_(window), model_(model), currentState(1), 
+    window_(window), model_(model), currentState(5), 
     currentImageIndex(0), numNormalStates(22), numCrearObjetosStates(20),
-    numCrearObjetosBucle(16),
-    numFinalStates(4) {
+    numCrearObjetosBucle(16), numInicioAtaque(19),
+    numFinalStates(28),numformaFinalStates(19)  {
         normalTextures.resize(numNormalStates);
         normalSprites.resize(numNormalStates);
 
@@ -99,8 +106,14 @@ public:
         crearObjetosbucleTextures.resize(numCrearObjetosBucle);
         crearObjetosbucleSprites.resize(numCrearObjetosBucle);
 
+        InicioAtaqueTextures.resize(numInicioAtaque);
+        InicioAtaqueSprites.resize(numInicioAtaque);
+
         finalTextures.resize(numFinalStates);
         finalSprites.resize(numFinalStates);
+
+        formaFinalTextures.resize(numformaFinalStates);
+        formaFinalSprites.resize(numformaFinalStates);
 
         // Cargamos las texturas normales
         for (int i = 0; i < numNormalStates; ++i) {
@@ -139,6 +152,62 @@ public:
                 window.getSize().y / 12);
             crearObjetosbucleTextures[i].setSmooth(true);
         }
+        //Ataque cabeza inicio
+        for (int i = 0; i < 9; ++i) {
+            if (!InicioAtaqueTextures[i].loadFromFile("img\\nivel_flor\\ataqueCabeza\\FA_High_" + std::to_string(i + 1) + ".png")) {
+                std::cerr << "Error al cargar la textura para el estado crearObjetos" << i + 1 << std::endl;
+            }
+            InicioAtaqueSprites[i].setTexture(InicioAtaqueTextures[i]);
+            InicioAtaqueSprites[i].setScale(window.getSize().x / 3 / InicioAtaqueSprites[i].getLocalBounds().width,
+                ((window.getSize().y * 4) / 5) / InicioAtaqueSprites[i].getLocalBounds().height);
+            InicioAtaqueSprites[i].setPosition(window_.getSize().x - (InicioAtaqueSprites[i].getLocalBounds().width) / 1.1,
+                window.getSize().y / 12);
+            InicioAtaqueTextures[i].setSmooth(true);
+        }
+        for (int i = 9; i <10; ++i) {
+            if (!InicioAtaqueTextures[i].loadFromFile("img\\nivel_flor\\ataqueCabeza\\FA_High_" + std::to_string(i + 1) + ".png")) {
+                std::cerr << "Error al cargar la textura para el estado crearObjetos" << i + 1 << std::endl;
+            }
+            InicioAtaqueSprites[i].setTexture(InicioAtaqueTextures[i]);
+            InicioAtaqueSprites[i].setScale(window.getSize().x / 2 / InicioAtaqueSprites[i].getLocalBounds().width,
+                ((window.getSize().y * 4) / 5) / InicioAtaqueSprites[i].getLocalBounds().height);
+            InicioAtaqueSprites[i].setPosition(window_.getSize().x - (InicioAtaqueSprites[i].getLocalBounds().width) / 1.1,
+                window.getSize().y / 12);
+            InicioAtaqueTextures[i].setSmooth(true);
+        }
+        for (int i = 10; i < 16; ++i) {
+            if (!InicioAtaqueTextures[i].loadFromFile("img\\nivel_flor\\ataqueCabeza\\FA_High_" + std::to_string(i + 1) + ".png")) {
+                std::cerr << "Error al cargar la textura para el estado crearObjetos" << i + 1 << std::endl;
+            }
+            InicioAtaqueSprites[i].setTexture(InicioAtaqueTextures[i]);
+            InicioAtaqueSprites[i].setScale(window.getSize().x / InicioAtaqueSprites[i].getLocalBounds().width,
+                ((window.getSize().y * 4) / 5) / InicioAtaqueSprites[i].getLocalBounds().height);
+            InicioAtaqueSprites[i].setPosition(window_.getSize().x - (InicioAtaqueSprites[i].getLocalBounds().width)*9/8,
+                window.getSize().y / 12);
+            InicioAtaqueTextures[i].setSmooth(true);
+        }
+        for (int i = 16; i <17; ++i) {
+            if (!InicioAtaqueTextures[i].loadFromFile("img\\nivel_flor\\ataqueCabeza\\FA_High_" + std::to_string(i + 1) + ".png")) {
+                std::cerr << "Error al cargar la textura para el estado crearObjetos" << i + 1 << std::endl;
+            }
+            InicioAtaqueSprites[i].setTexture(InicioAtaqueTextures[i]);
+            InicioAtaqueSprites[i].setScale(window.getSize().x / 2 / InicioAtaqueSprites[i].getLocalBounds().width,
+                ((window.getSize().y * 4) / 5) / InicioAtaqueSprites[i].getLocalBounds().height);
+            InicioAtaqueSprites[i].setPosition(window_.getSize().x - (InicioAtaqueSprites[i].getLocalBounds().width) / 1.1,
+                window.getSize().y / 12);
+            InicioAtaqueTextures[i].setSmooth(true);
+        }
+        for (int i = 17; i < numInicioAtaque; ++i) {
+            if (!InicioAtaqueTextures[i].loadFromFile("img\\nivel_flor\\ataqueCabeza\\FA_High_" + std::to_string(i + 1) + ".png")) {
+                std::cerr << "Error al cargar la textura para el estado crearObjetos" << i + 1 << std::endl;
+            }
+            InicioAtaqueSprites[i].setTexture(InicioAtaqueTextures[i]);
+            InicioAtaqueSprites[i].setScale(window.getSize().x / 3 / InicioAtaqueSprites[i].getLocalBounds().width,
+                ((window.getSize().y * 4) / 5) / InicioAtaqueSprites[i].getLocalBounds().height);
+            InicioAtaqueSprites[i].setPosition(window_.getSize().x - (InicioAtaqueSprites[i].getLocalBounds().width) / 1.1,
+                window.getSize().y / 12);
+            InicioAtaqueTextures[i].setSmooth(true);
+        }
 
         // Cargamos las texturas para final
         for (int i = 0; i < numFinalStates; ++i) {
@@ -152,9 +221,21 @@ public:
                 window.getSize().y / 12);
             finalTextures[i].setSmooth(true);
         }
+        // Cargamos las texturas para la FORMA final
+        for (int i = 0; i < numformaFinalStates; ++i) {
+            if (!formaFinalTextures[i].loadFromFile("img\\nivel_flor\\formaFinal\\Final_Idle_" + std::to_string(i + 1) + ".png")) {
+                std::cerr << "Error al cargar la textura para el estado final" << i + 1 << std::endl;
+            }
+            formaFinalSprites[i].setTexture(formaFinalTextures[i]);
+            formaFinalSprites[i].setScale(window.getSize().x / 3 / formaFinalSprites[i].getLocalBounds().width,
+                ((window.getSize().y * 4) / 5) / formaFinalSprites[i].getLocalBounds().height);
+            formaFinalSprites[i].setPosition(window_.getSize().x - (formaFinalSprites[i].getLocalBounds().width) / 1.1,
+                window.getSize().y / 12);
+            formaFinalTextures[i].setSmooth(true);
+        }
 
         // Cargamos la textura bossFinal
-        if (!bossFinalTexture.loadFromFile("img\\nivel_flor\\bossFinal.png")) {
+        if (!bossFinalTexture.loadFromFile("img\\nivel_flor\\faseFinal\\Final_Intro_28.png")) {
             std::cerr << "Error al cargar la textura bossFinal." << std::endl;
         }
         bossFinalSprite.setTexture(bossFinalTexture);
@@ -167,8 +248,7 @@ public:
         timerClock.restart();
 
         timeSinceLastImageChange = 0.0f;
-        imageChangeInterval = 0.048f; // Cambiar la imagen cada cuarto de segundo (0.25 segundos)
-        //imageChangeInterval = 1.25f;
+        imageChangeInterval = 0.042f; 
     }
 
     void draw() {
@@ -208,16 +288,39 @@ public:
                 currentImageIndex = 0; // Reiniciamos el índice de imagen
             }
         } else if (currentState == 4) {
+            if (currentImageIndex < numInicioAtaque) {
+                window_.draw(InicioAtaqueSprites[currentImageIndex]);
+                if (timeSinceLastImageChange >= imageChangeInterval*10) {
+                    currentImageIndex++;
+                    timeSinceLastImageChange = 0.0f; // Reiniciamos el contador
+                }
+            } else {
+                currentState = 1; // Cambiamos al siguiente estado
+                currentImageIndex = 0; // Reiniciamos el índice de imagen
+            }
+        } else if (currentState == 5) {
             if (currentImageIndex < numFinalStates) {
                 window_.draw(finalSprites[currentImageIndex]);
+                if (timeSinceLastImageChange >= imageChangeInterval*5) {
+                    currentImageIndex++;
+                    timeSinceLastImageChange = 0.0f; // Reiniciamos el contador
+                }
+            } else {
+                currentState = 6; // Cambiamos al siguiente estado
+                currentImageIndex = 0;
+            }
+        } else if (currentState == 6) {
+            if (currentImageIndex < numformaFinalStates) {
+                window_.draw(formaFinalSprites[currentImageIndex]);
                 if (timeSinceLastImageChange >= imageChangeInterval) {
                     currentImageIndex++;
                     timeSinceLastImageChange = 0.0f; // Reiniciamos el contador
                 }
             } else {
-                //currentState = 4; // Cambiamos al siguiente estado
+                //currentState = 7; // Cambiamos al siguiente estado
+                currentImageIndex = 0;
             }
-        } else if (currentState == 5) {
+        } else if (currentState == 7) {
             // Dibujamos la imagen final sin cambiar más
             window_.draw(bossFinalSprite);
         }
@@ -258,6 +361,7 @@ public:
         currentImageIndex = newImageIndex;
     }
 };
+
 class BossController {
 private:
     BossModel model_;

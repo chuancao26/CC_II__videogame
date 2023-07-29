@@ -1,7 +1,7 @@
 
 #ifndef BOSSCREATES_MODEL_H
 #define BOSSCREATES_MODEL_H
-#include "bosscreates_model.h"
+
 #include <iostream>
 
 class BossModel {
