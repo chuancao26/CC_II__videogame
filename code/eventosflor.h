@@ -32,6 +32,7 @@ private:
     SeedController seed3;
     SeedController* seeds[3] = {&seed1, &seed2, &seed3};
     sf::Clock clockSeed;
+    sf::Clock clockBoss;
 
 public:
     VistaFlor(sf::RenderWindow& win) : bossController(win),
@@ -69,6 +70,7 @@ public:
     void runMapaFlor(sf::RenderWindow& win)
     {
         float deltaTime = timer.getElapsedTime().asSeconds();
+        int modo=0;
 
         if (deltaTime >= interval)
         {
@@ -100,7 +102,7 @@ public:
             seeds[i]->setDestino(0.f,cup1.getPosy());
             seeds[i]->update();
         }
-
+        bossController.setState(4);
         bossController.update(0.01f);
         bossController.draw();
 
@@ -130,6 +132,7 @@ public:
                 seeds[i]->draw(win);
             }
         }
+        
     }
     
 };
