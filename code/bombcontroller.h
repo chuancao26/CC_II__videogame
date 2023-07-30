@@ -13,16 +13,11 @@ private:
     bool Eliminar;
 public:
     BombController(float ventanaAncho, float ventanaAlto) : bombs(1), cuadradoView(){
-        //float elapsedSeconds = 0.0f;
-        //elapsedSeconds = clock.getElapsedTime().asSeconds();
         for (int i = 0; i < 1; i++) {
-            //if (elapsedSeconds >= interval*i)
-            //{
                 float posicionX = static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX) / (ventanaAncho * 3 / 5));
                 bombs[i] = BombModel(ventanaAncho, ventanaAlto);
                 bombs[i].setX(posicionX);
                 bombs[i].caer();
-            //}
         }
     }
 

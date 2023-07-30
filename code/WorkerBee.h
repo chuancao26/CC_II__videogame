@@ -83,6 +83,10 @@ class WorkerBeeV
         {
             window.draw(sprite);
         }
+        sf::Sprite& getSprite()
+        {
+            return sprite;
+        }
 
     };
 #endif 

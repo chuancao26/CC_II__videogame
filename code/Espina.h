@@ -144,5 +144,9 @@ public:
         }
         sprite.setPosition(e->getPosx(), e->getPosy());
     }
+    sf::Sprite& getSprite()
+    {
+        return sprite;
+    }
 };
 #endif

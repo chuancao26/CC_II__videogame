@@ -6,15 +6,21 @@
 class MisilM : public Enemigo
 {
     private:
-        int width, height, sizeY, sizeX;
+        int width, height, sizeY, sizeX, type;
         float avance, speed, scale, elapsedTime, factorSpeed;
         bool moveLeft, moveUp, avanceFlag, change;
     public:
         // Constructor
-        MisilM(const int& width, const int& height):width(width), change(false),
+        MisilM(const int& width, const int& height, const int& type_):type(type_),width(width), change(false),
         height(height), avance(0.0f), speed(10.0f), moveLeft(true), moveUp(false),
-        scale(1.0f), avanceFlag(false), Enemigo(width* 0.5f, height * 0.9f, 100), sizeY(50), sizeX(size)
+        scale(1.0f), avanceFlag(false), Enemigo(width* 0.4f, height, 100), sizeY(50), sizeX(size)
         {
+            if (type == 2)
+            {
+                moveLeft = false;
+                posx = 0.6f * width;
+                posy = height;
+            }
         }
         void update(const float& elapsedTime_)
         {
@@ -31,28 +37,57 @@ class MisilM : public Enemigo
             {   
                 posx += speed;
             }
-            if (posx >= 0.5 * width)
+            if (type == 1)
             {
-                moveLeft = true;
-                moveUp = true;
-                if (!avanceFlag)
+                if (posx >= 0.45 * width)
                 {
-                    change = false;
-                    avance = posy;
-                    avanceFlag = true;
+                    moveLeft = true;
+                    moveUp = true;
+                    if (!avanceFlag)
+                    {
+                        change = false;
+                        avance = posy;
+                        avanceFlag = true;
+                    }
+                }
+                if (posx <= 0.05 * width)
+                {
+                    moveLeft = false;
+                    moveUp = true;
+                    
+                    if (!avanceFlag)
+                    {
+                        change = false;
+                        avance = posy;
+                        avanceFlag = true;
+                    }
                 }
             }
-            if (posx <= 0.05 * width)
+            if (type == 2)
             {
-                moveLeft = false;
-                moveUp = true;
-                
-                if (!avanceFlag)
+                if (posx >= 0.95 * width)
                 {
-                    change = false;
-                    avance = posy;
-                    avanceFlag = true;
+                    moveLeft = true;
+                    moveUp = true;
+                    if (!avanceFlag)
+                    {
+                        change = false;
+                        avance = posy;
+                        avanceFlag = true;
+                    }
                 }
+                if (posx <= 0.55 * width)
+                {
+                    moveLeft = false;
+                    moveUp = true;
+                    
+                    if (!avanceFlag)
+                    {
+                        change = false;
+                        avance = posy;
+                        avanceFlag = true;
+                    }
+                }                
             }
             if (moveUp)
             {
@@ -63,11 +98,6 @@ class MisilM : public Enemigo
                     avanceFlag = false;
                     moveUp = false;
                 }
-            }
-
-            if (posy <= 0 && !moveUp)
-            {
-                posy = height * 0.1;
             }
         }
         bool isExpired()
@@ -88,6 +118,7 @@ class MisilM : public Enemigo
         void setPosX(const float& posx_){posx = posx_;}
         void setPosY(const float& posy_){posy = posy_;}
         float getScale(){return scale;}
+        int getType(){return type;}
 };
 class MisilV
 {
@@ -111,41 +142,88 @@ class MisilV
     void updateTextures()
     {
         size_t textureIndex = static_cast<size_t>(std::round(elapsedTime * 6)) % textures.size();
-        sprite.setScale(misilm->getScale(), misilm->getScale());
+        if (misilm->getType() == 2)
+        {
+            sprite.setScale(-misilm->getScale(), misilm->getScale());
+        }
+        else
+        {
+            sprite.setScale(misilm->getScale(), misilm->getScale());
+        }
         sprite.setTexture(*textures[textureIndex]);
         sf::FloatRect bounds = sprite.getLocalBounds();
         sprite.setOrigin(bounds.width / 2, bounds.height / 2);
     }
     void move()
     {
-        if ( misilm->getPosX() >= 0.5 * misilm->getWidth())
+
+        if (misilm->getType() == 1)
         {
-            // misil.setSize(sf::Vector2f(misilm->getGetYsize(),misilm->getGetXsize()));
-            sprite.setRotation(90.0f);
-            if(!misilm -> getavanceFlag())
+            if ( misilm->getPosX() >= 0.45 * misilm->getWidth())
             {
-                misilm->setPosY(misilm->getPosY() - 50);
+                // misil.setSize(sf::Vector2f(misilm->getGetYsize(),misilm->getGetXsize()));
+                sprite.setRotation(90.0f);
+                if(!misilm -> getavanceFlag())
+                {
+                    misilm->setPosY(misilm->getPosY() - 50);
+                }
+            }
+            if ( misilm->getPosX() <= 0.05 * misilm->getWidth())
+            {
+                // misil.setSize(sf::Vector2f(misilm->getGetYsize(),misilm->getGetXsize()));
+                sprite.setRotation(90.0f);
+                if(!misilm -> getavanceFlag())
+                {
+                    misilm->setPosY(misilm->getPosY() - 50);
+                }
             }
         }
-        if ( misilm->getPosX() <= 0.05 * misilm->getWidth())
+        if (misilm->getType() == 2)
         {
-            // misil.setSize(sf::Vector2f(misilm->getGetYsize(),misilm->getGetXsize()));
-            sprite.setRotation(90.0f);
-            if(!misilm -> getavanceFlag())
+            if ( misilm->getPosX() <= 0.55 * misilm->getWidth())
             {
-                misilm->setPosY(misilm->getPosY() - 50);
+                // misil.setSize(sf::Vector2f(misilm->getGetYsize(),misilm->getGetXsize()));
+                sprite.setRotation(-90.0f);
+                if(!misilm -> getavanceFlag())
+                {
+                    misilm->setPosY(misilm->getPosY() - 50);
+                }
             }
-        }
+            if ( misilm->getPosX() >= 0.95 * misilm->getWidth())
+            {
+                // misil.setSize(sf::Vector2f(misilm->getGetYsize(),misilm->getGetXsize()));
+                sprite.setRotation(-90.0f);
+                if(!misilm -> getavanceFlag())
+                {
+                    misilm->setPosY(misilm->getPosY() - 50);
+                }
+            }
+            }
         if (misilm->getChange())
         {
-            if (!misilm->getMoveLeft())
+            if (misilm->getType() == 1)
             {
-                sprite.setRotation(180.f);
+                if (!misilm->getMoveLeft())
+                {
+                    sprite.setRotation(180.f);
+                }
+                else
+                {
+                    sprite.setRotation(0.0f);
+                }
             }
-            else
+            if (misilm->getType() == 2)
             {
-                sprite.setRotation(0.0f);
+                if (!misilm->getMoveLeft())
+                {
+                    sprite.setRotation(0.0f);
+                }
+                else
+                {
+                    sprite.setRotation(180.0f);
+                }
             }
+
         }
         sprite.setPosition(misilm->getPosX(), misilm->getPosY());
 
@@ -153,6 +231,10 @@ class MisilV
     void draw(sf::RenderWindow& window)
     {
         window.draw(sprite);
+    }
+    sf::Sprite& getSprite()
+    {
+        return sprite;
     }
 };
 

@@ -170,7 +170,7 @@ public:
     }
     void drawBomb(sf::RenderWindow& window)
     {
-        if (!activeBomb)
+        if (!activeBomb && !activeEspinas)
         {
             bombM = std::make_shared<BombaPoliceM>(p->getPosx(), p->getPosy(), elapsedTime);
             bombV = std::make_shared<BombaPoliceV>(bombM, texturesBomb);
@@ -254,6 +254,26 @@ public:
                 espinasV[7] ->draw(window);
             }
         }
+    }
+    sf::Sprite& getSprite()
+    {
+        return sprite;
+    }
+    std::vector<std::shared_ptr<EspinaV>>& getEspinasV()
+    {
+        return espinasV;
+    }
+    std::shared_ptr<BombaPoliceV>& getBombaPoliceV()
+    {
+        return bombV;
+    }
+    bool& getActiveEspinas() 
+    {
+        return activeEspinas;
+    }
+    bool& getActiveBomb()  
+    {
+        return activeBomb;
     }
     ~PoliceV()
     {

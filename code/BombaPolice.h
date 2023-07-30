@@ -66,6 +66,10 @@ public:
             updateTextures();
         }
     }
+    sf::Sprite& getSprite()
+    {
+        return sprite;
+    }
 };
 
 #endif
