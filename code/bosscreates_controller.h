@@ -4,6 +4,7 @@
 #include "bosscreates_view.h"
 #include "bosscreates_model.h"
 #include <iostream>
+
 class BossController {
 private:
     BossModel model_;
@@ -27,7 +28,9 @@ public:
     void setState(int state) {
         view_.setcurrentState(state);
     }
+    int getCurrentState() const {
+        return view_.getcurrentState();
+    }
 };
-
 
 #endif

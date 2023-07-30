@@ -56,7 +56,7 @@ public:
     void incrementImageIndex() {
         currentImageIndex++;
     }
-    
+
 };
 
 class BossViewAnimation {
@@ -77,23 +77,21 @@ public:
             timeSinceLastImageChange += deltaTime;
 
             if (timeSinceLastImageChange >= imageChangeInterval) {
-                window.clear(); // Limpiar el contenido anterior de la ventana
+                //window.clear(); // Limpiar el contenido anterior de la ventana
                 window.draw(sprites[currentImageIndex]); // Dibujar la imagen actual
-                window.display();
+                //window.display();
                 currentImageIndex++;
                 timeSinceLastImageChange = 0.0f; // Reiniciar el contador
-                
             }
         }
 
         change = true;
     }
-
+    
     bool canChange() {
         return change;
     }
 };
-
 
 class NormalAnimation : public BossViewAnimation {
 public:
@@ -205,13 +203,14 @@ private:
     BossFinalAnimation bossFinalAnimation;
     CrearObjetosBucleAnimation crearObjetosBucleAnimation;
 
+    int currentFrame;
 
 public:
     FlorBossView(sf::RenderWindow& window, BossModel& model) :
         window_(window), model_(model), currentState(2),
         currentImageIndex(0), numNormalStates(22), numCrearObjetosStates(20),
         numCrearObjetosBucle(16), numInicioAtaque(19),
-        numFinalStates(28), numformaFinalStates(19) {
+        numFinalStates(28), numformaFinalStates(19),currentFrame(0) {
 
         // Cargar texturas y configurar sprites
         normalTextures.resize(numNormalStates);
@@ -345,20 +344,20 @@ public:
 
         // Dibujar las animaciones usando la subclase apropiada según el currentState
         if (currentState == 1) {
-            normalAnimation.draw(window_, normalSprites);
+            normalAnimation.draw(window_, normalSprites[currentFrame]);
         } else if (currentState == 2) {
-            createObjetosAnimation.draw(window_, crearObjetosSprites);
+            createObjetosAnimation.draw(window_, crearObjetosSprites[currentFrame]);
             if(createObjetosAnimation.canChange()){
                 currentState=3;
             }
         } else if (currentState == 3) {
-            crearObjetosBucleAnimation.draw(window_, crearObjetosbucleSprites);
+            crearObjetosBucleAnimation.draw(window_, crearObjetosbucleSprites[currentFrame]);
         } else if (currentState == 4) {
-            ataqueCabezaAnimation.draw(window_, InicioAtaqueSprites);
+            ataqueCabezaAnimation.draw(window_, InicioAtaqueSprites[currentFrame]);
         } else if (currentState == 5) {
-            faseFinalAnimation.draw(window_, finalSprites);
+            faseFinalAnimation.draw(window_, finalSprites[currentFrame]);
         } else if (currentState == 6) {
-            formaFinalAnimation.draw(window_, formaFinalSprites);
+            formaFinalAnimation.draw(window_, formaFinalSprites[currentFrame]);
         } else if (currentState == 7) {
             //bossFinalAnimation.draw(window_, bossFinalSprite);
         }
@@ -400,6 +399,20 @@ public:
         currentState = newState;
         currentImageIndex = newImageIndex;
     }
+    int getcurrentState() const { // <-- Add 'const' here
+        return currentState;
+    }
+    void draw() {
+        drawCurrentFrame();
+    }
+    void nextFrame() {
+        if (currentFrame < numNormalStates - 1) {
+            currentFrame++;
+        }
+    }
+    void resetFrame() {
+        currentFrame = 0;
+    }
 };
 
 class BossController {
@@ -415,6 +428,7 @@ public:
 
         if (model_.isGrowing()) {
             view_.startGrowing();
+            view_.nextFrame();
         }
     }
 
@@ -425,33 +439,47 @@ public:
     void setState(int state) {
         view_.setcurrentState(state);
     }
+    int getCurrentState() const {
+        return view_.getcurrentState();
+    }
 };
-
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Boss Creates Game");
     BossController bossController(window);
+    int vida = 300;
 
+    // Variables for the control of animation time
+    float timeSinceLastImageChange = 0.0f;
+    float imageChangeInterval = 0.042f; // Default interval, adjust as needed
+    sf::Clock timerClock;
 
-    // Bucle principal del juego
+    // Main game loop
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-        //bossController.state(2);
-        float deltaTime = 0.042f;
-        bossController.update(deltaTime);
 
-        window.clear(); // Limpiar el contenido anterior de la ventana
+        // If a state change is required, update the current state and image index
+        if (bossController.getCurrentState() == 2 && vida < 200) {
+            bossController.setState(3); // Change to the crearObjetosBucle state
+        }
 
-        bossController.draw();
+        // Control animation time and image change
+        float deltaTime = timerClock.restart().asSeconds();
+        timeSinceLastImageChange += deltaTime;
 
+        // If it's time to change the image, update the controller and reset the counter
+        if (timeSinceLastImageChange >= imageChangeInterval) {
+            bossController.update(deltaTime); // Update the controller
+            timeSinceLastImageChange = 0.0f; // Reset the counter
+        }
+
+        window.clear();
+        bossController.draw(); // Draw the current state
         window.display();
-
-        // Pausa para reducir la velocidad de actualización
-        //sf::sleep(sf::milliseconds(100)); // Ajusta el valor para cambiar la velocidad de actualización
     }
 
     return 0;

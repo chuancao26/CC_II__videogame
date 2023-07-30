@@ -1,6 +1,5 @@
 #ifndef BOSSCREATES_VIEW_H
 #define BOSSCREATES_VIEW_H
-
 #include "bosscreates_model.h"
 #include <SFML/Graphics.hpp>
 #include <iostream> 
@@ -23,9 +22,9 @@ public:
             timeSinceLastImageChange += deltaTime;
 
             if (timeSinceLastImageChange >= imageChangeInterval) {
-                //window.clear(); // Limpiar el contenido anterior de la ventana
+                window.clear(); // Limpiar el contenido anterior de la ventana
                 window.draw(sprites[currentImageIndex]); // Dibujar la imagen actual
-                //window.display();
+                window.display();
                 currentImageIndex++;
                 timeSinceLastImageChange = 0.0f; // Reiniciar el contador
             }
@@ -343,6 +342,9 @@ public:
     void setStateAndImageIndex(int newState, int newImageIndex) {
         currentState = newState;
         currentImageIndex = newImageIndex;
+    }
+    int getcurrentState() const { // <-- Add 'const' here
+        return currentState;
     }
 };
 

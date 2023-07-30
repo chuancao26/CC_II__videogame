@@ -3,6 +3,7 @@
 #define BOSSCREATES_MODEL_H
 
 #include <iostream>
+
 class BossModel {
 private:
     int state;
@@ -57,6 +58,7 @@ public:
     void incrementImageIndex() {
         currentImageIndex++;
     }
-    
+
 };
+
 #endif
