@@ -18,7 +18,7 @@ public:
     Controlador()
         : vista(1280, 720)
     {
-        vista.getWindow().setFramerateLimit(20);
+        vista.getWindow().setFramerateLimit(60);
         nivel = 0;
         elegidos=false;
     }

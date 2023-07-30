@@ -65,7 +65,6 @@ class MisilM : public Enemigo
             }
             if (type == 2)
             {
-                std::cout << posx << "--" << posy << std::endl;
                 if (posx >= 0.95 * width)
                 {
                     moveLeft = true;

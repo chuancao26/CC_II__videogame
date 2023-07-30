@@ -23,13 +23,14 @@ private:
 
     std::shared_ptr<PoliceM> policeM;
     std::shared_ptr<PoliceV> policeV;
-
     std::vector<std::shared_ptr<TrianguloM>> triangulosM;    
     std::vector<std::shared_ptr<TrianguloV>> triangulosV;    
     
     std::shared_ptr<WorkerBeeM> workerBeeM;
     std::shared_ptr<WorkerBeeV> workerBeeV;
 
+    sf::FloatRect jugadorBounds1;
+    sf::FloatRect jugadorBounds2;
     bool activeWorker, activeTriangle, activeMisil, cupLeft;
     float rate;
     sf::RenderWindow& window;
@@ -56,10 +57,13 @@ public:
     {
         drawEntitys();
     }
-    void handleInput(const Cup& cup1_, const Cup& cup2_,const float& gameTime_) 
+    void handleInput(const Cup& cup1_, const Cup& cup2_,const float& gameTime_,
+                     const sf::Sprite& player, const sf::Sprite& player2) 
     {
         cup1 = cup1_;
         cup2 = cup2_;
+        jugadorBounds1 = player.getGlobalBounds();
+        jugadorBounds2 = player2.getGlobalBounds();
         update();
         gameTime = gameTime_;
     }
@@ -70,6 +74,8 @@ public:
         updateWorker();
         updateMisil();
         updatePositionsCup();
+        colisionesPlayer1Bee();
+        colisionesPlayer2Bee();
     }
     bool isOpen()
     {
@@ -97,7 +103,7 @@ public:
     }
     void updateWorker()
     {     
-        if (gameTime < 60)
+        if (gameTime < 10)
         { 
             if (cupLeft)
             {
@@ -140,65 +146,66 @@ public:
                 }
             }
         }
+        else 
+            activeWorker = false;
 
     }
     void drawWorker()
     {
-        if (gameTime < 60)
+        if (gameTime < 60 && activeWorker)
         {
-            if (activeWorker)
-            {
-                workerBeeV -> draw(window);
-            }
+            workerBeeV -> draw(window);
         }
-        
     }
     void updateTriangle()   
     {
-        int selector = (distributionY(generator)) % 2 + 1;
-        if (!activeTriangle)
+        if (gameTime > 30 && gameTime < 90)
         {
-            if (selector == 1) // upward and downward
+            int selector = (distributionY(generator)) % 2 + 1;
+            if (!activeTriangle)
             {
-                triangulosM.push_back(std::make_shared<TrianguloM>(xBorder*1/3,yBorder, xBorder, yBorder, 3));
-                triangulosM.push_back(std::make_shared<TrianguloM>(xBorder*2/3,0 , xBorder, yBorder, 4));
+                if (selector == 1) // upward and downward
+                {
+                    triangulosM.push_back(std::make_shared<TrianguloM>(xBorder*1/3,yBorder, xBorder, yBorder, 3));
+                    triangulosM.push_back(std::make_shared<TrianguloM>(xBorder*2/3,0 , xBorder, yBorder, 4));
+                    for (size_t i{0}; i<triangulosM.size();++i)
+                    {
+                        triangulosV.push_back(std::make_shared<TrianguloV>(triangulosM[i], textures.getTriangleTextures()));
+                    }
+                    activeTriangle = true;
+                }
+                if (selector == 2) // leftward and right ward
+                {
+                    triangulosM.push_back(std::make_shared<TrianguloM>(xBorder, yBorder*1/3, xBorder, yBorder, 2));
+                    triangulosM.push_back(std::make_shared<TrianguloM>(0, yBorder*2/3, xBorder, yBorder, 1));
+                    for (size_t i{0}; i<triangulosM.size();++i)
+                    {
+                        triangulosV.push_back(std::make_shared<TrianguloV>(triangulosM[i], textures.getTriangleTextures()));
+                    }
+                    activeTriangle = true;
+                }
+            }
+            if(activeTriangle)
+            {
                 for (size_t i{0}; i<triangulosM.size();++i)
                 {
-                    triangulosV.push_back(std::make_shared<TrianguloV>(triangulosM[i], textures.getTriangleTextures()));
-                }
-                activeTriangle = true;
-            }
-            if (selector == 2) // leftward and right ward
-            {
-                triangulosM.push_back(std::make_shared<TrianguloM>(xBorder, yBorder*1/3, xBorder, yBorder, 2));
-                triangulosM.push_back(std::make_shared<TrianguloM>(0, yBorder*2/3, xBorder, yBorder, 1));
-                for (size_t i{0}; i<triangulosM.size();++i)
-                {
-                    triangulosV.push_back(std::make_shared<TrianguloV>(triangulosM[i], textures.getTriangleTextures()));
-                }
-                activeTriangle = true;
-            }
-        }
-        if(activeTriangle)
-        {
-            for (size_t i{0}; i<triangulosM.size();++i)
-            {
-                triangulosM[i]->move();
-                triangulosV[i]->update(gameTime);
-                if (triangulosM[i]->isExpired())
-                {
-                    triangulosM[i].reset();
-                    triangulosV[i].reset();
-                    triangulosM.clear();
-                    triangulosV.clear();
-                    activeTriangle = false;
+                    triangulosM[i]->move();
+                    triangulosV[i]->update(gameTime);
+                    if (triangulosM[i]->isExpired())
+                    {
+                        triangulosM[i].reset();
+                        triangulosV[i].reset();
+                        triangulosM.clear();
+                        triangulosV.clear();
+                        activeTriangle = false;
+                    }
                 }
             }
         }
     }
     void drawTriangle()
     {
-        if (activeTriangle)
+        if (activeTriangle && gameTime > 30 && gameTime < 90)
         {
             for (size_t i{0}; i<triangulosM.size();++i)
             {
@@ -208,38 +215,41 @@ public:
     }
     void updateMisil()
     {
-        if (!activeMisil)
+        if (gameTime > 30 && gameTime < 90)
         {
-            
-            misilesM.push_back(std::make_shared<MisilM>(xBorder, yBorder,1));
-            misilesM.push_back(std::make_shared<MisilM>(xBorder, yBorder,2));
-            for (size_t i{0}; i<misilesM.size();++i)
+            if (!activeMisil)
             {
-                misilesV.push_back(std::make_shared<MisilV>(misilesM[i], textures.getMisilBeeTextures()));
-            }
-            activeMisil = true;
-        }
-        if (activeMisil)
-        {
-            for (size_t i{0}; i<misilesM.size();++i)
-            {
-                misilesM[i]->update(gameTime);
-                misilesV[i]->update(gameTime);
-                if (misilesM[i]->isExpired())
+                
+                misilesM.push_back(std::make_shared<MisilM>(xBorder, yBorder,1));
+                misilesM.push_back(std::make_shared<MisilM>(xBorder, yBorder,2));
+                for (size_t i{0}; i<misilesM.size();++i)
                 {
-                    misilesM[i].reset();
-                    misilesV[i].reset();
-                    misilesM.clear();
-                    misilesV.clear();
-                    activeMisil = false;
+                    misilesV.push_back(std::make_shared<MisilV>(misilesM[i], textures.getMisilBeeTextures()));
                 }
+                activeMisil = true;
             }
+            if (activeMisil)
+            {
+                for (size_t i{0}; i<misilesM.size();++i)
+                {
+                    misilesM[i]->update(gameTime);
+                    misilesV[i]->update(gameTime);
+                    if (misilesM[i]->isExpired())
+                    {
+                        misilesM[i].reset();
+                        misilesV[i].reset();
+                        misilesM.clear();
+                        misilesV.clear();
+                        activeMisil = false;
+                    }
+                }
 
+            }
         }
     }
     void drawMisil()
     {
-        if (activeMisil)
+        if (activeMisil && gameTime > 30 && gameTime < 90)
         {     
             for (size_t i{0}; i<misilesM.size();++i)
             {
@@ -247,7 +257,6 @@ public:
             }
         }
     }
-
     void drawEntitys()
     {
         drawPolice();
@@ -255,7 +264,6 @@ public:
         drawTriangle();
         drawMisil();
     }
-
     void updatePositionsCup()
     {
         if (cup1.getPosx() < xBorder / 2)
@@ -267,6 +275,26 @@ public:
             cupLeft = false;
         }
     }
+    void colisionesPlayer1Bee()
+    {
+        //worker 
+        if(activeWorker)
+        {
+            sf::FloatRect workerBounds = workerBeeV->getSprite().getGlobalBounds();
+            cup1.enChoque(jugadorBounds1.intersects(workerBounds));
+        }
+        
+    }
+    void colisionesPlayer2Bee()
+    {
+        //worker 
+         if(activeWorker)
+        {
+            sf::FloatRect workerBounds = workerBeeV->getSprite().getGlobalBounds();
+            cup2.enChoque(jugadorBounds2.intersects(workerBounds));
+        }
+    }
+
     ~VistaBee()
     {
 

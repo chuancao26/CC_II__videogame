@@ -53,9 +53,9 @@ public:
         plat.setPosition(plataforma.getPosx(), plataforma.getPosy());
         window.draw(plat.get());
     }
-    void loadBeeView(const Cup& player1, const Cup& player2 )
+    void loadBeeView(const Cup& player1, const Cup& player2)
     {
-        vistaBee.handleInput(player1,player2, getGameTime());
+        vistaBee.handleInput(player1,player2, getGameTime(), jugador_v.cupShape, jugador_v2.cupShape);
         vistaBee.render();
     }
     void loadFlorView(const Cup& player1, const Cup& player2, sf::RenderWindow& win)
@@ -70,7 +70,6 @@ public:
         sf::FloatRect plataformaBounds(platform.x, platform.y, platform.width,platform.height);
         return jugadorBounds.intersects(plataformaBounds);
     }
-
     bool ventanaAbierta() {
         return window.isOpen();
     }

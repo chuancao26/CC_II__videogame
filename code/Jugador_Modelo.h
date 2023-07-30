@@ -27,14 +27,14 @@ class Jugador
 
 class Cup: public Jugador {
 public:
-    bool saltando,enplataforma,derecha,izquierda,quieto;
+    bool saltando,enplataforma,derecha,izquierda,quieto, choque;
     float salto;
     int jumps, vidas;
 public:
     Cup(float px, float py, int size_)
     :Jugador(px, py, 15.0f, 20.0f, 0.0f, size_, 1, false), saltando(false),
     derecha(false), izquierda(false), enplataforma(false), vidas(3),
-    salto(150)
+    salto(150), choque(false)
     {
     }
     Cup()
@@ -55,6 +55,7 @@ public:
     void caida();
     void estaColisionando(const float& y);
     void enPlataforma(bool t);
+    void enChoque(const bool&);
 };
 
 class CupMuerto : public Jugador
