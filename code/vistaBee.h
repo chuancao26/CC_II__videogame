@@ -166,7 +166,7 @@ public:
             }
             if (activeWorker)
             {
-                workerBeeM -> update(elapsedtime);
+                workerBeeM -> update(gameTime);
                 workerBeeV -> update();
                 if(workerBeeM -> isExpired())
                 {
