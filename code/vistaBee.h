@@ -17,8 +17,10 @@ private:
     Cup cup1;
     Cup cup2;
     Textures textures;
-    std::shared_ptr<MisilM> misilM;
-    std::shared_ptr<MisilV> misilV;
+
+    std::vector<std::shared_ptr<MisilM>> misilesM;
+    std::vector<std::shared_ptr<MisilV>> misilesV;
+
     std::shared_ptr<PoliceM> policeM;
     std::shared_ptr<PoliceV> policeV;
 
@@ -208,35 +210,50 @@ public:
     {
         if (!activeMisil)
         {
-            misilM = std::make_shared<MisilM>(xBorder, yBorder);
-            misilV = std::make_shared<MisilV>(misilM, textures.getMisilBeeTextures());
+            
+            misilesM.push_back(std::make_shared<MisilM>(xBorder, yBorder,1));
+            misilesM.push_back(std::make_shared<MisilM>(xBorder, yBorder,2));
+            for (size_t i{0}; i<misilesM.size();++i)
+            {
+                misilesV.push_back(std::make_shared<MisilV>(misilesM[i], textures.getMisilBeeTextures()));
+            }
             activeMisil = true;
         }
         if (activeMisil)
         {
-            misilM->update(gameTime);
-            misilV->update(gameTime);
-            if (misilM->isExpired())
+            for (size_t i{0}; i<misilesM.size();++i)
             {
-                misilM.reset();
-                misilV.reset();
-                activeMisil = false;
+                misilesM[i]->update(gameTime);
+                misilesV[i]->update(gameTime);
+                if (misilesM[i]->isExpired())
+                {
+                    misilesM[i].reset();
+                    misilesV[i].reset();
+                    misilesM.clear();
+                    misilesV.clear();
+                    activeMisil = false;
+                }
+            }
+
+        }
+    }
+    void drawMisil()
+    {
+        if (activeMisil)
+        {     
+            for (size_t i{0}; i<misilesM.size();++i)
+            {
+                misilesV[i]->draw(window);
             }
         }
     }
+
     void drawEntitys()
     {
         drawPolice();
         drawWorker();
         drawTriangle();
         drawMisil();
-    }
-    void drawMisil()
-    {
-        if (activeMisil)
-        {
-            misilV ->draw(window);
-        }
     }
 
     void updatePositionsCup()
