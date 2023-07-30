@@ -3,7 +3,6 @@
 #define BOSSCREATES_MODEL_H
 
 #include <iostream>
-
 class BossModel {
 private:
     int state;
@@ -15,7 +14,7 @@ private:
     float growthDuration_;
 
 public:
-    BossModel() : state(1), currentImageIndex(0), timer_(0.0f), duration_(0.2f), isGrowing_(false), growthTimer_(0.0f), growthDuration_(1.0f) {}
+    BossModel() : state(1), currentImageIndex(0), timer_(0.0f), duration_(0.2f), isGrowing_(false), growthTimer_(0.0f), growthDuration_(0.042f) {}
 
     void update(float deltaTime) {
         timer_ += deltaTime;

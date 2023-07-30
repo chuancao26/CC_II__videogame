@@ -102,7 +102,7 @@ public:
             seeds[i]->setDestino(0.f,cup1.getPosy());
             seeds[i]->update();
         }
-        bossController.setState(4);
+        //bossController.setState(4);
         bossController.update(0.01f);
         bossController.draw();
 
