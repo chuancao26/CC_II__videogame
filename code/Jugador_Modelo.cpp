@@ -81,3 +81,11 @@ void Cup::setDisparo(Disparo* disparo_)
 void Cup::disparar(const float& px, const float& py) {
     disparo->disparar(px, py);
 }
+void Cup::enChoque(const bool& t)
+{
+    choque = t;
+    if (choque)
+    {
+        std::cout << "Acaba de chocar" << std::endl;
+    }
+}

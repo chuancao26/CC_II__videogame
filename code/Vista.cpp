@@ -23,7 +23,7 @@ public:
     VistaFlor vistaFlor;
     ElegirPlayer elegir;
     Background background;
-    sf::Clock clock, clock2, clock5;
+    sf::Clock clock, gameTime, clock5;
 
     
 public:
@@ -34,8 +34,10 @@ public:
         height = window.getSize().y;  
         tiempoAcumulado = sf::Time::Zero;
     }
-    
-
+    float getGameTime()
+    {
+        return gameTime.getElapsedTime().asSeconds();
+    }
     void cargarJugadores(int j1,int j2)
     {
         if(j1!=0 && j2!=0)
@@ -80,9 +82,9 @@ public:
     void actualizar_Plataformas() {
         
     }
-    void loadBeeView(const Cup& player1, const Cup& player2 )
+    void loadBeeView(const Cup& player1, const Cup& player2)
     {
-        vistaBee.handleInput(player1,player2);
+        vistaBee.handleInput(player1,player2, getGameTime(), jugador_v.cupShape, jugador_v2.cupShape);
         vistaBee.render();
     }
     void loadFlorView(sf::RenderWindow& win)
