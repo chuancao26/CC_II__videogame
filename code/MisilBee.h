@@ -232,6 +232,10 @@ class MisilV
     {
         window.draw(sprite);
     }
+    sf::Sprite& getSprite()
+    {
+        return sprite;
+    }
 };
 
 #endif

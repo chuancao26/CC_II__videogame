@@ -255,6 +255,26 @@ public:
             }
         }
     }
+    sf::Sprite& getSprite()
+    {
+        return sprite;
+    }
+    std::vector<std::shared_ptr<EspinaV>>& getEspinasV()
+    {
+        return espinasV;
+    }
+    std::shared_ptr<BombaPoliceV>& getBombaPoliceV()
+    {
+        return bombV;
+    }
+    bool& getActiveEspinas() 
+    {
+        return activeEspinas;
+    }
+    bool& getActiveBomb()  
+    {
+        return activeBomb;
+    }
     ~PoliceV()
     {
  

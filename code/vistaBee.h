@@ -36,14 +36,14 @@ private:
     sf::RenderWindow& window;
     sf::Clock clock;
     float gameTime;
-    int xBorder, yBorder;
+    int xBorder, yBorder, cutPix;
     std::mt19937 generator;
     std::uniform_int_distribution<int> distributionY;
 public:
     // constructor
     VistaBee(sf::RenderWindow& window_):
     xBorder(1280), yBorder(720), activeWorker(false), activeTriangle(false), rate(0.0f), window(window_)
-    , cupLeft(false) 
+    , cupLeft(false), cutPix(10)
     {
         std::random_device rd;
         generator.seed(rd());
@@ -202,6 +202,10 @@ public:
                 }
             }
         }
+        else
+        {
+            activeTriangle = false;
+        }
     }
     void drawTriangle()
     {
@@ -246,6 +250,10 @@ public:
 
             }
         }
+        else
+        {
+            activeMisil = false;
+        }
     }
     void drawMisil()
     {
@@ -280,19 +288,112 @@ public:
         //worker 
         if(activeWorker)
         {
-            sf::FloatRect workerBounds = workerBeeV->getSprite().getGlobalBounds();
-            cup1.enChoque(jugadorBounds1.intersects(workerBounds));
+            sf::FloatRect entityBounds(workerBeeV->getSprite().getPosition(),
+                                        sf::Vector2f(workerBeeV->getSprite().getGlobalBounds().width - cutPix,
+                                        workerBeeV->getSprite().getGlobalBounds().height - cutPix));
+            cup1.enChoque(jugadorBounds1.intersects(entityBounds));
+        }
+        //triangles
+        if (activeTriangle)
+        {
+            for (size_t i{0};i < triangulosV.size(); ++i)
+            {   
+                sf::FloatRect entityBounds(triangulosV[i]->getSprite().getPosition(),
+                            sf::Vector2f(triangulosV[i]->getSprite().getGlobalBounds().width - cutPix,
+                            triangulosV[i]->getSprite().getGlobalBounds().height - cutPix));
+                cup1.enChoque(jugadorBounds1.intersects(entityBounds));    
+            }
+        }
+        //misil
+        if (activeMisil)
+        {
+            for (size_t i{0};i < misilesV.size(); ++i)
+            {   
+                sf::FloatRect entityBounds(misilesV[i]->getSprite().getPosition(),
+                            sf::Vector2f(misilesV[i]->getSprite().getGlobalBounds().width - cutPix,
+                            misilesV[i]->getSprite().getGlobalBounds().height - cutPix));
+                cup1.enChoque(jugadorBounds1.intersects(entityBounds));    
+            }
+        }
+        if (policeV.use_count() > 0)
+        {
+            sf::FloatRect entityBounds(policeV->getSprite().getPosition(),
+                        sf::Vector2f(policeV->getSprite().getGlobalBounds().width - cutPix,
+                        policeV->getSprite().getGlobalBounds().height - cutPix));
+            cup1.enChoque(jugadorBounds1.intersects(entityBounds));
+            if (policeV->getActiveBomb())
+            {
+                if (policeV->getActiveEspinas())
+                {
+                    for(size_t i{0}; policeV->getEspinasV().size(); ++i)
+                    {
+                        sf::FloatRect entityBounds(policeV->getEspinasV()[i]->getSprite().getPosition(),
+                                    sf::Vector2f(policeV->getEspinasV()[i]->getSprite().getGlobalBounds().width - cutPix,
+                        policeV->getEspinasV()[i]->getSprite().getGlobalBounds().height - cutPix));
+                        cup1.enChoque(jugadorBounds1.intersects(entityBounds)); 
+                    }
+                }
+            }
+            
         }
         
     }
     void colisionesPlayer2Bee()
     {
         //worker 
-         if(activeWorker)
+        if(activeWorker)
         {
-            sf::FloatRect workerBounds = workerBeeV->getSprite().getGlobalBounds();
-            cup2.enChoque(jugadorBounds2.intersects(workerBounds));
+            sf::FloatRect entityBounds(workerBeeV->getSprite().getPosition(),
+                                        sf::Vector2f(workerBeeV->getSprite().getGlobalBounds().width - cutPix,
+                                        workerBeeV->getSprite().getGlobalBounds().height - cutPix));
+            cup2.enChoque(jugadorBounds2.intersects(entityBounds));
         }
+        //triangles
+        if (activeTriangle)
+        {
+            for (size_t i{0};i < triangulosV.size(); ++i)
+            {   
+                sf::FloatRect entityBounds(triangulosV[i]->getSprite().getPosition(),
+                            sf::Vector2f(triangulosV[i]->getSprite().getGlobalBounds().width - cutPix,
+                            triangulosV[i]->getSprite().getGlobalBounds().height - cutPix));
+                cup2.enChoque(jugadorBounds2.intersects(entityBounds)); 
+                std::cout << triangulosV[i]->getSprite().getGlobalBounds().width - cutPix << std::endl;
+            }
+        }
+        //misil
+        if (activeMisil)
+        {
+            for (size_t i{0};i < misilesV.size(); ++i)
+            {   
+                sf::FloatRect entityBounds(misilesV[i]->getSprite().getPosition(),
+                            sf::Vector2f(misilesV[i]->getSprite().getGlobalBounds().width - cutPix,
+                            misilesV[i]->getSprite().getGlobalBounds().height - cutPix));
+                cup2.enChoque(jugadorBounds2.intersects(entityBounds));    
+            }
+        }
+        // police
+        if (policeV.use_count() > 0)
+        {
+            sf::FloatRect entityBounds(policeV->getSprite().getPosition(),
+                        sf::Vector2f(policeV->getSprite().getGlobalBounds().width - cutPix,
+                        policeV->getSprite().getGlobalBounds().height - cutPix));
+            cup2.enChoque(jugadorBounds2.intersects(entityBounds));
+            // Espinas
+            if (policeV->getActiveBomb())
+            {
+                if (policeV->getActiveEspinas())
+                {
+                    for(size_t i{0}; policeV->getEspinasV().size(); ++i)
+                    {
+                        sf::FloatRect entityBounds(policeV->getEspinasV()[i]->getSprite().getPosition(),
+                                    sf::Vector2f(policeV->getEspinasV()[i]->getSprite().getGlobalBounds().width - cutPix,
+                        policeV->getEspinasV()[i]->getSprite().getGlobalBounds().height - cutPix));
+                        cup2.enChoque(jugadorBounds2.intersects(entityBounds)); 
+                    }
+                }
+            }
+        }
+
     }
 
     ~VistaBee()

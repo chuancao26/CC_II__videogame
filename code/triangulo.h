@@ -107,6 +107,10 @@ public:
         sf::FloatRect bounds = sprite.getLocalBounds();
         sprite.setOrigin(bounds.width / 2, bounds.height / 2);
     }
+    sf::Sprite& getSprite()
+    {
+        return sprite;    
+    }
 };
 
 #endif
