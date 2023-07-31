@@ -18,6 +18,9 @@ private:
     int nivel,j1,j2;
     vector<int> jugadores;
 
+    bool disparoJugador1 = false;
+    bool disparoJugador2 = false;
+
 public:
     Controlador()
         : vista(1280, 720)
@@ -50,35 +53,43 @@ public:
                 nivel += 1;
                 break;
             case 6:
+                modelo.jugador1.disparar(modelo.jugador1.getPosx(), modelo.jugador1.getPosy());
+                disparoJugador1 = true;
+                break;
+            case 7:
                 modelo.jugador2.estaSaltando(true);
                 modelo.jugador2.saltar();
                 break;
-            case 7:
+            case 8:
                 modelo.jugador2.vaizquierda(true);
                 modelo.jugador2.moverIzquierda();
                 break;
-            case 8:
+            case 9:
                 modelo.jugador2.vaderecha(true);
                 modelo.jugador2.moverDerecha();
                 break;
-            case 9:
+            case 10:
                 modelo.jugador2.moverAbajo();
                 break;
-            case 10:
+            case 11:
+                modelo.jugador2.disparar(modelo.jugador2.getPosx(),modelo.jugador2.getPosy());
+                disparoJugador2 = true;
+                break;
+            case 12:
                 modelo.jugador1.vaizquierda(false);
                 modelo.jugador1.vaderecha(false);
                 break;
-            case 11:
+            case 13:
                 modelo.jugador1.estaSaltando(false);
                 break;
-            case 12:
+            case 14:
                 modelo.jugador2.vaizquierda(false);
                 modelo.jugador2.vaderecha(false);
                 break;
-            case 13:
+            case 15:
                 modelo.jugador2.estaSaltando(false);
                 break;
-            case 14:
+            case 16:
                 FloatPtr primerElemento = Posicion.front();
                 FloatPtr segundoElemento = Posicion.back();
                 sf::Vector2f mousePos(*primerElemento, *segundoElemento);
@@ -104,6 +115,8 @@ public:
             {
                 j1=jugadores.front();
                 j2=jugadores.back();
+                modelo.asignarDisparos(j1,modelo.jugador1);
+                modelo.asignarDisparos(j2,modelo.jugador2);
                 vista.cargarJugadores(j1,j2); 
             }
             
@@ -111,7 +124,7 @@ public:
         case 1:
             vista.background.cargar(vista.window, nivel);
             vista.background.draw2(vista.window);
-            modelo.crearplataformas();
+            modelo.crearplataformas(nivel);
             vista.eliminarplataformas(modelo.map);
             mover_plataformas();
             dibujarPlataformas();
@@ -119,12 +132,15 @@ public:
             vista.loadBeeView(modelo.jugador1,modelo.jugador2);
             break;
         case 2:
-            
+            modelo.limpiarPlataformas();
+            modelo.crearplataformas(nivel);
             vista.background.cargar(vista.window, nivel);
             vista.background.draw1(vista.window);
+            //dibujarPlataformas();
             vista.dibujarCup(modelo.jugador1,modelo.jugador2);
-            vista.loadFlorView(modelo.jugador1,modelo.jugador2,vista.window);
-            
+            vista.loadFlorView(vista.window,modelo.jugador1,modelo.jugador2);
+            dibujar_Balas_Jugador1();
+            dibujar_Balas_Jugador2();
             break;
         case 3:
             vista.background.cargar(vista.window, nivel);
@@ -153,7 +169,6 @@ public:
             {
                 modelo.jugador1.enPlataforma(true);
                 modelo.jugador1.estaColisionando(modelo.map->platforms[i].y);
-
             }
             else {
                 modelo.jugador1.enPlataforma(false);
@@ -168,7 +183,6 @@ public:
                 modelo.jugador2.enPlataforma(false);
             }
         }
-        
     }
     void mover_plataformas() {
         float delta = vista.clock.restart().asSeconds();
@@ -177,6 +191,71 @@ public:
             modelo.map->platforms[i].caida(delta);
         }
         vista.background.actualizar(vista.window, delta);
+    }
+    void dibujar_Balas_Jugador1() {
+        modelo.moverBalas(modelo.jugador1,j1);
+        for(int i=0;i<modelo.jugador1.disparo->size;i++)
+        {
+            switch (j1)
+            {
+            case 1:{
+                BalaNormal* balaNormal = dynamic_cast<BalaNormal*>(modelo.jugador1.disparo->balas[i]);
+                if (balaNormal) {
+                    vista.dibujarBalasNormales(*balaNormal);
+                }
+                break;}
+            case 2:{
+                BalaBomba* balaBomba = dynamic_cast<BalaBomba*>(modelo.jugador1.disparo->balas[i]);
+                if (balaBomba) {
+                    vista.dibujarBalasBombas(*balaBomba);
+                }
+                break;}
+            case 3:{
+                BalaEstrella* balaEstrella = dynamic_cast<BalaEstrella*>(modelo.jugador1.disparo->balas[i]);
+                if (balaEstrella) {
+                    vista.dibujarBalasEstrellas(*balaEstrella);
+                }
+                break;}
+            }
+        }
+        
+    }
+    void dibujar_Balas_Jugador2() {
+        modelo.moverBalas(modelo.jugador2,j2);
+        for(int i=0;i<modelo.jugador2.disparo->size;i++)
+        { 
+            switch (j2)
+            {
+            case 1:{
+                BalaNormal* balaNormal = dynamic_cast<BalaNormal*>(modelo.jugador2.disparo->balas[i]);
+                if (balaNormal) {
+                    vista.dibujarBalasNormales(*balaNormal);
+                }
+                break;}
+            case 2:{
+                BalaBomba* balaBomba = dynamic_cast<BalaBomba*>(modelo.jugador2.disparo->balas[i]);
+                if (balaBomba) {
+                    vista.dibujarBalasBombas(*balaBomba);
+                }
+                break;}
+            case 3:{
+                BalaEstrella* balaEstrella = dynamic_cast<BalaEstrella*>(modelo.jugador2.disparo->balas[i]);
+                if (balaEstrella) {
+                    vista.dibujarBalasEstrellas(*balaEstrella);
+                }
+                break;}
+            }
+        }
+    }
+    
+    // Agregar un método para obtener si se disparó la bala del jugador 1
+    bool seDisparoJugador1() const {
+        return disparoJugador1;
+    }
+
+    // Agregar un método para obtener si se disparó la bala del jugador 2
+    bool seDisparoJugador2() const {
+        return disparoJugador2;
     }
     void ejecutar() {
         while (vista.window.isOpen()) {

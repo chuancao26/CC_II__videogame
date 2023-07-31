@@ -95,6 +95,57 @@ void Mapa::parseMap(const std::vector<std::string>& mapStrings)
     }
 }
 
+void Mapa::parseMap2(const std::vector<std::string>& mapStrings)
+{
+    size_t numRows = mapStrings.size();
+    size_t numCols = 0;
+    for (const auto& mapString : mapStrings) {
+        if (mapString.size() > numCols) {
+            numCols = mapString.size();
+        }
+    }
+    float currentX;
+    currentY=600;
+    float plat;
+    recorrer=false;
+
+    for (size_t row = 0; row < numRows; ++row) {
+        const auto& mapString = mapStrings[row];
+        if(!recorrer)
+        {
+            currentX = 10.0f;
+            plat=10.0f;
+            recorrer=true;
+        }
+        else{
+           currentX = 50.0f; // Reiniciar la posición X para cada línea de mapa 
+           plat=95.0f;
+           recorrer=false;
+        }
+        
+        for (size_t col = 0; col < numCols; ++col) {
+            char c = (col < mapString.size()) ? mapString[col] : ' ';
+
+            if (c == 'P') // Carácter que representa otra plataforma
+            {
+                Plataforma platform;
+                platform.x = currentX;
+                platform.y = currentY;
+                platform.width = platformWidth-50;
+                platform.height = platformHeight;
+
+                push_back(std::move(platform));
+            }
+
+            // Mueve las coordenadas X hacia la derecha
+            currentX += platformWidth + plat;
+        }
+
+        // Mueve las coordenadas Y hacia arriba para la siguiente línea de mapa
+        currentY -= platformHeight+30 + 2*platformSpacingH;
+    }
+}
+
 void Plataforma::caida(float d)
 {
     if(y<800)

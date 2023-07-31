@@ -14,12 +14,12 @@ private:
 public:
     BoomerangView(float width, float height) {
         // Cargar las texturas desde los archivos
-        if (!texture1.loadFromFile("img\\nivel_flor\\boomerang1.png")) {
+        if (!texture1.loadFromFile("img/nivel_flor/boomerang1.png")) {
             // Manejar el error si la carga de la textura 1 falla
             std::cout << "Error al cargar la imagen boomerang1.png" << std::endl;
         }
 
-        if (!texture2.loadFromFile("img\\nivel_flor\\boomerang2.png")) {
+        if (!texture2.loadFromFile("img/nivel_flor/boomerang2.png")) {
             // Manejar el error si la carga de la textura 2 falla
             std::cout << "Error al cargar la imagen boomerang2.png" << std::endl;
         }
@@ -41,6 +41,10 @@ public:
     void draw(sf::RenderWindow& window, float x, float y) {
         sprite.setPosition(x, y);
         window.draw(sprite);
+    }
+    sf::Sprite& getSprite()
+    {
+        return sprite; 
     }
 };
 #endif

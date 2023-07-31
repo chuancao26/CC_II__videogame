@@ -3,6 +3,9 @@
 #include "Plataforma_Vista.cpp"
 #include "Background_Vista.cpp"
 #include "Elegir.cpp"
+#include "BalaNormal_Vista.cpp"
+#include "BalaBomba_Vista.cpp"
+#include "BalaEstrella_Vista.cpp"
 #include "eventosflor.h"
 #include <thread>
 #include <memory>
@@ -20,7 +23,7 @@ public:
     VistaFlor vistaFlor;
     ElegirPlayer elegir;
     Background background;
-    sf::Clock clock, clock2, clock5;
+    sf::Clock clock, gameTime, clock5;
 
     
 public:
@@ -31,10 +34,10 @@ public:
         height = window.getSize().y;  
         tiempoAcumulado = sf::Time::Zero;
     }
-    //void loadNivelFlor(sf::RenderWindow& win)
-    //{
-     //   vistaFlor.runMapaFlor(win);
-    //}
+    float getGameTime()
+    {
+        return gameTime.getElapsedTime().asSeconds();
+    }
     void cargarJugadores(int j1,int j2)
     {
         if(j1!=0 && j2!=0)
@@ -55,17 +58,38 @@ public:
         plat.setPosition(plataforma.getPosx(), plataforma.getPosy());
         window.draw(plat.get());
     }
+
+    void dibujarBalasNormales( BalaNormal& bala) {
+       
+       BalaNormalVista bal(bala);
+       bal.setPosition(bala.getPosx(), bala.getPosy());
+       window.draw(bal.get());
+    }
+
+    void dibujarBalasBombas(BalaBomba& bala) {
+       
+       BalaBombaVista bal(bala);
+       bal.setPosition(bala.getPosx(), bala.getPosy());
+       window.draw(bal.get());
+    }
+    void dibujarBalasEstrellas(BalaEstrella& bala) {
+       
+       BalaEstrellaVista bal(bala);
+       bal.setPosition(bala.getPosx(), bala.getPosy());
+       window.draw(bal.get());
+    }
+
     void actualizar_Plataformas() {
         
     }
-    void loadBeeView(const Cup& player1, const Cup& player2 )
+    void loadBeeView(const Cup& player1, const Cup& player2)
     {
-        vistaBee.handleInput(player1,player2);
+        vistaBee.handleInput(player1,player2, getGameTime(), jugador_v.cupShape, jugador_v2.cupShape);
         vistaBee.render();
     }
-    void loadFlorView(const Cup& player1, const Cup& player2, sf::RenderWindow& win)
+    void loadFlorView(sf::RenderWindow& win,const Cup& player1, const Cup& player2)
     {
-        vistaFlor.handleInput(player1,player2,win);
+        vistaFlor.handleInput(win,player1,player2,jugador_v.cupShape, jugador_v2.cupShape);
         vistaFlor.render(win);
     }
     
@@ -105,34 +129,40 @@ public:
                 else if (event.key.code == sf::Keyboard::Space) {
                     return 5;
                 }
-                // Manejar teclas presionadas para el jugador 2
-                if (event.key.code == sf::Keyboard::W) {
+                else if (event.key.code == sf::Keyboard::X) {
                     return 6;
                 }
-                else if (event.key.code == sf::Keyboard::A) {
+                // Manejar teclas presionadas para el jugador 2
+                if (event.key.code == sf::Keyboard::W) {
                     return 7;
                 }
-                else if (event.key.code == sf::Keyboard::D) {
+                else if (event.key.code == sf::Keyboard::A) {
                     return 8;
                 }
-                else if (event.key.code == sf::Keyboard::S) {
+                else if (event.key.code == sf::Keyboard::D) {
                     return 9;
+                }
+                else if (event.key.code == sf::Keyboard::S) {
+                    return 10;
+                }
+                else if (event.key.code == sf::Keyboard::Z) {
+                    return 11;
                 }
             }
             else if (event.type == sf::Event::KeyReleased) {
                 // Manejar teclas liberadas para el jugador 1
                 if (event.key.code == sf::Keyboard::Left || event.key.code == sf::Keyboard::Right) {
-                    return 10;
+                    return 12;
                 }
                 if (event.key.code == sf::Keyboard::Up) {
-                    return 11;
+                    return 13;
                 }
                 // Manejar teclas liberadas para el jugador 2
                 if (event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::D) {
-                    return 12;
+                    return 14;
                 }
                 if (event.key.code == sf::Keyboard::W) {
-                    return 13;
+                    return 15;
                 }
             }
             else if (event.type == sf::Event::MouseButtonPressed) {
@@ -141,7 +171,7 @@ public:
                     sf::Vector2f mousePos(mousePosition.x, mousePosition.y);
                     Posicion.push_back(std::make_shared<float>(mousePosition.x));
                     Posicion.push_back(std::make_shared<float>(mousePosition.y));
-                    return 14;
+                    return 16;
                 }
             }
         }

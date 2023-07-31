@@ -11,7 +11,7 @@ private:
 
 public:
     SeedView(const sf::Vector2f& position) {
-        if (!texture.loadFromFile("img\\nivel_flor\\seed.png")) {
+        if (!texture.loadFromFile("img/nivel_flor/seed.png")) {
             // Manejo de error si no se puede cargar la textura
         }
 
@@ -27,6 +27,10 @@ public:
     void draw(sf::RenderWindow& window, float angle) {
         sprite.setRotation(angle);
         window.draw(sprite);
+    }
+    sf::Sprite& getSprite()
+    {
+        return sprite; 
     }
 };
 

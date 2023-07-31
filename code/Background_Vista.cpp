@@ -7,27 +7,27 @@ public:
         switch (n)
         {
         case 0:
-            if (!texture_.loadFromFile("img\\menu\\menuInicio.png")) {
+            if (!texture_.loadFromFile("img/menu/menuInicio.png")) {
             std::cout<<"Error al cargar la imagen menuInicio.png"<<std::endl;
             }
             break;
         case 1:
-            if (!texture_.loadFromFile("img\\menu\\fondoBee.png")) {
+            if (!texture_.loadFromFile("img/menu/fondoBee.png")) {
                 std::cout<<"Error al cargar la imagen fondoBee2.png"<<std::endl;
             }
             break;
         case 2:
-            if (!texture_.loadFromFile("img\\menu\\fondoFlor.png")) {
+            if (!texture_.loadFromFile("img/menu/fondoFlor.png")) {
                 std::cout<<"Error al cargar la imagen fondoFlor.png"<<std::endl;
             }
             break;
         case 3:
-            if (!texture_.loadFromFile("img\\menu\\menuGano.png")) {
+            if (!texture_.loadFromFile("img/menu/menuGano.png")) {
                 std::cout<<"Error al cargar la imagen menuGano.png"<<std::endl;
             }
             break;
         case 4:
-            if(!texture_.loadFromFile("img\\menu\\menuPerdio.png")) {
+            if(!texture_.loadFromFile("img/menu/menuPerdio.png")) {
             std::cout<<"Error al cargar la imagen menuPerdio.png"<<std::endl;
             }
             break;

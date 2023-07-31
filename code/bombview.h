@@ -14,11 +14,11 @@ private:
 
 public:
     BombView() {
-        if (!texturaCae.loadFromFile("img\\nivel_flor\\bombaCae.png")) {
+        if (!texturaCae.loadFromFile("img/nivel_flor/bombaCae.png")) {
             std::cout << "Error al cargar la imagen bombaCae.png" << std::endl;
         }
 
-        if (!texturaPiso.loadFromFile("img\\nivel_flor\\bombaPiso.png")) {
+        if (!texturaPiso.loadFromFile("img/nivel_flor/bombaPiso.png")) {
             std::cout << "Error al cargar la imagen bombaPiso.png" << std::endl;
         }
 
@@ -43,6 +43,10 @@ public:
 
     void draw(sf::RenderWindow& window) {
         window.draw(sprite);
+    }
+    sf::Sprite& getSprite()
+    {
+        return sprite; 
     }
 
 };
