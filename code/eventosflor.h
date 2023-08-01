@@ -92,12 +92,13 @@ public:
         delete boomerang;
         for (int i = 0; i < maxBombs; i++)
         {
-            delete bombs[i];
+            bombs[i]=nullptr;
         }
         for (int i = 0; i < 3; i++)
         {
             delete seeds[i];
         }
+        
     }
 
     void update(sf::RenderWindow& win)
@@ -158,7 +159,7 @@ public:
                 if (bombs[i] == nullptr)
                 {
                     nextAvailableBomb = i;
-                    break;
+                    // break;
                 }
             }
 
@@ -171,6 +172,7 @@ public:
 
             // Reiniciar el temporizador global para la siguiente bomba
             elapsedSeconds = 0.0f;
+           
         }
 
         // Actualizar las bombas que han pasado su tiempo de intervalo
@@ -215,6 +217,7 @@ public:
         {
             boomerang[0].draw(win);
         }
+        
     }
 
     void drawSeeds(sf::RenderWindow& win)
@@ -257,6 +260,7 @@ public:
             cup1.enChoque(jugador1.intersects(entityBounds));
         }
         // Colisiones con Bombs
+        
         for (int i = 0; i < maxBombs; ++i)
         {
             if (bombs[i] != nullptr)
