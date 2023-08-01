@@ -45,6 +45,7 @@ public:
             }
             else if (!cuadrado.isEliminado()){
                 Eliminar=true;
+                
             }
         }
     }

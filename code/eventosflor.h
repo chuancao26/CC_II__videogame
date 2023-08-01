@@ -14,6 +14,7 @@
 #include <string>
 #include <memory>
 #include "Jugador_Modelo.h"
+//#include "Bala_Modelo.h"
 #include "Bala.cpp"
 
 class VistaFlor
@@ -53,6 +54,9 @@ private:
     bool updateOnceInRange25 = true;
 
     BalaNormalVista balaVista;
+    BalaNormal bala;
+
+    float limX;
 public:
     VistaFlor(sf::RenderWindow& win) : bossController(win),
                                   seed1(win.getSize().x * 2.f / 3.f, win.getSize().y * 2.f / 6.f),
@@ -64,6 +68,7 @@ public:
         seed1.setDestino(0, 500);
         deltatime = timer.getElapsedTime().asSeconds();
         deltaTime = clock.getElapsedTime().asSeconds();
+        limX=bossController.lineX();
     }
     
     void render(sf::RenderWindow& win)
@@ -183,7 +188,7 @@ public:
         // Realizar acciones según el rango de vida del boss
         if (vidaBoss > 40 && vidaBoss < 45 && updateOnceInRange45)
         {
-            bossController.setState(3);
+            bossController.setState(4);
             boomerang[0].update(win.getSize().x);
             updateSeeds();
             updateOnceInRange45 = false; // Marcar como actualizado para que no se repita
@@ -251,6 +256,17 @@ public:
                                                     seeds[i]->getSprite().getGlobalBounds().height - cutPix));
             cup1.enChoque(jugador1.intersects(entityBounds));
         }
+        // Colisiones con Bombs
+        for (int i = 0; i < maxBombs; ++i)
+        {
+            if (bombs[i] != nullptr)
+            {
+                sf::FloatRect entityBounds(bombs[i]->getSprite().getPosition(),
+                                        sf::Vector2f(bombs[i]->getSprite().getGlobalBounds().width - cutPix,
+                                                        bombs[i]->getSprite().getGlobalBounds().height - cutPix));
+                cup1.enChoque(jugador1.intersects(entityBounds));
+            }
+        }
         
     }
 
@@ -274,7 +290,25 @@ public:
                                                     seeds[i]->getSprite().getGlobalBounds().height - cutPix));
             cup2.enChoque(jugador2.intersects(entityBounds));
         }
+        // Colisiones con Bombs
+        for (int i = 0; i < maxBombs; ++i)
+        {
+            if (bombs[i] != nullptr)
+            {
+                sf::FloatRect entityBounds(bombs[i]->getSprite().getPosition(),
+                                        sf::Vector2f(bombs[i]->getSprite().getGlobalBounds().width - cutPix,
+                                                        bombs[i]->getSprite().getGlobalBounds().height - cutPix));
+                cup2.enChoque(jugador2.intersects(entityBounds));
+            }
+        }
 
+    }
+    void disparado(bool T)
+    {
+        if (T==true){
+            std::cout << "Ataque" << std::endl;
+            bossController.Attack();
+        }
     }
     void updateBalaVista(sf::RenderWindow& win)
     {
@@ -288,12 +322,15 @@ public:
         float tolerance = 5.0f;
 
         // Verificar colisión entre el sprite de la bala y la línea del boss
-        if (balaVista.get().getPosition().x >= bossController.lineX() - tolerance)
+        if (balaVista.getPositionX() >= bossController.lineX() - tolerance)
         {
             // Generar colisión
             std::cout << "Ataque" << std::endl;
             bossController.Attack();
         }
+    }
+    float getlimX()const{
+        return limX;
     }
 };
 

@@ -184,6 +184,16 @@ public:
             }
         }
     }
+    void atacar(){
+        if ((disparoJugador1 == true)||(disparoJugador2 ==true))
+            {
+                if(vista.ataque(vista.bala)){
+                    std::cout<<"atacado"<<std::endl;
+                    vista.vistaFlor.disparado(true);
+                }
+                
+            }
+    }
     void mover_plataformas() {
         float delta = vista.clock.restart().asSeconds();
         for(int i=0;i<modelo.map->size;i++)
@@ -193,6 +203,7 @@ public:
         vista.background.actualizar(vista.window, delta);
     }
     void dibujar_Balas_Jugador1() {
+        disparoJugador1=true;
         modelo.moverBalas(modelo.jugador1,j1);
         for(int i=0;i<modelo.jugador1.disparo->size;i++)
         {
@@ -224,6 +235,7 @@ public:
         modelo.moverBalas(modelo.jugador2,j2);
         for(int i=0;i<modelo.jugador2.disparo->size;i++)
         { 
+            disparoJugador2=true;
             switch (j2)
             {
             case 1:{

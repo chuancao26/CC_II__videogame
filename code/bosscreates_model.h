@@ -18,7 +18,7 @@ private:
 public:
     BossModel() : state(1), currentImageIndex(0), timer_(0.0f), 
     duration_(0.2f), isGrowing_(false), growthTimer_(0.0f), 
-    growthDuration_(0.042f), vida(50), lineX(800),lineY(0), deltaTime(0.042f) {}
+    growthDuration_(0.042f), vida(42), lineX(800),lineY(0), deltaTime(0.042f) {}
 
     void update() {
         timer_ += deltaTime;
@@ -73,6 +73,13 @@ public:
     float getLineY() const {
         return lineY;
     }   
-
+    void atacado(const bool& t)
+    {
+        if (t)
+        {
+            std::cout << "Atacado!" << std::endl;
+            vida=vida-1;
+        }
+    }
 };
 #endif

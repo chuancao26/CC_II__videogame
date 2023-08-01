@@ -25,7 +25,9 @@ class BalaBombaVista
             posy=bal.getPosy();
         }
 
-        
+        float getPosX(){
+            return posx;
+        }
         void setPosition(float x, float y) 
         {
             balaShape.setPosition(x, y);

@@ -31,7 +31,7 @@ class Bala {
         virtual void mover(float px, float py) {
         setPosx(getPosx() + px);
         setPosy(getPosy() - py);
-    }
+        }
         
     private:
         float posx,posy,direccion,size;
