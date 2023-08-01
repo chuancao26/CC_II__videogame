@@ -92,7 +92,6 @@ public:
     }
     void updateTextures()
     {
-        std::cout << cupM->isInPlatform() << std::endl;
         if (cupM->isLeft())
         {
             size_t textureIndex = static_cast<size_t>(std::round(cupM->getElapsedTime()* 10)) % (runTexture.size());

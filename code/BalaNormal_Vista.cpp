@@ -1,6 +1,7 @@
 #ifndef BALANORMAL_VISTA_H
 #define BALANORMAL_VISTA_H
 #include <SFML/Graphics.hpp>
+#include <iostream>
 #include "Bala.cpp"
 
 class BalaNormalVista

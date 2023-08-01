@@ -2,7 +2,7 @@
 #define BALABOMBA_VISTA_H
 #include <SFML/Graphics.hpp>
 #include "Bala.cpp"
-
+#include <iostream>
 class BalaBombaVista
 {
     public:
