@@ -85,22 +85,23 @@ void Cup::disparar(const float& px, const float& py)
 {
     disparo->disparar(px, py);
 }
+void Cup::morir()
+{
+    vidas-=1;
+    std::cout<<vidas<<std::endl;
+}
 void Cup::enChoque(const bool& t)
 {
     choque = t;
-    if(choque)
-    {
-        this->vidas=vidas-1;
-        std::cout<<vidas<<std::endl;
-    }/*
+
     if (choque && !isInvunerable)
     {
-        std::cout << "-1 vida " << std::endl;
+        std::cout << "-1 vida y vidas " <<vidas<< std::endl;
         --vidas; 
-        start = elapsedTime;
-        isInvunerable = true;
+        //start = elapsedTime;
+        //isInvunerable = true;
     }
-    if (elapsedTime - start > 2.0f)
+    /*if (elapsedTime - start > 2.0f)
     {
         isInvunerable = false;
     }*/

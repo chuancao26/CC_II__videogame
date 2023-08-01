@@ -62,6 +62,7 @@ public:
     void estaColisionando(const float& y);
     void enPlataforma(bool t);    
     void enChoque(const bool&);
+    void morir();
 };
 
 class CupMuerto : public Jugador

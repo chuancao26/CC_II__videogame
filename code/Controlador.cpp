@@ -133,7 +133,6 @@ public:
             modelo.crearplataformas(nivel);
             vista.background.cargar(vista.window, nivel);
             vista.background.draw1(vista.window);
-            //dibujarPlataformas();
             vista.dibujarCup(modelo.jugador1,modelo.jugador2);
             vista.loadFlorView(vista.window);
             dibujar_Balas_Jugador1();
@@ -180,6 +179,11 @@ public:
                 modelo.jugador2.enPlataforma(false);
             }
         }
+    }
+    void colisionesMounstruos()
+    {
+        modelo.jugador1.enChoque(vista.colisiones1Bee(modelo.jugador1));
+        modelo.jugador2.enChoque(vista.colisiones1Bee(modelo.jugador2));
     }
     void mover_plataformas() {
         float delta = vista.clock.restart().asSeconds();
@@ -247,6 +251,7 @@ public:
     void ejecutar() {
         while (vista.window.isOpen()) {
             colisiones();
+            colisionesMounstruos();
             manejarEventos();
             renderizar();
         }  
