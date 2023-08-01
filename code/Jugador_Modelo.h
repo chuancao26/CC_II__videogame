@@ -28,15 +28,15 @@ class Jugador
 
 class Cup: public Jugador {
 public:
-    bool saltando,enplataforma,derecha,izquierda,quieto, choque;
-    float salto;
+    bool isInvunerable, saltando,enplataforma,derecha,izquierda,quieto, choque;
+    float salto, start, elapsedTime;
     int jumps, vidas;
     Disparo* disparo;
 public:
     Cup(float px, float py, int size_)
     :Jugador(px, py, 15.0f, 20.0f, 0.0f, size_, 1, false), saltando(false),
-    derecha(false), izquierda(false), enplataforma(false), vidas(3),
-    salto(150), choque(false)
+    derecha(false), izquierda(false), enplataforma(false), vidas(5),
+    salto(150), choque(false), start(0.0f), isInvunerable(false)
     {
         disparo = new DisparoNormal();
     }
@@ -44,6 +44,7 @@ public:
     {
 
     }
+    void update(const float&);
     void setDisparo(Disparo* disparo_);
     void disparar(const float& px, const float& py);
     virtual void mover(const float& px, const float& py) override;

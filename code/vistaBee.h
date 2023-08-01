@@ -48,7 +48,7 @@ public:
     // constructor
     VistaBee(sf::RenderWindow& window_):
     xBorder(1280), yBorder(720), activeWorker(false), activeTriangle(false), rate(0.0f), window(window_)
-    , cupLeft(false), cutPix(10), activeFist(false)
+    , cupLeft(false), cutPix(20), activeFist(false)
     {
         std::random_device rd;
         generator.seed(rd());
@@ -277,7 +277,7 @@ public:
         {
             fistsM.push_back(std::make_shared<FlyingFistM>(xBorder, yBorder, 1));
             fistsM.push_back(std::make_shared<FlyingFistM>(xBorder, yBorder, 2));
-            fistsM.push_back(std::make_shared<FlyingFistM>(xBorder, yBorder, 1));
+            fistsM.push_back(std::make_shared<FlyingFistM>(xBorder, yBorder, 3));
             for (size_t i{0}; i < fistsM.size(); ++i)
             {
                 fistsV.push_back(std::make_shared<FlyingFistV>(fistsM[i], textures.getFistTextures()));
@@ -373,7 +373,16 @@ public:
                     }
                 }
             }
-            
+        }
+        if (activeFist)
+        {
+            for (size_t i{0};i < fistsV.size(); ++i)
+            {   
+                sf::FloatRect entityBounds(fistsV[i]->getSprite().getPosition(),
+                            sf::Vector2f(fistsV[i]->getSprite().getGlobalBounds().width - cutPix,
+                            fistsV[i]->getSprite().getGlobalBounds().height - cutPix));
+                cup1.enChoque(jugadorBounds1.intersects(entityBounds));    
+            }
         }
         
     }
@@ -429,6 +438,16 @@ public:
                         cup2.enChoque(jugadorBounds2.intersects(entityBounds)); 
                     }
                 }
+            }
+        }
+        if (activeFist)
+        {
+            for (size_t i{0};i < fistsV.size(); ++i)
+            {   
+                sf::FloatRect entityBounds(fistsV[i]->getSprite().getPosition(),
+                            sf::Vector2f(fistsV[i]->getSprite().getGlobalBounds().width - cutPix,
+                            fistsV[i]->getSprite().getGlobalBounds().height - cutPix));
+                cup2.enChoque(jugadorBounds2.intersects(entityBounds));    
             }
         }
 

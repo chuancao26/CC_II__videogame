@@ -1,6 +1,5 @@
 #include "Jugador_Modelo.h"
 using namespace std;
-
 float Jugador::getPosx() const {return posx;}
 float Jugador::getPosy() const {return posy;}
 int Jugador::getSize() const {return size;}
@@ -8,6 +7,10 @@ void Cup::mover(const float& px, const float& py)
 {
     posx = px;
     posy = py;
+}
+void Cup::update(const float& elapsedTime_)
+{
+    elapsedTime = elapsedTime_;
 }
 void Cup::moverIzquierda()
 {
@@ -85,8 +88,20 @@ void Cup::disparar(const float& px, const float& py)
 void Cup::enChoque(const bool& t)
 {
     choque = t;
-    if (choque)
+    if(choque)
     {
-        std::cout << "Acaba de chocar" << std::endl;
+        this->vidas=vidas-1;
+        std::cout<<vidas<<std::endl;
+    }/*
+    if (choque && !isInvunerable)
+    {
+        std::cout << "-1 vida " << std::endl;
+        --vidas; 
+        start = elapsedTime;
+        isInvunerable = true;
     }
+    if (elapsedTime - start > 2.0f)
+    {
+        isInvunerable = false;
+    }*/
 }

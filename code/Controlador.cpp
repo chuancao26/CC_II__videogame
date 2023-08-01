@@ -117,6 +117,8 @@ public:
             
             break;
         case 1:
+            modelo.jugador1.update(vista.getGameTime());
+            modelo.jugador2.update(vista.getGameTime());
             vista.background.cargar(vista.window, nivel);
             vista.background.draw2(vista.window);
             modelo.crearplataformas(nivel);

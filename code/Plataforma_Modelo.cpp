@@ -27,7 +27,7 @@ Mapa::Mapa()
 std::string Mapa::generarSecuenciaFila() 
 {
     std::string fila;
-    int numA = rand() % 3 + 1;  // Número aleatorio de letras 'A' (entre 1 y 3)
+    int numA = 3;//rand() % 3 + 1;  // Número aleatorio de letras 'A' (entre 1 y 3)
     for (int i = 0; i < numA; i++) {
         fila += 'A';
     }

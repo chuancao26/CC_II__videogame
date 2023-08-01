@@ -17,14 +17,14 @@ private:
 
 public:
     FlyingFistM(const int& xBorder_, const int& yBorder_, const int& type_): xBorder(xBorder_), yBorder(yBorder_),
-    Enemigo(xBorder_ * 1/3, yBorder_, 50), speed(0.02f), inPosition(false), scale(1.0f), angle(0.0f), type(type_),
-    upSpeed(5.0f)
+    Enemigo(xBorder_ * 1/3, yBorder_, 50), speed(0.04f), inPosition(false), scale(1.0f), angle(0.0f), type(type_),
+    upSpeed(10.0f)
     {
         std::random_device rd;
         generator.seed(rd());
-        genNum = std::uniform_int_distribution<int>(100,xBorder);
+        genNum = std::uniform_int_distribution<int>(0, xBorder);
         positionX = static_cast<float>(genNum(generator));
-        rotationGen = std::uniform_int_distribution<int>(300,xBorder);
+        rotationGen = std::uniform_int_distribution<int>(300, 600);
         rotationSize = static_cast<int>(rotationGen(generator));
         (type == 1) ? posx = positionX - cos(angle) * rotationSize : posx = positionX + cos(angle) * rotationSize;
         
@@ -53,7 +53,7 @@ public:
         else
         {
             (type == 1) ? posx = positionX - cos(angle) * rotationSize : posx = positionX + cos(angle) * rotationSize;
-            posy = yBorder / 2 + sin(angle) * rotationSize/2;
+            (type == 3) ? posy = yBorder / 2 - sin(angle) * rotationSize/2 : posy = yBorder / 2 + sin(angle) * rotationSize/2; 
 
             angle += speed;
         }
