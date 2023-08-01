@@ -10,6 +10,7 @@ public:
     std::vector<sf::Texture> abajo;
     std::vector<sf::Texture> quieto;
     std::vector<sf::Texture> disparar;
+    sf::Texture herido;
     sf::Sprite cupShape;
     string jugador;
     int indiceAnimacion = 0;
@@ -81,7 +82,9 @@ public:
             }
             quieto.push_back(textura);
         }
-        
+        if (!herido.loadFromFile("img/cup/"+jugador+"/herido.png")) {
+                cout << "Error al cargar la imagen herido.png" <<endl;
+            }
     }
     
     void dibujar(const Cup& jugador,sf::RenderWindow& window) {
@@ -90,9 +93,11 @@ public:
             indiceAnimacion = (indiceAnimacion + 1) % salto.size();
             reloj.restart();
         }
-
-        // Dibujar sprite utilizando la textura actual
-        if(jugador.saltando)
+        if(jugador.herido)
+        {
+            cupShape.setTexture(herido);
+        }
+        else if(jugador.saltando)
         {
             cupShape.setTexture(salto[indiceAnimacion]);
         }

@@ -63,7 +63,7 @@ public:
        
        BalaNormalVista bal(bala);
        bal.setPosition(bala.getPosx(), bala.getPosy());
-       window.draw(bal.get());
+       window.draw(bal.getSprite());
     }
 
     void dibujarBalasBombas(BalaBomba& bala) {
@@ -95,8 +95,9 @@ public:
     {
         return vistaBee.colisionesPlayer2Bee(player1);
     }
-    void loadFlorView(sf::RenderWindow& win)
+    void loadFlorView(sf::RenderWindow& win,const Cup& player1, const Cup& player2)
     {
+        vistaFlor.handleInput(win,player1,player2,jugador_v.cupShape, jugador_v2.cupShape);
         vistaFlor.render(win);
     }
     

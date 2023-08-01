@@ -30,9 +30,18 @@ class BalaNormalVista
         {
             balaShape.setPosition(x, y);
         }
-        sf::Sprite& get(){
+        sf::Sprite& getSprite(){
             return balaShape;
         }
-
+        
+        bool shouldDelete(){
+            return false;
+        }
+        float getPositionY(){   
+            return posy;
+        }
+        float getPositionX(){
+            return posx;
+        }
 };
 #endif

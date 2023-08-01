@@ -93,10 +93,10 @@ void Cup::morir()
 void Cup::enChoque(const bool& t)
 {
     choque = t;
-
+    herido = t;
     if (choque && !isInvunerable)
     {
-        std::cout << "-1 vida y vidas " <<vidas<< std::endl;
+        std::cout << "-1 vida y vidas " << vidas << std::endl;
         --vidas; 
         //start = elapsedTime;
         //isInvunerable = true;

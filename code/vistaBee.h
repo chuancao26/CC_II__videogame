@@ -25,6 +25,7 @@ private:
 
     std::shared_ptr<PoliceM> policeM;
     std::shared_ptr<PoliceV> policeV;
+    
     std::vector<std::shared_ptr<TrianguloM>> triangulosM;    
     std::vector<std::shared_ptr<TrianguloV>> triangulosV;    
     

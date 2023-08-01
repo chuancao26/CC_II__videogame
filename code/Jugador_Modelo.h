@@ -28,7 +28,7 @@ class Jugador
 
 class Cup: public Jugador {
 public:
-    bool isInvunerable, saltando,enplataforma,derecha,izquierda,quieto, choque;
+    bool isInvunerable, herido, saltando,enplataforma,derecha,izquierda,quieto, choque;
     float salto, start, elapsedTime;
     int jumps, vidas;
     Disparo* disparo;
@@ -36,7 +36,7 @@ public:
     Cup(float px, float py, int size_)
     :Jugador(px, py, 15.0f, 20.0f, 0.0f, size_, 1, false), saltando(false),
     derecha(false), izquierda(false), enplataforma(false), vidas(5),
-    salto(150), choque(false), start(0.0f), isInvunerable(false)
+    salto(150), choque(false), start(0.0f), isInvunerable(false), herido(false)
     {
         disparo = new DisparoNormal();
     }

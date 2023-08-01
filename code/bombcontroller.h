@@ -45,6 +45,7 @@ public:
             }
             else if (!cuadrado.isEliminado()){
                 Eliminar=true;
+                
             }
         }
     }
@@ -53,7 +54,10 @@ public:
 
         return Eliminar;
     }
-    
+    sf::Sprite& getSprite()
+    {
+        return cuadradoView.getSprite(); 
+    }
 
 };
 #endif
