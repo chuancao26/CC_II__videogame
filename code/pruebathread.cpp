@@ -9,11 +9,11 @@
 int main()
 {
     Textures textures;
-    std::shared_ptr<CupHeadM> cupM = std::make_shared<CupHeadM>(400, 400, 800, 800);
+    std::shared_ptr<CupHeadM> cupM = std::make_shared<CupHeadM>(500, 500, 1280, 720);
     std::shared_ptr<CupHeadV> cupV = std::make_shared<CupHeadV>(cupM, textures.getRedRunTextures(),
                                                                 textures.getRedJumpTextures(),
                                                                 textures.getRedStandingTextures());
-    std::shared_ptr<CupHeadM> cupM2 = std::make_shared<CupHeadM>(500, 500, 800, 800);
+    std::shared_ptr<CupHeadM> cupM2 = std::make_shared<CupHeadM>(500, 500, 1280, 720);
     std::shared_ptr<CupHeadV> cupV2 = std::make_shared<CupHeadV>(cupM2, textures.getRedRunTextures(),
                                                                 textures.getRedJumpTextures(),
                                                                 textures.getRedStandingTextures());
@@ -29,7 +29,7 @@ int main()
             {
                 inPlatform1 = false;
             }
-            if (cupM->getPosY() >= 700)
+            if (cupM->getPosY() >= 600)
             {
                 inPlatform1 = true;
             }
@@ -50,7 +50,7 @@ int main()
                 inPlatform2 = false;
             }
             // Verificar si el cuadrado ha llegado al piso
-            if (cupM2->getPosY() >= 700)
+            if (cupM2->getPosY() >= 600)
             {
                 inPlatform2 = true;
             }
@@ -67,6 +67,8 @@ int main()
     // Iniciar los threads para los cupheads
     std::thread threadCuphead1(updateAndDrawCuphead1);
     std::thread threadCuphead2(updateAndDrawCuphead2);
+
+
     std::shared_ptr<FlyingFistM> fistM = std::make_shared<FlyingFistM>(1280,720,1);
     std::shared_ptr<FlyingFistV> fistV = std::make_shared<FlyingFistV>(fistM,textures.getFistTextures());
 
