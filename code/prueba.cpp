@@ -3,7 +3,6 @@
 #include <memory>
 #include "Cup.h"
 #include "Textures.h"
-#include <SFML/Graphics.hpp>
 #include "FlyingFist.h"
 #include <cmath>
 

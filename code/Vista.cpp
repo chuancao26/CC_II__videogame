@@ -80,7 +80,7 @@ public:
     void actualizar_Plataformas() {
         
     }
-    void loadBeeView(Cup& player1,Cup& player2)
+    void loadBeeView(Cup& player1, Cup& player2)
     {
         vistaBee.handleInput(player1, player2, getGameTime(),jugador_v.cupShape, jugador_v2.cupShape);
         vistaBee.render();

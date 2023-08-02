@@ -58,15 +58,17 @@ public:
     {
         drawEntitys();
     }
-    void handleInput(Cup& cup1_, Cup& cup2_, const float& gameTime_,
+    void handleInput(Cup& cup1_, Cup& cup2_,const float& gameTime_,
                      const sf::Sprite& player, const sf::Sprite& player2) 
     {
-        update(cup1_, cup2_);
-        colisionesPlayer1Bee(cup1_, player);
-        colisionesPlayer2Bee(cup2_, player2);
+        jugadorBounds1 = player.getGlobalBounds();
+        jugadorBounds2 = player2.getGlobalBounds();
+        update(cup1_);
         gameTime = gameTime_;
+        colisionesPlayer1Bee(cup1_);
+        colisionesPlayer2Bee(cup2_);
     }
-    void update(Cup& cup1_, Cup& cup2_)
+    void update(Cup& cup1_)
     {
         updatePolice();
         updateTriangle();
@@ -304,7 +306,7 @@ public:
         drawMisil();
         drawFist();
     }
-    void updatePositionsCup(Cup& cup1_)
+    void updatePositionsCup(Cup& cup1)
     {
         if (cup1_.getPosx() < xBorder / 2)
         {
@@ -315,7 +317,7 @@ public:
             cupLeft = false;
         }
     }
-    void colisionesPlayer1Bee(Cup& cup1, const sf::Sprite& sprite)
+    void colisionesPlayer1Bee(Cup& cup1)
     {
         sf::FloatRect jugadorBounds1 = sprite.getGlobalBounds();
         //worker 
@@ -392,8 +394,19 @@ public:
                    
             }
         }
+        if (activeFist)
+        {
+            for (size_t i{0};i < fistsV.size(); ++i)
+            {   
+                sf::FloatRect entityBounds(fistsV[i]->getSprite().getPosition(),
+                            sf::Vector2f(fistsV[i]->getSprite().getGlobalBounds().width - cutPix,
+                            fistsV[i]->getSprite().getGlobalBounds().height - cutPix));
+                cup1.enChoque(jugadorBounds1.intersects(entityBounds));    
+            }
+        }
+        
     }
-    void colisionesPlayer2Bee(Cup& cup2, const sf::Sprite& sprite)
+    void colisionesPlayer2Bee(Cup& cup2)
     {
         sf::FloatRect jugadorBounds2 = sprite.getGlobalBounds();
         //worker 
@@ -459,7 +472,7 @@ public:
                 cup2.enChoque(jugadorBounds2.intersects(entityBounds));    
             }
         }
-       
+
     }
 
     ~VistaBee()

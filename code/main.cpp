@@ -6,6 +6,5 @@ using namespace sf;
 int main() {
     Controlador controlador;
     controlador.ejecutar();
-    
     return 0;
 }
