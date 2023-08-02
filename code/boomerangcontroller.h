@@ -1,5 +1,6 @@
 #ifndef BOOMERANGCONTROLLER_H
 #define BOOMERANGCONTROLLER_H
+#include <SFML/Graphics.hpp>
 #include "boomerangview.h"
 #include "boomerangmodel.h"
 #include <iostream>
@@ -30,6 +31,10 @@ public:
 
     bool shouldDelete() const {
         return boomerangModel.shouldDelete();
+    }
+    sf::Sprite& getSprite()
+    {
+        return boomerangView.getSprite(); 
     }
 };
 #endif

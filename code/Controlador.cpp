@@ -132,7 +132,7 @@ public:
             vista.background.draw1(vista.window);
             //dibujarPlataformas();
             vista.dibujarCup(modelo.jugador1,modelo.jugador2);
-            vista.loadFlorView(vista.window);
+            vista.loadFlorView(vista.window,modelo.jugador1,modelo.jugador2);
             dibujar_Balas_Jugador1();
             dibujar_Balas_Jugador2();
             break;
@@ -242,7 +242,7 @@ public:
         }
     }
     void ejecutar() {
-        while (vista.getWindow().isOpen()) {
+        while (vista.window.isOpen()) {
             colisiones();
             manejarEventos();
             renderizar();

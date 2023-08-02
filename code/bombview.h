@@ -44,6 +44,10 @@ public:
     void draw(sf::RenderWindow& window) {
         window.draw(sprite);
     }
+    sf::Sprite& getSprite()
+    {
+        return sprite; 
+    }
 
 };
 
