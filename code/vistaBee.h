@@ -16,7 +16,6 @@ class VistaBee
 {
 private:
     Textures textures;
-
     std::vector<std::shared_ptr<FlyingFistM>> fistsM;
     std::vector<std::shared_ptr<FlyingFistV>> fistsV;
 
@@ -25,6 +24,7 @@ private:
 
     std::shared_ptr<PoliceM> policeM;
     std::shared_ptr<PoliceV> policeV;
+
     std::vector<std::shared_ptr<TrianguloM>> triangulosM;    
     std::vector<std::shared_ptr<TrianguloV>> triangulosV;    
     
@@ -33,6 +33,7 @@ private:
 
     sf::FloatRect jugadorBounds1;
     sf::FloatRect jugadorBounds2;
+
     bool activeWorker, activeTriangle, activeMisil, cupLeft, activeFist;
     float rate;
     sf::RenderWindow& window;

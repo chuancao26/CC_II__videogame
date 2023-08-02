@@ -1,16 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include <thread>
-#include <atomic>
 #include <iostream>
 #include <memory>
 #include "Cup.h"
 #include "Textures.h"
 #include "FlyingFist.h"
 #include <cmath>
-
-
-// ... (Asumiendo que aquí se encuentran las definiciones de las clases FlyingFistM, FlyingFistV, Textures, CupHeadM y CupHeadV)
-
 int main()
 {
     Textures textures;
@@ -18,7 +13,6 @@ int main()
     std::shared_ptr<CupHeadV> cupV = std::make_shared<CupHeadV>(cupM, textures.getRedRunTextures(),
                                                                 textures.getRedJumpTextures(),
                                                                 textures.getRedStandingTextures());
-
     std::shared_ptr<CupHeadM> cupM2 = std::make_shared<CupHeadM>(500, 500, 800, 800);
     std::shared_ptr<CupHeadV> cupV2 = std::make_shared<CupHeadV>(cupM2, textures.getRedRunTextures(),
                                                                 textures.getRedJumpTextures(),
@@ -28,12 +22,6 @@ int main()
     bool inPlatform2 = false;
     sf::Clock clock, clock2;
     window.setFramerateLimit(60);
-
-
-
-
-
-    // Función para actualizar y dibujar el primer cuphead en un thread
     auto updateAndDrawCuphead1 = [&]() {
         while (window.isOpen())
         {
@@ -41,7 +29,6 @@ int main()
             {
                 inPlatform1 = false;
             }
-            // Verificar si el cuadrado ha llegado al piso
             if (cupM->getPosY() >= 700)
             {
                 inPlatform1 = true;
@@ -55,8 +42,6 @@ int main()
             cupV->update();
         }
     };
-
-    // Función para actualizar y dibujar el segundo cuphead en otro thread
     auto updateAndDrawCuphead2 = [&]() {
         while (window.isOpen())
         {
@@ -82,6 +67,8 @@ int main()
     // Iniciar los threads para los cupheads
     std::thread threadCuphead1(updateAndDrawCuphead1);
     std::thread threadCuphead2(updateAndDrawCuphead2);
+    std::shared_ptr<FlyingFistM> fistM = std::make_shared<FlyingFistM>(1280,720,1);
+    std::shared_ptr<FlyingFistV> fistV = std::make_shared<FlyingFistV>(fistM,textures.getFistTextures());
 
     while (window.isOpen())
     {
@@ -92,9 +79,12 @@ int main()
                 window.close();
         }
 
+        fistM->update(clock2.getElapsedTime().asSeconds());
+        fistV->update();
         window.clear();
         cupV->draw(window);
         cupV2->draw(window);
+        fistV->draw(window);
         window.display();
     }
 

@@ -242,7 +242,7 @@ public:
         }
     }
     void ejecutar() {
-        while (vista.window.isOpen()) {
+        while (vista.getWindow().isOpen()) {
             colisiones();
             manejarEventos();
             renderizar();
