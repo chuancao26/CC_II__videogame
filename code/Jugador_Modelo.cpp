@@ -94,13 +94,14 @@ void Cup::enChoque(const bool& t)
 {
     choque = t;
     herido = t;
-    if (choque && !isInvunerable)
-    {
-        std::cout << "-1 vida y vidas " << vidas << std::endl;
-        --vidas; 
-        //start = elapsedTime;
-        //isInvunerable = true;
-    }
+    std::cout << "Choco" << std::endl;
+
+    // if (choque && !isInvunerable)
+    // {
+    //     --vidas; 
+    //     //start = elapsedTime;
+    //     //isInvunerable = true;
+    // }
     /*if (elapsedTime - start > 2.0f)
     {
         isInvunerable = false;

@@ -180,11 +180,11 @@ public:
             }
         }
     }
-    void colisionesMounstruos()
-    {
-        modelo.jugador1.enChoque(vista.colisiones1Bee(modelo.jugador1));
-        modelo.jugador2.enChoque(vista.colisiones1Bee(modelo.jugador2));
-    }
+    // void colisionesMounstruos()
+    // {
+    //     modelo.jugador1.enChoque(vista.colisiones1Bee(modelo.jugador1));
+    //     modelo.jugador2.enChoque(vista.colisiones2Bee(modelo.jugador2));
+    // }
     void mover_plataformas() {
         float delta = vista.clock.restart().asSeconds();
         for(int i=0;i<modelo.map->size;i++)
@@ -251,7 +251,7 @@ public:
     void ejecutar() {
         while (vista.window.isOpen()) {
             colisiones();
-            colisionesMounstruos();
+            // colisionesMounstruos();
             manejarEventos();
             renderizar();
         }  

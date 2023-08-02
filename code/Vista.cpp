@@ -18,7 +18,6 @@ public:
     JugadorVista jugador_v;
     JugadorVista jugador_v2;
     float width,height;
-    sf::Time tiempoAcumulado;
     VistaBee vistaBee;
     VistaFlor vistaFlor;
     ElegirPlayer elegir;
@@ -32,7 +31,6 @@ public:
     {
         width = window.getSize().x;
         height = window.getSize().y;  
-        tiempoAcumulado = sf::Time::Zero;
     }
     float getGameTime()
     {
@@ -84,17 +82,17 @@ public:
     }
     void loadBeeView(Cup& player1,Cup& player2)
     {
-        vistaBee.handleInput(player1,player2, getGameTime(), jugador_v.cupShape, jugador_v2.cupShape);
+        vistaBee.handleInput(player1, player2, getGameTime(),jugador_v.cupShape, jugador_v2.cupShape);
         vistaBee.render();
     }
-    bool colisiones1Bee(Cup& player1)
-    {
-        return vistaBee.colisionesPlayer1Bee(player1);
-    }
-    bool colisiones2Bee(Cup& player1)
-    {
-        return vistaBee.colisionesPlayer2Bee(player1);
-    }
+    // bool colisiones1Bee(Cup& player1)
+    // {
+    //     return vistaBee.colisionesPlayer1Bee(player1);
+    // }
+    // bool colisiones2Bee(Cup& player1)
+    // {
+    //     return vistaBee.colisionesPlayer2Bee(player1);
+    // }
     void loadFlorView(sf::RenderWindow& win,const Cup& player1, const Cup& player2)
     {
         vistaFlor.handleInput(win,player1,player2,jugador_v.cupShape, jugador_v2.cupShape);
