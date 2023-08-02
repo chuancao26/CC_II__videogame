@@ -32,6 +32,10 @@ public:
             view.draw(window, model.getAngle());
         }
     }
+    sf::Sprite& getSprite()
+    {
+        return view.getSprite(); 
+    }
 };
 
 #endif

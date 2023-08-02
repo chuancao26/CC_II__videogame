@@ -141,8 +141,7 @@ public:
             modelo.crearplataformas(nivel);
             vista.background.cargar(vista.window, nivel);
             vista.background.draw1(vista.window);
-            vista.dibujarCup(modelo.jugador1,modelo.jugador2);
-            vista.loadFlorView(vista.window);
+            vista.loadFlorView(vista.window,modelo.jugador1,modelo.jugador2);
             dibujar_Balas_Jugador1();
             dibujar_Balas_Jugador2();
             break;

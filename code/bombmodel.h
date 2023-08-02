@@ -62,7 +62,9 @@ public:
     float getSize() const {
         return size;
     }
-
+    void Eliminado(bool T){
+        eliminado=T;
+    }
     bool isEliminado() const {
         return eliminado;
     }
