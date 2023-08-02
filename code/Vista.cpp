@@ -24,8 +24,8 @@ public:
     ElegirPlayer elegir;
     Background background;
     sf::Clock clock, gameTime, clock5;
-    BalaNormal bala;
 
+    
 public:
     Vista(const int& xedge, const int& yedge) : width(xedge), height(yedge), window(sf::VideoMode(xedge, yedge), "CUPHEAD!")
     , vistaBee(window), vistaFlor(window)
@@ -33,7 +33,6 @@ public:
         width = window.getSize().x;
         height = window.getSize().y;  
         tiempoAcumulado = sf::Time::Zero;
-
     }
     float getGameTime()
     {
@@ -83,7 +82,7 @@ public:
     void actualizar_Plataformas() {
         
     }
-    void loadBeeView(const Cup& player1, const Cup& player2)
+    void loadBeeView(Cup& player1, Cup& player2)
     {
         vistaBee.handleInput(player1,player2, getGameTime(), jugador_v.cupShape, jugador_v2.cupShape);
         vistaBee.render();
@@ -100,12 +99,7 @@ public:
         sf::FloatRect plataformaBounds(platform.x, platform.y, platform.width,platform.height);
         return jugadorBounds.intersects(plataformaBounds);
     }
-    bool ataque(BalaNormal& balaNormal){
-        float limite=vistaFlor.getlimX();
-        sf::FloatRect balaBounds(balaNormal.getPosx(), balaNormal.getPosy(), balaNormal.getSize(), balaNormal.getSize());
-        sf::FloatRect bordesBounds(limite,0,width, height);
-        return balaBounds.intersects(bordesBounds);
-    }
+
     bool ventanaAbierta() {
         return window.isOpen();
     }

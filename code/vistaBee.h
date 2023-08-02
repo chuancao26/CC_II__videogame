@@ -11,18 +11,20 @@
 #include "MisilBee.h"
 #include "Textures.h"
 #include "Jugador_Modelo.h"
+#include "FlyingFist.h"
 class VistaBee
 {
 private:
-    Cup cup1;
-    Cup cup2;
     Textures textures;
+    std::vector<std::shared_ptr<FlyingFistM>> fistsM;
+    std::vector<std::shared_ptr<FlyingFistV>> fistsV;
 
     std::vector<std::shared_ptr<MisilM>> misilesM;
     std::vector<std::shared_ptr<MisilV>> misilesV;
 
     std::shared_ptr<PoliceM> policeM;
     std::shared_ptr<PoliceV> policeV;
+
     std::vector<std::shared_ptr<TrianguloM>> triangulosM;    
     std::vector<std::shared_ptr<TrianguloV>> triangulosV;    
     
@@ -31,7 +33,8 @@ private:
 
     sf::FloatRect jugadorBounds1;
     sf::FloatRect jugadorBounds2;
-    bool activeWorker, activeTriangle, activeMisil, cupLeft;
+
+    bool activeWorker, activeTriangle, activeMisil, cupLeft, activeFist;
     float rate;
     sf::RenderWindow& window;
     sf::Clock clock;
@@ -39,11 +42,12 @@ private:
     int xBorder, yBorder, cutPix;
     std::mt19937 generator;
     std::uniform_int_distribution<int> distributionY;
+
 public:
     // constructor
     VistaBee(sf::RenderWindow& window_):
     xBorder(1280), yBorder(720), activeWorker(false), activeTriangle(false), rate(0.0f), window(window_)
-    , cupLeft(false), cutPix(10)
+    , cupLeft(false), cutPix(10), activeFist(false)
     {
         std::random_device rd;
         generator.seed(rd());
@@ -57,25 +61,25 @@ public:
     {
         drawEntitys();
     }
-    void handleInput(const Cup& cup1_, const Cup& cup2_,const float& gameTime_,
+    void handleInput(Cup& cup1_, Cup& cup2_,const float& gameTime_,
                      const sf::Sprite& player, const sf::Sprite& player2) 
     {
-        cup1 = cup1_;
-        cup2 = cup2_;
         jugadorBounds1 = player.getGlobalBounds();
         jugadorBounds2 = player2.getGlobalBounds();
-        update();
+        update(cup1_);
         gameTime = gameTime_;
+        colisionesPlayer1Bee(cup1_);
+        colisionesPlayer2Bee(cup2_);
     }
-    void update()
+    void update(Cup& cup1_)
     {
         updatePolice();
         updateTriangle();
         updateWorker();
         updateMisil();
-        updatePositionsCup();
-        colisionesPlayer1Bee();
-        colisionesPlayer2Bee();
+        updateFist();
+        updatePositionsCup(cup1_);
+
     }
     bool isOpen()
     {
@@ -103,7 +107,7 @@ public:
     }
     void updateWorker()
     {     
-        if (gameTime < 10)
+        if (gameTime <= 30)
         { 
             if (cupLeft)
             {
@@ -152,7 +156,7 @@ public:
     }
     void drawWorker()
     {
-        if (gameTime < 60 && activeWorker)
+        if (gameTime < 30 && activeWorker)
         {
             workerBeeV -> draw(window);
         }
@@ -265,14 +269,47 @@ public:
             }
         }
     }
+    void updateFist()
+    {
+        if (!activeFist)
+        {
+            fistsM.push_back(std::make_shared<FlyingFistM>(xBorder, yBorder, 1));
+            fistsM.push_back(std::make_shared<FlyingFistM>(xBorder, yBorder, 2));
+            fistsM.push_back(std::make_shared<FlyingFistM>(xBorder, yBorder, 1));
+            for (size_t i{0}; i < fistsM.size(); ++i)
+            {
+                fistsV.push_back(std::make_shared<FlyingFistV>(fistsM[i], textures.getFistTextures()));
+            }
+            activeFist = true;
+        }
+        else
+        {
+            for (size_t i{0}; i < fistsM.size(); ++i)
+            {
+                fistsM[i]->update(gameTime);
+                fistsV[i]->update();
+            }
+        }
+    }
+    void drawFist()
+    {
+        if(activeFist)
+        {
+            for (size_t i{0}; i < fistsM.size(); ++i)
+            {
+                fistsV[i]->draw(window);
+            }
+        }
+    }
     void drawEntitys()
     {
         drawPolice();
         drawWorker();
         drawTriangle();
         drawMisil();
+        drawFist();
     }
-    void updatePositionsCup()
+    void updatePositionsCup(Cup& cup1)
     {
         if (cup1.getPosx() < xBorder / 2)
         {
@@ -283,7 +320,7 @@ public:
             cupLeft = false;
         }
     }
-    void colisionesPlayer1Bee()
+    void colisionesPlayer1Bee(Cup& cup1)
     {
         //worker 
         if(activeWorker)
@@ -336,9 +373,19 @@ public:
             }
             
         }
+        if (activeFist)
+        {
+            for (size_t i{0};i < fistsV.size(); ++i)
+            {   
+                sf::FloatRect entityBounds(fistsV[i]->getSprite().getPosition(),
+                            sf::Vector2f(fistsV[i]->getSprite().getGlobalBounds().width - cutPix,
+                            fistsV[i]->getSprite().getGlobalBounds().height - cutPix));
+                cup1.enChoque(jugadorBounds1.intersects(entityBounds));    
+            }
+        }
         
     }
-    void colisionesPlayer2Bee()
+    void colisionesPlayer2Bee(Cup& cup2)
     {
         //worker 
         if(activeWorker)
@@ -357,7 +404,6 @@ public:
                             sf::Vector2f(triangulosV[i]->getSprite().getGlobalBounds().width - cutPix,
                             triangulosV[i]->getSprite().getGlobalBounds().height - cutPix));
                 cup2.enChoque(jugadorBounds2.intersects(entityBounds)); 
-                std::cout << triangulosV[i]->getSprite().getGlobalBounds().width - cutPix << std::endl;
             }
         }
         //misil
@@ -391,6 +437,16 @@ public:
                         cup2.enChoque(jugadorBounds2.intersects(entityBounds)); 
                     }
                 }
+            }
+        }
+        if (activeFist)
+        {
+            for (size_t i{0};i < fistsV.size(); ++i)
+            {   
+                sf::FloatRect entityBounds(fistsV[i]->getSprite().getPosition(),
+                            sf::Vector2f(fistsV[i]->getSprite().getGlobalBounds().width - cutPix,
+                            fistsV[i]->getSprite().getGlobalBounds().height - cutPix));
+                cup2.enChoque(jugadorBounds2.intersects(entityBounds));    
             }
         }
 

@@ -21,7 +21,7 @@ class Disparo {
         }
 };
 
-class DisparoNormal : public Disparo { 
+class DisparoNormal : public Disparo {
     public:
         void disparar(const float& x,const float& y) override {
             size = 1;

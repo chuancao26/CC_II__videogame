@@ -2,7 +2,7 @@
 #define BALABOMBA_VISTA_H
 #include <SFML/Graphics.hpp>
 #include "Bala.cpp"
-
+#include <iostream>
 class BalaBombaVista
 {
     public:
@@ -25,9 +25,7 @@ class BalaBombaVista
             posy=bal.getPosy();
         }
 
-        float getPosX(){
-            return posx;
-        }
+        
         void setPosition(float x, float y) 
         {
             balaShape.setPosition(x, y);

@@ -18,12 +18,14 @@ class Textures
         std::vector<std::shared_ptr<sf::Texture>> redJump;
         std::vector<std::shared_ptr<sf::Texture>> blueJump;
         std::vector<std::shared_ptr<sf::Texture>> redStanding;
+        std::vector<std::shared_ptr<sf::Texture>> fist;
 
         int cantWB, cantPolice, cantMisil, cantTriangle, cantEspinas, cantBomb,
-            cantRedRun, cantRedJump, cantBlueJump, cantBlueRun, cantRedStanding;
+            cantRedRun, cantRedJump, cantBlueJump, cantBlueRun, cantRedStanding,
+            cantFist;
     public:
     Textures():cantWB(6), cantMisil(10), cantPolice(6), cantTriangle(5), cantEspinas(7), cantBomb(4),
-    cantBlueRun(7), cantRedRun(7), cantRedJump(5), cantBlueJump(5), cantRedStanding(5)
+    cantBlueRun(7), cantRedRun(7), cantRedJump(5), cantBlueJump(5), cantRedStanding(5), cantFist(7)
     {
         loadTextures();
     }
@@ -135,6 +137,17 @@ class Textures
             if(!redStanding[i - 1]->loadFromFile(filename))
                 std::cout << "Problemas para cargar la imagen" << std::endl;
         }
+        fist.reserve(cantFist);
+        for (size_t i{1}; i < cantFist; ++i)
+        {
+            fist.push_back(std::make_shared<sf::Texture>());
+            std::string tmp = (i < 10 ? "0" : "");
+            std::string filename = "img/nivel_Bee/FlyingFist/bee_bullet_punch_00" + tmp + std::to_string(i) + ".png";
+            
+            if(!fist[i - 1]->loadFromFile(filename))
+                std::cout << "Problemas para cargar la imagen" << std::endl;
+        }
+
     }
     std::vector<std::shared_ptr<sf::Texture>> getTriangleTextures()
     {
@@ -179,6 +192,10 @@ class Textures
     std::vector<std::shared_ptr<sf::Texture>> getRedStandingTextures()
     {
         return redStanding;
+    }
+    std::vector<std::shared_ptr<sf::Texture>> getFistTextures()
+    {
+        return fist;
     }
     
 
