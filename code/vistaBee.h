@@ -15,8 +15,6 @@
 class VistaBee
 {
 private:
-    Cup cup1;
-    Cup cup2;
     Textures textures;
 
     std::vector<std::shared_ptr<FlyingFistM>> fistsM;
@@ -62,26 +60,25 @@ public:
     {
         drawEntitys();
     }
-    void handleInput(const Cup& cup1_, const Cup& cup2_,const float& gameTime_,
+    void handleInput(Cup& cup1_, Cup& cup2_,const float& gameTime_,
                      const sf::Sprite& player, const sf::Sprite& player2) 
     {
-        cup1 = cup1_;
-        cup2 = cup2_;
         jugadorBounds1 = player.getGlobalBounds();
         jugadorBounds2 = player2.getGlobalBounds();
-        update();
+        update(cup1_);
         gameTime = gameTime_;
+        colisionesPlayer1Bee(cup1_);
+        colisionesPlayer2Bee(cup2_);
     }
-    void update()
+    void update(Cup& cup1_)
     {
         updatePolice();
         updateTriangle();
         updateWorker();
         updateMisil();
         updateFist();
-        updatePositionsCup();
-        colisionesPlayer1Bee();
-        colisionesPlayer2Bee();
+        updatePositionsCup(cup1_);
+
     }
     bool isOpen()
     {
@@ -311,7 +308,7 @@ public:
         drawMisil();
         drawFist();
     }
-    void updatePositionsCup()
+    void updatePositionsCup(Cup& cup1)
     {
         if (cup1.getPosx() < xBorder / 2)
         {
@@ -322,7 +319,7 @@ public:
             cupLeft = false;
         }
     }
-    void colisionesPlayer1Bee()
+    void colisionesPlayer1Bee(Cup& cup1)
     {
         //worker 
         if(activeWorker)
@@ -375,9 +372,19 @@ public:
             }
             
         }
+        if (activeFist)
+        {
+            for (size_t i{0};i < fistsV.size(); ++i)
+            {   
+                sf::FloatRect entityBounds(fistsV[i]->getSprite().getPosition(),
+                            sf::Vector2f(fistsV[i]->getSprite().getGlobalBounds().width - cutPix,
+                            fistsV[i]->getSprite().getGlobalBounds().height - cutPix));
+                cup1.enChoque(jugadorBounds1.intersects(entityBounds));    
+            }
+        }
         
     }
-    void colisionesPlayer2Bee()
+    void colisionesPlayer2Bee(Cup& cup2)
     {
         //worker 
         if(activeWorker)
@@ -429,6 +436,16 @@ public:
                         cup2.enChoque(jugadorBounds2.intersects(entityBounds)); 
                     }
                 }
+            }
+        }
+        if (activeFist)
+        {
+            for (size_t i{0};i < fistsV.size(); ++i)
+            {   
+                sf::FloatRect entityBounds(fistsV[i]->getSprite().getPosition(),
+                            sf::Vector2f(fistsV[i]->getSprite().getGlobalBounds().width - cutPix,
+                            fistsV[i]->getSprite().getGlobalBounds().height - cutPix));
+                cup2.enChoque(jugadorBounds2.intersects(entityBounds));    
             }
         }
 

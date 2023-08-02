@@ -22,9 +22,9 @@ public:
     {
         std::random_device rd;
         generator.seed(rd());
-        genNum = std::uniform_int_distribution<int>(100,xBorder);
+        genNum = std::uniform_int_distribution<int>(0,xBorder);
         positionX = static_cast<float>(genNum(generator));
-        rotationGen = std::uniform_int_distribution<int>(300,xBorder);
+        rotationGen = std::uniform_int_distribution<int>(300,600);
         rotationSize = static_cast<int>(rotationGen(generator));
         (type == 1) ? posx = positionX - cos(angle) * rotationSize : posx = positionX + cos(angle) * rotationSize;
         

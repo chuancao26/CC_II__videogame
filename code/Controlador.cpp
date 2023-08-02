@@ -14,7 +14,6 @@ private:
     bool elegidos;
     float elapsedTime;
     float clock5, clock;
-    //float clock,clock2,clock5;
     int nivel,j1,j2;
     vector<int> jugadores;
 
