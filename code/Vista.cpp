@@ -95,7 +95,7 @@ public:
     {
         return vistaBee.colisionesPlayer2Bee(player1);
     }
-    void loadFlorView(sf::RenderWindow& win,const Cup& player1, const Cup& player2)
+    void loadFlorView(sf::RenderWindow& win,Cup& player1, Cup& player2)
     {
         vistaFlor.handleInput(win,player1,player2,jugador_v.cupShape, jugador_v2.cupShape);
         vistaFlor.render(win);
