@@ -31,7 +31,7 @@ El repositorio se organiza en cuatro ramas principales:
 - **Arleen**: Rama de desarrollo propiedad de Arleen Maritza Ferro Vásquez.
 - **cdho**: Rama de desarrollo propiedad de Cristhian David Huanca Olazabal.
 - **jazz**: Rama de desarrollo propiedad de Jazmin Gabriela Perez Villasante.
-- 
+  
 ## Requisitos y Dependencias
 
 Para poder ejecutar y trabajar en el proyecto, asegúrate de tener las siguientes dependencias instaladas:
