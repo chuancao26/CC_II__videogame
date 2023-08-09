@@ -69,6 +69,11 @@
         "condition_variable": "cpp",
         "queue": "cpp",
         "ranges": "cpp",
-        "span": "cpp"
+        "span": "cpp",
+        "functional": "cpp",
+        "future": "cpp",
+        "list": "cpp",
+        "unordered_map": "cpp",
+        "xhash": "cpp"
     }
 }
