@@ -42,5 +42,9 @@ public:
         sprite.setPosition(x, y);
         window.draw(sprite);
     }
+    sf::Sprite& getSprite()
+    {
+        return sprite; 
+    }
 };
 #endif

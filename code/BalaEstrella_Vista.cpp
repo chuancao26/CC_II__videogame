@@ -2,7 +2,7 @@
 #define BALAESTRELLA_VISTA_H
 #include <SFML/Graphics.hpp>
 #include "Bala.cpp"
-
+#include <iostream>
 class BalaEstrellaVista
 {
     public:

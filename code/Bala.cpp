@@ -2,7 +2,7 @@
 #define BALA_MODELO_H
 class Bala {
     public:
-        Bala():size(60.0f){};
+        Bala():size(60.0f), height(720), width(1280){};
         virtual void setPosx(float px)
         {
             posx=px;
@@ -27,14 +27,18 @@ class Bala {
         {
             return size;
         }
+        bool isExpired()
+        {
+            return (posx >= width) ? true:false;
+        }
         virtual void mover() = 0;
         virtual void mover(float px, float py) {
         setPosx(getPosx() + px);
         setPosy(getPosy() - py);
     }
-        
     private:
         float posx,posy,direccion,size;
+        int height, width;
 };
 
 class BalaNormal : public Bala {

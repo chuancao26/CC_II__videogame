@@ -3,9 +3,9 @@
 using namespace std;
 using namespace sf;
 
-int main() {
+int main() 
+{
     Controlador controlador;
     controlador.ejecutar();
-    
     return 0;
 }

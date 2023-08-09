@@ -12,8 +12,9 @@
         "code/main.cpp",
         ";",
         "g++",
-        "main.o",
         // "${fileBasenameNoExtension}.o",
+
+        "main.o",
         "-o",
         // "${fileBasenameNoExtension}",
         "main",

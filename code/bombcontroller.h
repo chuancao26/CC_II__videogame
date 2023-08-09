@@ -8,52 +8,55 @@
 
 class BombController {
 private:
-    std::vector<BombModel> bombs;
+    BombModel bombs;
     BombView cuadradoView;
     bool Eliminar;
 public:
-    BombController(float ventanaAncho, float ventanaAlto) : bombs(1), cuadradoView(){
-        for (int i = 0; i < 1; i++) {
-                float posicionX = static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX) / (ventanaAncho * 3 / 5));
-                bombs[i] = BombModel(ventanaAncho, ventanaAlto);
-                bombs[i].setX(posicionX);
-                bombs[i].caer();
-        }
+    BombController(float ventanaAncho, float ventanaAlto) : bombs(),cuadradoView(),Eliminar(false){
+        float posicionX = static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX) / (ventanaAncho * 3 / 5));
+        bombs = BombModel(ventanaAncho, ventanaAlto);
+        bombs.setX(posicionX);
+        bombs.caer();
+
     }
 
-    void update() {
-        for (auto& bomb : bombs) {
-            bomb.caer();
-        }
+    void update() { 
+
+        bombs.caer();
+
     }
 
 
     void draw(sf::RenderWindow& window) {
-        for (const auto& cuadrado : bombs) {
-            if (!cuadrado.isEliminado()) {
-                cuadradoView.setSize(cuadrado.getSize());
-                cuadradoView.setPosition(cuadrado.getX(), cuadrado.getY());
 
-                if (cuadrado.llegoMaximo) {
+            if (!bombs.isEliminado()) {
+                cuadradoView.setSize(bombs.getSize());
+                cuadradoView.setPosition(bombs.getX(), bombs.getY());
+
+                if (bombs.llegoMaximo) {
                     cuadradoView.setTexturePiso();
                 } else {
                     cuadradoView.setTextureCae();
                 }
 
                 cuadradoView.draw(window);
-                bool Eliminar=false;
+                //Eliminar=false;
+                bombs.Eliminado(false);
             }
-            else if (!cuadrado.isEliminado()){
-                Eliminar=true;
+            else {
+                bombs.Eliminado(true);
             }
-        }
+        
     }
     
     bool Eliminado(){
 
-        return Eliminar;
+        return bombs.isEliminado();
     }
-    
+    sf::Sprite& getSprite()
+    {
+        return cuadradoView.getSprite(); 
+    }
 
 };
 #endif

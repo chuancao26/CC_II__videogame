@@ -28,6 +28,10 @@ public:
         sprite.setRotation(angle);
         window.draw(sprite);
     }
+    sf::Sprite& getSprite()
+    {
+        return sprite; 
+    }
 };
 
 #endif

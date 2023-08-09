@@ -24,6 +24,9 @@ public:
     ElegirPlayer elegir;
     Background background;
     sf::Clock clock, gameTime, clock5;
+    sf::Sprite buttonMenu;
+    sf::Texture textura,textura2;
+    sf::Sprite buttonSiguiente;
 
     
 public:
@@ -33,6 +36,14 @@ public:
         width = window.getSize().x;
         height = window.getSize().y;  
         tiempoAcumulado = sf::Time::Zero;
+        if (!textura.loadFromFile("img/menu/botonMenu.png")) {
+                cout << "Error al cargar la imagen botonMenu.png" <<endl;
+            }
+        buttonMenu.setTexture(textura);
+        if (!textura2.loadFromFile("img/menu/botonSiguiente.png")) {
+                cout << "Error al cargar la imagen botonSiguiente.png" <<endl;
+            }
+        buttonSiguiente.setTexture(textura2);
     }
     float getGameTime()
     {
@@ -63,7 +74,7 @@ public:
        
        BalaNormalVista bal(bala);
        bal.setPosition(bala.getPosx(), bala.getPosy());
-       window.draw(bal.get());
+       window.draw(bal.getSprite());
     }
 
     void dibujarBalasBombas(BalaBomba& bala) {
@@ -79,16 +90,36 @@ public:
        window.draw(bal.get());
     }
 
+    void dibujarBotones(int n)
+    {   
+        buttonMenu.setPosition(1177,620);
+        buttonSiguiente.setPosition(1228,620);
+        window.draw(buttonMenu);
+        if(n==1)
+        {
+            window.draw(buttonSiguiente);
+        }
+    }
+
     void actualizar_Plataformas() {
         
     }
-    void loadBeeView(const Cup& player1, const Cup& player2)
+    void loadBeeView(Cup& player1,Cup& player2)
     {
         vistaBee.handleInput(player1,player2, getGameTime(), jugador_v.cupShape, jugador_v2.cupShape);
         vistaBee.render();
     }
-    void loadFlorView(sf::RenderWindow& win)
+    bool colisiones1Bee(Cup& player1)
     {
+        return vistaBee.colisionesPlayer1Bee(player1);
+    }
+    bool colisiones2Bee(Cup& player1)
+    {
+        return vistaBee.colisionesPlayer2Bee(player1);
+    }
+    void loadFlorView(sf::RenderWindow& win,Cup& player1, Cup& player2)
+    {
+        vistaFlor.handleInput(win,player1,player2,jugador_v.cupShape, jugador_v2.cupShape);
         vistaFlor.render(win);
     }
     
@@ -103,66 +134,79 @@ public:
         return window.isOpen();
     }
 
-    int procesarEventos(std::vector<FloatPtr>& Posicion) {
+    int procesarEventosPlayer1() {
+        sf::Event event;
+        if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+            
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+                    return 1;
+                }
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+                    return 2;
+                }
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+                    return 3;
+                }
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+                    return 4;
+                }
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+                    return 5;
+                }
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
+                    return 6;
+                }
+                
+                else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Right) ) {
+                    return 12;
+                }
+                else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+                    return 13;
+                }
+                
+            
+        
+        return 0;
+    }
+    int procesarEventosPlayer2() {
+        sf::Event event;
+        if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+            
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+                    return 7;
+                }
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+                    return 8;
+                }
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+                    return 9;
+                }
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+                    return 10;
+                }
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+                    return 11;
+                }
+            
+                else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+                    return 14;
+                }
+                else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+                    return 15;
+                }
+    
+        return 0;
+    }
+    
+    int procesarEventosMouse(std::vector<FloatPtr>& Posicion) {
         sf::Event event;
         if (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 window.close();
-            }
-            
-            else if (event.type == sf::Event::KeyPressed) {
-                // Manejar teclas presionadas para el jugador 1
-                if (event.key.code == sf::Keyboard::Up) {
-                    //Acciones.push_back(std::make_shared<std::string>("Up"));
-                    return 1;
-                }
-                else if (event.key.code == sf::Keyboard::Left) {
-                    return 2;
-                }
-                else if (event.key.code == sf::Keyboard::Right) {
-                    return 3;
-                }
-                else if (event.key.code == sf::Keyboard::Down) {
-                    return 4;
-                }
-                else if (event.key.code == sf::Keyboard::Space) {
-                    return 5;
-                }
-                else if (event.key.code == sf::Keyboard::X) {
-                    return 6;
-                }
-                // Manejar teclas presionadas para el jugador 2
-                if (event.key.code == sf::Keyboard::W) {
-                    return 7;
-                }
-                else if (event.key.code == sf::Keyboard::A) {
-                    return 8;
-                }
-                else if (event.key.code == sf::Keyboard::D) {
-                    return 9;
-                }
-                else if (event.key.code == sf::Keyboard::S) {
-                    return 10;
-                }
-                else if (event.key.code == sf::Keyboard::Z) {
-                    return 11;
-                }
-            }
-            else if (event.type == sf::Event::KeyReleased) {
-                // Manejar teclas liberadas para el jugador 1
-                if (event.key.code == sf::Keyboard::Left || event.key.code == sf::Keyboard::Right) {
-                    return 12;
-                }
-                if (event.key.code == sf::Keyboard::Up) {
-                    return 13;
-                }
-                // Manejar teclas liberadas para el jugador 2
-                if (event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::D) {
-                    return 14;
-                }
-                if (event.key.code == sf::Keyboard::W) {
-                    return 15;
-                }
             }
             else if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.mouseButton.button == sf::Mouse::Left) {

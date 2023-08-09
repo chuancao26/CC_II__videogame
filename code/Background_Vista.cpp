@@ -22,13 +22,13 @@ public:
             }
             break;
         case 3:
-            if (!texture_.loadFromFile("img/menu/menuGano.png")) {
-                std::cout<<"Error al cargar la imagen menuGano.png"<<std::endl;
+            if (!texture_.loadFromFile("img/menu/menuTutorial.png")) {
+                std::cout<<"Error al cargar la imagen menuTutorial.png"<<std::endl;
             }
             break;
         case 4:
-            if(!texture_.loadFromFile("img/menu/menuPerdio.png")) {
-            std::cout<<"Error al cargar la imagen menuPerdio.png"<<std::endl;
+            if(!texture_.loadFromFile("img/menu/menuElegir.png")) {
+            std::cout<<"Error al cargar la imagen menuElegir.png"<<std::endl;
             }
             break;
         }

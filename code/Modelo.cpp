@@ -7,16 +7,18 @@
 class Modelo
 {
     public:
-    Cup jugador1;
-    Cup jugador2;
+    Cup* jugador1;
+    Cup* jugador2;
     Mapa* map;
     Plataforma pla;
     DisparoNormal d_normal;
     DisparoBomba d_bomba;
     DisparoEstrella d_estrella;
 
-    Modelo():jugador1(20,100,80), jugador2(200,100,80)
+    Modelo()
     {
+        jugador1= new Cup(20,100,80);
+        jugador2= new Cup(200,100,80);
         map= new Mapa();
     }
     void crearMapa(int tipo)
@@ -91,4 +93,18 @@ class Modelo
         }
         
     }
+    void eliminarJugadores() {
+        delete jugador1;
+        delete jugador2;
+
+        jugador1 = new Cup(20, 100, 80);
+        jugador2 = new Cup(200, 100, 80);
+
+    }
+    ~Modelo()
+    {
+        delete jugador1;
+        delete jugador2;
+    }
+
 };
