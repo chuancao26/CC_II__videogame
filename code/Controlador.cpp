@@ -137,11 +137,14 @@ public:
             vista.loadBeeView(modelo.jugador1,modelo.jugador2);
             break;
         case 2:
+            modelo.jugador1.update(vista.getGameTime());
+            modelo.jugador2.update(vista.getGameTime());
             modelo.limpiarPlataformas();
-            modelo.crearplataformas(nivel);
             vista.background.cargar(vista.window, nivel);
             vista.background.draw1(vista.window);
+            vista.dibujarCup(modelo.jugador1,modelo.jugador2);
             vista.loadFlorView(vista.window,modelo.jugador1,modelo.jugador2);
+            modelo.crearplataformas(nivel);
             dibujar_Balas_Jugador1();
             dibujar_Balas_Jugador2();
             break;
