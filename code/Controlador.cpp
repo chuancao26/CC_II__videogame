@@ -194,6 +194,8 @@ public:
                 vista.dibujarBotones(nivel);
                 vista.dibujarCup(*modelo.jugador1,*modelo.jugador2);
                 vista.loadBeeView(*modelo.jugador1,*modelo.jugador2);
+                vista.drawTimeBee();
+                vista.restartClock2();
                 break;
             case 2:
                 modelo.jugador1->update(vista.getGameTime());
@@ -207,6 +209,8 @@ public:
                 modelo.crearplataformas(nivel);
                 dibujar_Balas_Jugador1();
                 dibujar_Balas_Jugador2();
+                vista.drawTimeFlower();
+                vista.restartClock1();
                 break;
             case 3:
                 vista.background.cargar(vista.window, nivel);

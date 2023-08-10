@@ -22,17 +22,29 @@ public:
     VistaBee vistaBee;
     VistaFlor vistaFlor;
     ElegirPlayer elegir;
-    Background background;
-    sf::Clock clock, gameTime, clock5;
+    Background background; 
+    sf::Clock clock, gameTime, clock5, clockLevel2, clockLevel1;
     sf::Sprite buttonMenu;
     sf::Texture textura,textura2;
     sf::Sprite buttonSiguiente;
+    sf::Text time;
+    sf::Font font;
+    bool level2, level3;
 
     
 public:
     Vista(const int& xedge, const int& yedge) : width(xedge), height(yedge), window(sf::VideoMode(xedge, yedge), "CUPHEAD!")
     , vistaBee(window), vistaFlor(window)
     {
+        if (!font.loadFromFile("font/MadnessHyperactive.otf")) 
+        {
+            std::cout << "error" << std::endl; 
+        }
+        time.setFont(font);
+        time.setCharacterSize(64);
+        time.setFillColor(sf::Color::White);
+        time.setPosition(1280 / 2 - 64, 5); // Posición en la parte inferior izquierda
+
         width = window.getSize().x;
         height = window.getSize().y;  
         tiempoAcumulado = sf::Time::Zero;
@@ -44,6 +56,48 @@ public:
                 cout << "Error al cargar la imagen botonSiguiente.png" <<endl;
             }
         buttonSiguiente.setTexture(textura2);
+    }
+    void drawTimeBee()
+    {
+        if (!level2)
+        {
+            clockLevel1.restart();
+            level2 = true;
+        }
+        if (level2)
+        {
+            sf::Time elapsedTime = clockLevel1.getElapsedTime();
+            int seconds = elapsedTime.asSeconds();
+            int minutes = seconds / 60;
+            seconds %= 60;
+            time.setString(std::to_string(minutes) + ":" + (seconds < 10 ? "0" : "") + std::to_string(seconds));
+            window.draw(time);
+        }   
+    }
+    void restartClock1()
+    {
+        clockLevel1.restart();
+    }
+    void restartClock2()
+    {
+        clockLevel2.restart();
+    }
+    void drawTimeFlower()
+    {
+        if (!level3)
+        {
+            clockLevel2.restart();
+            level3 = true;
+        }
+        if (level2)
+        {
+            sf::Time elapsedTime = clockLevel2.getElapsedTime();
+            int seconds = elapsedTime.asSeconds();
+            int minutes = seconds / 60;
+            seconds %= 60;
+            time.setString(std::to_string(minutes) + ":" + (seconds < 10 ? "0" : "") + std::to_string(seconds));
+            window.draw(time);
+        } 
     }
     float getGameTime()
     {
@@ -106,7 +160,7 @@ public:
     }
     void loadBeeView(Cup& player1,Cup& player2)
     {
-        vistaBee.handleInput(player1,player2, getGameTime(), jugador_v.cupShape, jugador_v2.cupShape);
+        vistaBee.handleInput(player1,player2, clockLevel1.getElapsedTime().asSeconds(), jugador_v.cupShape, jugador_v2.cupShape);
         vistaBee.render();
     }
     bool colisiones1Bee(Cup& player1)
