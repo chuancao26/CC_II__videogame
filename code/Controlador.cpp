@@ -18,7 +18,6 @@ private:
     //float clock,clock2,clock5;
     int nivel,j1,j2;
     vector<int> jugadores;
-    std::mutex modeloMutex;
 
 public:
     Controlador()
@@ -135,6 +134,7 @@ public:
             dibujarPlataformas();
             vista.dibujarCup(modelo.jugador1,modelo.jugador2);
             vista.loadBeeView(modelo.jugador1,modelo.jugador2);
+            vista.drawTimeBee();
             break;
         case 2:
             modelo.jugador1.update(vista.getGameTime());
@@ -147,6 +147,7 @@ public:
             modelo.crearplataformas(nivel);
             dibujar_Balas_Jugador1();
             dibujar_Balas_Jugador2();
+            vista.drawTimeFlower();
             break;
         case 3:
             vista.background.cargar(vista.window, nivel);

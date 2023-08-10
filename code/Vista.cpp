@@ -23,16 +23,61 @@ public:
     VistaFlor vistaFlor;
     ElegirPlayer elegir;
     Background background;
-    sf::Clock clock, gameTime, clock5;
-
-    
+    sf::Clock clock, gameTime, clock5, clockLevel2;
+    sf::Text  time;
+    sf::Font font;
+    bool level2, level3;
 public:
     Vista(const int& xedge, const int& yedge) : width(xedge), height(yedge), window(sf::VideoMode(xedge, yedge), "CUPHEAD!")
-    , vistaBee(window), vistaFlor(window)
+    , vistaBee(window), vistaFlor(window), level2(false)
     {
+        if (!font.loadFromFile("font/MadnessHyperactive.otf")) 
+        {
+            std::cout << "error" << std::endl; 
+        }
+        time.setFont(font);
+        time.setCharacterSize(64);
+        time.setFillColor(sf::Color::White);
+        time.setPosition(1280 / 2 - 64, 5); // Posición en la parte inferior izquierda
+
+
         width = window.getSize().x;
         height = window.getSize().y;  
         tiempoAcumulado = sf::Time::Zero;
+    }
+    void drawTimeBee()
+    {
+        if (!level2)
+        {
+            clockLevel2.restart();
+            level2 = true;
+        }
+        if (level2)
+        {
+            sf::Time elapsedTime = clockLevel2.getElapsedTime();
+            int seconds = elapsedTime.asSeconds();
+            int minutes = seconds / 60;
+            seconds %= 60;
+            time.setString(std::to_string(minutes) + ":" + (seconds < 10 ? "0" : "") + std::to_string(seconds));
+            window.draw(time);
+        }   
+    }
+    void drawTimeFlower()
+    {
+        if (!level3)
+        {
+            clockLevel2.restart();
+            level3 = true;
+        }
+        if (level2)
+        {
+            sf::Time elapsedTime = clockLevel2.getElapsedTime();
+            int seconds = elapsedTime.asSeconds();
+            int minutes = seconds / 60;
+            seconds %= 60;
+            time.setString(std::to_string(minutes) + ":" + (seconds < 10 ? "0" : "") + std::to_string(seconds));
+            window.draw(time);
+        } 
     }
     float getGameTime()
     {
